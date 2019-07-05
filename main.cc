@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 	for(int opt=1; opt<argc; opt++) {
 		cmd = argv[opt];
 		
-		switch(mode[cmd]) {
+		switch(mode.at(cmd)) {
 			case ARG_TEXT:
 				// TODO: set to text mode
 				break;
