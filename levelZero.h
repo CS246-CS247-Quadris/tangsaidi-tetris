@@ -14,10 +14,10 @@ class LevelZero: public Level {
     int current = 0;
 
   public:
-    LevelZero();
+    LevelZero(std::shared_ptr<Board> board);
     
     // set the sequence of the file
-    void setSequence(std::string fileName = "sequence.txt");
+    void setSequence(std::string fileName);
 
     // get the next block on this level
     std::unique_ptr<Block> getNext() override;
@@ -27,4 +27,5 @@ class LevelZero: public Level {
     // Perform a rotation by calling the current block's rotate function
     // params: isClockWise(true, false)
     void rotate(bool) override;
-}
+};
+#endif

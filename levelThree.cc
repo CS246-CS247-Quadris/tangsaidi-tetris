@@ -1,6 +1,7 @@
 #include "levelThree.h"
 #include <stdlib>
 #include <time>
+#include <iostream>
 #include <fstream>
 
 
@@ -20,7 +21,7 @@ void LevelThree::setSequence(std::string fileName) {
 }
 
 void LevelThree::setNorandom(bool norandom) {
-  this.norandom = norandom;   
+  this->norandom = norandom;   
 }
 
 
@@ -30,7 +31,7 @@ std::unique_ptr<Block> LevelThree::getNext() {
     if (current == sequence.size()) {
       current = 0;
     }
-    return Block.create(sequence[current++]);
+    return Block::create(sequence[current++]);
   }
 
   srand(time(null));
@@ -51,7 +52,7 @@ std::unique_ptr<Block> LevelThree::getNext() {
   } else if (randNum < 9) {
     blockType = 'T';
   }
-  return Block.create(blockType);
+  return Block::create(blockType);
 }
 
 // Change the location of current block by calling the move function of block

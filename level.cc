@@ -1,15 +1,10 @@
 #include "level.h"
-#include "levelZero.h"
-#include "levelOne.h"
 
-std::unique_ptr<Level> Level::create(int level) {
+std::unique_ptr<Level> Level::create(int level, std::shared_ptr<Board> board) {
   switch(level) {
     case 0: {
-      return std::make_unique<LevelZero>();
+      return std::make_unique<LevelZero>(board);
       }
-    case 1: {
-      return std::make_unique<levelOne>();
-    }
   }		
-  return std::make_unique<LevelZero>();
+  return std::make_unique<LevelZero>(board);
 }

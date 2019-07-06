@@ -22,7 +22,7 @@ std::unique_ptr<Block> LevelOne::getNext() {
   } else if (randNum < 12) {
     blockType = 'T';
   }
-  return Block.create(blockType);
+  return Block::create(blockType);
 }
 
 // Change the location of current block by calling the move function of block

@@ -1,10 +1,11 @@
 #include "levelZero.h"
 #include <fstream>
+#include <iostream>
 
-LevelZero::LevelZero() {
-  setSequence();
+LevelZero::LevelZero(std::shared_ptr<Board> board) {
+  this->board = board;
+  setSequence("sequence.txt");
 }
-
 
 void LevelZero::setSequence(std::string fileName) {
   std::ifstream inFile;
@@ -28,7 +29,7 @@ std::unique_ptr<Block> LevelZero::getNext() {
   if (current == sequence.size()) {
     current = 0;
   }
-  return Block.create(sequence[current++]);
+  return Block::create(sequence[current++]);
 }
 
 // Change the location of current block by calling the move function of block

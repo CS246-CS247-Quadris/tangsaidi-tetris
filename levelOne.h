@@ -18,4 +18,5 @@ class LevelOne: public Level {
     // Perform a rotation by calling the current block's rotate function
     // params: isClockWise(true, false)
     void rotate(bool) override;
-}
+};
+#endif
