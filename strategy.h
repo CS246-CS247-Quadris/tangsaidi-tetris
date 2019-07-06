@@ -2,8 +2,6 @@
 #define STRATEGY
 
 #include <memory>
-// #include <board.h>
-// #include <block.h>
 
 class Board;
 class Block;
