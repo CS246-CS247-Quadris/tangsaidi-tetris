@@ -1,7 +1,9 @@
 #include <cstdlib> 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
+#include "game.h"
 using namespace std;
 
 enum ArgumentType {
@@ -32,7 +34,7 @@ const string gameExecName = "quadris";
 */
 
 // formatted with special character fix: "\" => "\\"
-// DO NOT CHANGE !!!
+// DO NOT MODIFY !!!
 const string gameSymbol = 
 "   ___                        _          _       \n"
 "  / _ \\   _   _    __ _    __| |  _ __  (_)  ___ \n"
@@ -64,46 +66,79 @@ void printHelp(bool verbose) {
 	     << endl;
 }
 
+void printErrorMessage(string option, string msg, bool needHelp=true) {
+	cout << "Error at option \"" << option << "\": " << endl;
+	cout << "  " << msg << endl;
+	
+	if(needHelp)
+		printHelp(false);
+}
+
+bool isNumber(const string& s)
+{
+    string::const_iterator it = s.begin();
+    while (it != s.end() && isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
+}
+
 int main(int argc, char *argv[]) {
+	// Argument parsing
 	string cmd;
+	map<ArgumentType, string> argument = {
+		{ARG_SEED, "0"},
+		{ARG_LEVEL, "0"}
+	};
+	// Configuration variables
+	int startLevel=0;
+	ifstream fs;
+	bool enableTextMode=false; 
+	// Game interface
+	unique_ptr<Game> game;
 	
 	for(int opt=1; opt<argc; opt++) {
 		cmd = argv[opt];
 		
 		if(mode.count(cmd) <= 0) {
-			// error: Unrecognized commands
-			cout << "Error: unrecognized argument: \"" << cmd << "\"." << endl;
-			printHelp(false);
+			printErrorMessage(cmd, "Unrecognized argument.");
 			return 1;
 		}
 		
 		switch(mode.at(cmd)) {
 			case ARG_TEXT:
-				// TODO: set to text mode
+				argument[ARG_TEXT] = "";
 				break;
 			case ARG_SEED:
-				// TODO: read one more, set rand seed
 				if(opt != argc-1) {
-					srand((unsigned)0);
+					cmd = argv[++opt];
+					argument[ARG_SEED] = cmd;
 				}
-				// error otherwise: missing argument
+				else {
+					printErrorMessage(cmd, "Missing argument, expect number.");
+					return 2;
+				}
 				break;
 			case ARG_SCRIPT:
-				// TODO: read one more, set istream from cin to ifstream
 				if(opt != argc-1) {
-					
+					cmd = argv[++opt];
+					argument[ARG_SCRIPT] = cmd;
 				}
-				// error otherwise: missing argument
+				else {
+					printErrorMessage(cmd, "Missing argument, expect string.");
+					return 2;
+				}
 				break;
 			case ARG_LEVEL:
-				// TODO: read one more, set level
 				if(opt != argc-1) {
-					
+					cmd = argv[++opt];
+					argument[ARG_LEVEL] = cmd;
 				}
-				// error otherwise: missing argument
+				else {
+					printErrorMessage(cmd, "Missing argument, expect number.");
+					return 2;
+				}
 				break;
 			case ARG_HELP:
-				printHelp(true);
+				argument[ARG_HELP] = "";
 				break;
 			default:
 				// deprecated arguments will be ignored (i.e. do nothing)
@@ -111,6 +146,51 @@ int main(int argc, char *argv[]) {
 				break;
 		}
 	}
+	
+	/* Now process configurations */
+	// -help option takes highest priority and discard rest if there is any
+	if(argument.count(ARG_HELP) > 0) {
+		printHelp(true);
+		return 0;
+	}
+	else {
+		string str_seed = argument.at(ARG_SEED);
+		string str_level = argument.at(ARG_LEVEL);
+		string str_file;
+		
+		if(!isNumber(str_seed)) {
+			printErrorMessage("-seed", str_seed + " is not a number.");
+			return 3;
+		}
+		if(!isNumber(str_level)) {
+			printErrorMessage("-startlevel", str_level + " is not a number.");
+			return 3;
+		}
+		
+		srand((unsigned int)stoi(str_seed));
+		startLevel = stoi(str_level);
+		
+		if(argument.count(ARG_TEXT) > 0) {
+			enableTextMode = true;
+		}
+		
+		if(argument.count(ARG_SCRIPT) > 0) {
+			str_file = argument.at(ARG_SCRIPT);
+			fs.open(str_file.c_str(), ifstream::in);
+			
+			if(fs.fail()) {
+				printErrorMessage("-scriptfile", "Cannot open script file \""+str_file+"\".", false);
+				// TODO: should we terminate?
+				return 4;
+			}
+		}
+	}
+	
+	// Now start the game
+//	cout << "Text mode: " << (enableTextMode?"true":"false") << endl;
+//	cout << "Start Level: " << startLevel << endl;
+//	cout << "Stream: " << (argument.count(ARG_SCRIPT)>0 ? "file" : "standard") << endl;
+	game = make_unique<Game>(enableTextMode, startLevel, argument.count(ARG_SCRIPT)>0 ? fs : cin);
 	
 	return 0;
 }
