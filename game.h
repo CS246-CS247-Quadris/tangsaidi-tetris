@@ -2,11 +2,12 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <iostream>
 #include "board.h"
 
 class Game {
 public:
-	Game();
+	Game(bool, int, std::istream&);
 	void parseCommand(const std::string&);
 	
 private:
@@ -35,6 +36,13 @@ private:
 		COMMAND_RENAME
 	};
 	
+	// Node class for the compressed prefix tree
+	class StateNode {
+	private:
+		StateNode();
+	};
+	
+	std::istream& in;
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
 	std::map<std::string, std::vector<std::string>> macro;

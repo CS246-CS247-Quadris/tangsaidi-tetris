@@ -3,7 +3,7 @@
 
 class Board {
 public:
-	
+	Board(int level);
 private:
-	
+	int curLevel;
 };
