@@ -1,23 +1,15 @@
-#ifndef LEVELZEROSTRATEGY
-#define LEVELZEROSTRATEGY
+#ifndef LEVELTWO
+#define LEVELTWO
 
+#include "level.h"
 #include <memory>
 #include <vector>
 
 class Board;
 class Block;
 
-class LevelZeroStrategy: public Strategy {
-  private:
-    std::vector<char> sequence;
-    int current = 0;
-
-  public:
-    LevelZeroStrategy();
-    
-    // set the sequence of the file
-    void setSequence(std::string fileName = "sequence.txt");
-
+class LevelTwo: public Level {
+  public:    
     // get the next block on this level
     std::unique_ptr<Block> getNext() override;
     // Change the location of current block by calling the move function of block

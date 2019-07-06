@@ -1,12 +1,12 @@
-#include "levelZeroStrategy.h"
+#include "levelZero.h"
 #include <fstream>
 
-LevelZeroStrategy::LevelZeroStrategy() {
+LevelZero::LevelZero() {
   setSequence();
 }
 
 
-void LevelZeroStrategy::setSequence(std::string fileName) {
+void LevelZero::setSequence(std::string fileName) {
   std::ifstream inFile;
   inFile.open(fileName);
   if (!inFile) {
@@ -24,7 +24,7 @@ void LevelZeroStrategy::setSequence(std::string fileName) {
 
 
 // get the next block on this level
-std::unique_ptr<Block> LevelZeroStrategy::getNext() {
+std::unique_ptr<Block> LevelZero::getNext() {
   if (current == sequence.size()) {
     current = 0;
   }
@@ -33,12 +33,12 @@ std::unique_ptr<Block> LevelZeroStrategy::getNext() {
 
 // Change the location of current block by calling the move function of block
 // params: direction(n, s, e, w), distance(>=0)
-void LevelZeroStrategy::move(char direction, int steps) {
+void LevelZero::move(char direction, int steps) {
   board.cur->move(direction, steps);
 }
 
 // Perform a rotation by calling the current block's rotate function
 // params: isClockWise(true, false)
-void LevelZeroStrategy::rotate(bool isClockwise) {
+void LevelZero::rotate(bool isClockwise) {
   board.cur->rotate(isClockwise);
 }

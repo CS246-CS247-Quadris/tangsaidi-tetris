@@ -1,20 +1,26 @@
-#ifndef LEVELONESTRATEGY
-#define LEVELONESTRATEGY
+#ifndef LEVEL
+#define LEVEL
 
 #include <memory>
-#include <vector>
 
 class Board;
 class Block;
 
-class LevelOneStrategy: public Strategy {
-  public:    
+class Level {
+  protected:
+    std::shared_ptr<Board> board;
+
+  public:
+    // factory method
+    // param: level (0-4)
+    static std::unique_ptr<Level> create(int);
+
     // get the next block on this level
-    std::unique_ptr<Block> getNext() override;
+    virtual std::unique_ptr<Block> getNext() = 0;
     // Change the location of current block by calling the move function of block
     // params: direction(n, s, e, w), distance(>=0)
-    void move(char, int) override;
+    virtual void move(char, int) = 0;
     // Perform a rotation by calling the current block's rotate function
     // params: isClockWise(true, false)
-    void rotate(bool) override;
+    virtual void rotate(bool) = 0;
 }

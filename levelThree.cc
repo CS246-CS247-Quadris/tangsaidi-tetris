@@ -1,10 +1,10 @@
-#include "levelThreeStrategy.h"
+#include "levelThree.h"
 #include <stdlib>
 #include <time>
 #include <fstream>
 
 
-void LevelThreeStrategy::setSequence(std::string fileName) {
+void LevelThree::setSequence(std::string fileName) {
   std::ifstream inFile;
   inFile.open(fileName);
   if (!inFile) {
@@ -19,13 +19,13 @@ void LevelThreeStrategy::setSequence(std::string fileName) {
   inFile.close();
 }
 
-void LevelThreeStrategy::setNorandom(bool norandom) {
+void LevelThree::setNorandom(bool norandom) {
   this.norandom = norandom;   
 }
 
 
 // get the next block on this level
-std::unique_ptr<Block> LevelThreeStrategy::getNext() {
+std::unique_ptr<Block> LevelThree::getNext() {
   if (norandom) {
     if (current == sequence.size()) {
       current = 0;
@@ -56,14 +56,14 @@ std::unique_ptr<Block> LevelThreeStrategy::getNext() {
 
 // Change the location of current block by calling the move function of block
 // params: direction(n, s, e, w), distance(>=0)
-void LeveThreeStrategy::move(char direction, int steps) {
+void LeveThree::move(char direction, int steps) {
   board.cur->move(direction, steps);
   board.cur->move('d', 1);
 }
 
 // Perform a rotation by calling the current block's rotate function
 // params: isClockWise(true, false)
-void LevelThreeStrategy::rotate(bool isClockwise) {
+void LevelThree::rotate(bool isClockwise) {
   board.cur->rotate(isClockwise);
   board.cur->move('d', 1);
 }
