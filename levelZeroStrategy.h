@@ -3,8 +3,6 @@
 
 #include <memory>
 #include <vector>
-// #include <board.h>
-// #include <block.h>
 
 class Board;
 class Block;

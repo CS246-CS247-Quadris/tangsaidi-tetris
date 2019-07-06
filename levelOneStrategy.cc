@@ -2,8 +2,6 @@
 #include <stdlib>
 #include <time>
 
-
-
 // get the next block on this level
 std::unique_ptr<Block> LevelOneStrategy::getNext() {
   srand(time(null));
