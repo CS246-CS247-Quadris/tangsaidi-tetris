@@ -1,3 +1,4 @@
+#include <cstdlib> 
 #include <iostream>
 #include <string>
 #include <map>
@@ -23,6 +24,12 @@ int main(int argc, char *argv[]) {
 	for(int opt=1; opt<argc; opt++) {
 		cmd = argv[opt];
 		
+		if(mode.count(cmd) <= 0) {
+			// error: Unrecognized commands
+			// TODO: print help text
+			return 1;
+		}
+		
 		switch(mode.at(cmd)) {
 			case ARG_TEXT:
 				// TODO: set to text mode
@@ -30,7 +37,7 @@ int main(int argc, char *argv[]) {
 			case ARG_SEED:
 				// TODO: read one more, set rand seed
 				if(opt != argc-1) {
-					
+					srand((unsigned)0);
 				}
 				// error otherwise: missing argument
 				break;
@@ -49,7 +56,7 @@ int main(int argc, char *argv[]) {
 				// error otherwise: missing argument
 				break;
 			default:
-				// error: unrecognized command
+				// deprecated arguments will be ignored (i.e. do nothing)
 				break;
 		}
 	}
