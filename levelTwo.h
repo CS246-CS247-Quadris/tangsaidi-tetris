@@ -5,8 +5,6 @@
 #include <memory>
 #include <vector>
 
-class Board;
-class Block;
 
 class LevelTwo: public Level {
   public:    

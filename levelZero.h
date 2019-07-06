@@ -5,9 +5,6 @@
 #include <memory>
 #include <vector>
 
-class Board;
-class Block;
-
 class LevelZero: public Level {
   private:
     std::vector<char> sequence;

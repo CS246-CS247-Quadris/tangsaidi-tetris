@@ -1,11 +1,13 @@
 #ifndef LEVEL
 #define LEVEL
 
+#include "block.h"
+
 #include <memory>
+
 
 class Board;
 class Block;
-class LevelZero;
 
 class Level {
   protected:
@@ -24,5 +26,7 @@ class Level {
     // Perform a rotation by calling the current block's rotate function
     // params: isClockWise(true, false)
     virtual void rotate(bool) = 0;
+
+    virtual ~Level() = 0;
 };
 #endif
