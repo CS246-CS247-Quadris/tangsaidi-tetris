@@ -13,7 +13,9 @@ void LevelZeroStrategy::setSequence(std::string fileName) {
     std::cerr << "Failed to open file" << std::endl;
     return;
   }
+
   char c;
+  sequence = std::vector<char>();
   while (inFile >> c) {
     sequence.push_back(c);
   }

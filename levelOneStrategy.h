@@ -8,10 +8,6 @@ class Board;
 class Block;
 
 class LevelOneStrategy: public Strategy {
-  private:
-    std::vector<char> sequence;
-    int current = 0;
-
   public:    
     // get the next block on this level
     std::unique_ptr<Block> getNext() override;
