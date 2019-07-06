@@ -9,7 +9,7 @@
 class Board;
 class Block;
 
-class LevelZeroStrategy: Strategy {
+class LevelZeroStrategy: public Strategy {
   private:
     std::vector<char> sequence;
     int current = 0;
