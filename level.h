@@ -28,10 +28,10 @@ class Level {
     virtual std::unique_ptr<Block> getNext() = 0;
     // Change the location of current block by calling the move function of block
     // params: direction(n, s, e, w), distance(>=0)
-    virtual void move(char, int) = 0;
+    virtual void move(char, int);
     // Perform a rotation by calling the current block's rotate function
     // params: isClockWise(true, false)
-    virtual void rotate(bool) = 0;
+    virtual void rotate(bool);
 
     virtual ~Level();
 };

@@ -44,4 +44,12 @@ std::unique_ptr<Level> Level::create(int level, std::shared_ptr<Board> board) {
   return std::make_unique<LevelZero>(board);
 }
 
+void Level::move(char direction, int steps) {
+  board->cur->move(direction, steps);
+}
+
+void Level::rotate(bool isClockwise) {
+  board->cur->rotate(isClockwise);
+}
+
 Level::~Level() {}

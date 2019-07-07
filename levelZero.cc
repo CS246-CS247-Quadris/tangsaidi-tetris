@@ -22,16 +22,4 @@ std::unique_ptr<Block> LevelZero::getNext() {
   return Block::create(sequence[current++]);
 }
 
-// Change the location of current block by calling the move function of block
-// params: direction(n, s, e, w), distance(>=0)
-void LevelZero::move(char direction, int steps) {
-  board->cur->move(direction, steps);
-}
-
-// Perform a rotation by calling the current block's rotate function
-// params: isClockWise(true, false)
-void LevelZero::rotate(bool isClockwise) {
-  board->cur->rotate(isClockwise);
-}
-
 LevelZero::~LevelZero() {}
