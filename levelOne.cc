@@ -2,6 +2,10 @@
 #include <stdlib>
 #include <time>
 
+LevelOne::LevelOne(std::shared_ptr<Board> board) {
+  this->board = board;
+}
+
 // get the next block on this level
 std::unique_ptr<Block> LevelOne::getNext() {
   srand(time(null));
@@ -36,3 +40,5 @@ void LevelOne::move(char direction, int steps) {
 void LevelOne::rotate(bool isClockwise) {
   board.cur->rotate(isClockwise);
 }
+
+LevelOne::~LevelOne() {}

@@ -2,27 +2,18 @@
 #include <fstream>
 #include <iostream>
 
-LevelZero::LevelZero(std::shared_ptr<Board> board) {
-  this->board = board;
-  setSequence("sequence.txt");
-}
-
 void LevelZero::setSequence(std::string fileName) {
-  std::ifstream inFile;
-  inFile.open(fileName);
-  if (!inFile) {
-    std::cerr << "Failed to open file" << std::endl;
-    return;
+  if (fileName != scriptFile) {
+    std::cerr << "The scriptfile for level 0 cannot be changed" << std::endl;
+  } else {
+    Level::setSequence(fileName);
   }
-
-  char c;
-  sequence = std::vector<char>();
-  while (inFile >> c) {
-    sequence.push_back(c);
-  }
-  inFile.close();
 }
 
+LevelZero::LevelZero(std::shared_ptr<Board> board, int seed) {
+  this->board = board;
+  setSequence(scriptFile);
+}
 
 // get the next block on this level
 std::unique_ptr<Block> LevelZero::getNext() {

@@ -2,6 +2,7 @@
 #include <iostream>
 
 std::unique_ptr<Block> Block::create(char type) {
+  std::cout << "Block " << type << " created" << std::endl;
   return std::make_unique<Block>();
 }
 

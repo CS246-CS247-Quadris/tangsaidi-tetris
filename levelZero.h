@@ -6,16 +6,11 @@
 #include <vector>
 
 class LevelZero: public Level {
-  private:
-    std::vector<char> sequence;
-    int current = 0;
 
   public:
-    LevelZero(std::shared_ptr<Board> board);
+    LevelZero(std::shared_ptr<Board> board, int seed = 0);
     
-    // set the sequence of the file
-    void setSequence(std::string fileName);
-
+    void setSequence(std::string fileName) override;
     // get the next block on this level
     std::unique_ptr<Block> getNext() override;
     // Change the location of current block by calling the move function of block
