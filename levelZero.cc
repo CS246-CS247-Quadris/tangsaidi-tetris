@@ -41,5 +41,7 @@ void LevelZero::move(char direction, int steps) {
 // Perform a rotation by calling the current block's rotate function
 // params: isClockWise(true, false)
 void LevelZero::rotate(bool isClockwise) {
-  board.cur->rotate(isClockwise);
+  board->cur->rotate(isClockwise);
 }
+
+LevelZero::~LevelZero() {}

@@ -1,12 +1,10 @@
 #ifndef LEVEL
 #define LEVEL
 
+#include "board.h"
 #include "block.h"
-
 #include <memory>
 
-
-class Board;
 class Block;
 
 class Level {
@@ -27,6 +25,6 @@ class Level {
     // params: isClockWise(true, false)
     virtual void rotate(bool) = 0;
 
-    virtual ~Level() = 0;
+    virtual ~Level();
 };
 #endif

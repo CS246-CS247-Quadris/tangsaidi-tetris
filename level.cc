@@ -10,3 +10,5 @@ std::unique_ptr<Level> Level::create(int level, std::shared_ptr<Board> board) {
   }		
   return std::make_unique<LevelZero>(board);
 }
+
+Level::~Level() {}
