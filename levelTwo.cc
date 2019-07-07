@@ -1,10 +1,12 @@
 #include "levelTwo.h"
-#include <stdlib>
-#include <time>
+
+LevelTwo::LevelTwo(std::shared_ptr<Board> board) {
+  this->board = board;
+  srand(Level::seed);
+}
 
 // get the next block on this level
 std::unique_ptr<Block> LevelTwo::getNext() {
-  srand(time(null));
   int randNum = rand() % 7;
   char blockType = 'I';
   if (randNum < 1) {
@@ -25,14 +27,4 @@ std::unique_ptr<Block> LevelTwo::getNext() {
   return Block::create(blockType);
 }
 
-// Change the location of current block by calling the move function of block
-// params: direction(n, s, e, w), distance(>=0)
-void LevelTwo::move(char direction, int steps) {
-  board.cur->move(direction, steps);
-}
-
-// Perform a rotation by calling the current block's rotate function
-// params: isClockWise(true, false)
-void LevelTwo::rotate(bool isClockwise) {
-  board.cur->rotate(isClockwise);
-}
+LevelTwo::~LevelTwo() {}
