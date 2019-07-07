@@ -22,16 +22,8 @@ int main(void) {
   level0->getNext(); // O
   level0->getNext(); // O
 
+  Level::setSeed(2);
   unique_ptr<Level> level1 = Level::create(1, board);
-  level1->getNext();
-  level1->getNext();
-  level1->getNext();
-  level1->getNext();
-  level1->getNext();
-
-  Level::setSeed(0);
-  level1 = Level::create(1, board);
-
   level1->getNext();
   level1->getNext();
   level1->getNext();
@@ -40,5 +32,16 @@ int main(void) {
   level1->move('s', 2);
   level1->rotate(true);
   level1->rotate(false);
+
+  unique_ptr<Level> level2 = Level::create(2, board);
+  level2->getNext();
+  level2->getNext();
+  level2->getNext();
+  level2->getNext();
+  level2->getNext();
+  level2->move('s', 2);
+  level2->rotate(true);
+  level2->rotate(false);
+
   return 0;
 }
