@@ -1,5 +1,6 @@
 #include "level.h"
 #include "levelZero.h"
+#include "levelOne.h"
 
 #include <fstream>
 #include <iostream>
@@ -36,9 +37,9 @@ std::unique_ptr<Level> Level::create(int level, std::shared_ptr<Board> board) {
     case 0: {
       return std::make_unique<LevelZero>(board);
       }
-    // case 1: {
-    //   return std::make_unique<LevelOne>(board);
-    // }
+    case 1: {
+      return std::make_unique<LevelOne>(board);
+    }
   }		
   return std::make_unique<LevelZero>(board);
 }

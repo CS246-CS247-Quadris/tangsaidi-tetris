@@ -8,7 +8,7 @@
 class LevelZero: public Level {
 
   public:
-    LevelZero(std::shared_ptr<Board> board, int seed = 0);
+    LevelZero(std::shared_ptr<Board> board);
     
     void setSequence(std::string fileName) override;
     // get the next block on this level

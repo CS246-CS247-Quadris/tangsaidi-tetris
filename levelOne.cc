@@ -1,14 +1,12 @@
 #include "levelOne.h"
-#include <stdlib>
-#include <time>
 
 LevelOne::LevelOne(std::shared_ptr<Board> board) {
   this->board = board;
+  srand(Level::seed);
 }
 
 // get the next block on this level
 std::unique_ptr<Block> LevelOne::getNext() {
-  srand(time(null));
   int randNum = rand() % 12;
   char blockType = 'I';
   if (randNum < 1) {
@@ -32,13 +30,13 @@ std::unique_ptr<Block> LevelOne::getNext() {
 // Change the location of current block by calling the move function of block
 // params: direction(n, s, e, w), distance(>=0)
 void LevelOne::move(char direction, int steps) {
-  board.cur->move(direction, steps);
+  board->cur->move(direction, steps);
 }
 
 // Perform a rotation by calling the current block's rotate function
 // params: isClockWise(true, false)
 void LevelOne::rotate(bool isClockwise) {
-  board.cur->rotate(isClockwise);
+  board->cur->rotate(isClockwise);
 }
 
 LevelOne::~LevelOne() {}
