@@ -61,6 +61,6 @@ private:
 	void debugPrintTree(const std::shared_ptr<StateNode>& root, int k=0);
 	
 	bool test(const std::string&);
-	bool perform(const vector<string>&, size_t&, const int&);
+	bool perform(const std::vector<std::string>&, size_t&, const int&);
 	void splitToken(const std::string&, std::string&, int&);
 };

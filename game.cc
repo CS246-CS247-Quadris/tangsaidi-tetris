@@ -163,8 +163,8 @@ bool Game::perform(const vector<string>& tokens, size_t& index, const int& rept)
 		type = command.at(token);
 	}
 	else if(macro.count(token) > 0) {
-		vector<string> m = vector.at(token);
-		for(auto v& : m) {
+		vector<string> m = macro.at(token);
+		for(auto &v : m) {
 			perform(tokens, index, rept);
 		}
 	}
@@ -278,7 +278,7 @@ bool Game::perform(const vector<string>& tokens, size_t& index, const int& rept)
 			break;
 	}
 	
-	return true
+	return true;
 }
 
 // split number out of a token
