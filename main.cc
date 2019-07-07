@@ -192,13 +192,15 @@ int main(int argc, char *argv[]) {
 //	cout << "Stream: " << (argument.count(ARG_SCRIPT)>0 ? "file" : "standard") << endl;
 	game = make_unique<Game>(enableTextMode, startLevel, argument.count(ARG_SCRIPT)>0 ? fs : cin);
 	
-	game->parseCommand("123left");
-	game->parseCommand("1left");
-	game->parseCommand("0left");
-	game->parseCommand("left");
-	game->parseCommand("3ri");
-	game->parseCommand("counterc");
-	game->parseCommand("co");
+//	game->parseCommand("123left");
+//	game->parseCommand("1left");
+//	game->parseCommand("0left");
+//	game->parseCommand("left");
+//	game->parseCommand("3ri");
+//	game->parseCommand("counterc");
+//	game->parseCommand("co");
+	game->parseCommand();
+	
 	
 	return 0;
 }
