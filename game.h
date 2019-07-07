@@ -1,3 +1,6 @@
+#ifndef __GAME_H__
+#define __GAME_H__
+
 #include <map>
 #include <memory>
 #include <string>
@@ -64,3 +67,5 @@ private:
 	bool perform(const std::vector<std::string>&, size_t&, const int&);
 	void splitToken(const std::string&, std::string&, int&);
 };
+
+#endif /* __GAME_H__ */

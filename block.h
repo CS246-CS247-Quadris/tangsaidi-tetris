@@ -1,5 +1,5 @@
-#ifndef BLOCK
-#define BLOCK
+#ifndef __BLOCK_H__
+#define __BLOCK_H__
 
 #include <memory>
 
@@ -11,4 +11,4 @@ class Block {
     void rotate(bool);
 };
 
-#endif
+#endif /* __BLOCK_H__ */
