@@ -3,20 +3,11 @@
 
 #include "level.h"
 #include <memory>
-#include <vector>
-
 
 class LevelThree: public Level {
-  private:
-    std::vector<char> sequence;
-    int current = 0;
-    bool norandom = false;
-
   public:
-    // need to setSequence and then setNorandom for the norand command
-    void setNorandom(bool norandom);
-    // set the sequence of the file
-    void setSequence(std::string fileName = "sequence.txt");
+    LevelThree(std::shared_ptr<Board> board);
+
     // get the next block on this level
     std::unique_ptr<Block> getNext() override;
     // Change the location of current block by calling the move function of block
@@ -25,6 +16,7 @@ class LevelThree: public Level {
     // Perform a rotation by calling the current block's rotate function
     // params: isClockWise(true, false)
     void rotate(bool) override;
+    ~LevelThree() override;
 };
 
 #endif

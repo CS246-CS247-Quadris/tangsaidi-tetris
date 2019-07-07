@@ -2,12 +2,24 @@
 #include "levelZero.h"
 #include "levelOne.h"
 #include "levelTwo.h"
+#include "levelThree.h"
 
 #include <fstream>
 #include <iostream>
 
 int Level::seed = 0;
 std::string Level::scriptFile = "sequence.txt";
+
+Level::Level(std::shared_ptr<Board> board): board(board) {} 
+
+
+Block* Level::getCur() {
+  return board->cur.get();
+}
+
+void Level::setNorandom(bool norandom) {
+  this->norandom = norandom;
+}
 
 void Level::setSequence(std::string fileName) {
   std::ifstream inFile;
@@ -43,6 +55,9 @@ std::unique_ptr<Level> Level::create(int level, std::shared_ptr<Board> board) {
     }
     case 2: {
       return std::make_unique<LevelTwo>(board);
+    }
+    case 3: {
+      return std::make_unique<LevelThree>(board);
     }
   }		
   return std::make_unique<LevelZero>(board);

@@ -1,7 +1,7 @@
 #include "levelTwo.h"
+#include <cstdlib> 
 
-LevelTwo::LevelTwo(std::shared_ptr<Board> board) {
-  this->board = board;
+LevelTwo::LevelTwo(std::shared_ptr<Board> board): Level(board) {
   srand(Level::seed);
 }
 

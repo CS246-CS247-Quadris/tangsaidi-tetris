@@ -3,11 +3,13 @@
 #include "block.h"
 
 class Board {
+	friend class Level;
+
 	public:
-		std::unique_ptr<Block> cur;
 		Board(int level);
 
 
 	private:
+		std::unique_ptr<Block> cur;
 		int curLevel;
 };

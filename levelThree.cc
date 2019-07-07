@@ -1,29 +1,10 @@
 #include "levelThree.h"
-#include <stdlib>
-#include <time>
-#include <iostream>
-#include <fstream>
+#include <cstdlib> 
 
 
-void LevelThree::setSequence(std::string fileName) {
-  std::ifstream inFile;
-  inFile.open(fileName);
-  if (!inFile) {
-    std::cerr << "Failed to open file" << std::endl;
-    return;
-  }
-  char c;
-  sequence = std::vector<char>();
-  while (inFile >> c) {
-    sequence.push_back(c);
-  }
-  inFile.close();
+LevelThree::LevelThree(std::shared_ptr<Board> board): Level(board) {
+  srand(Level::seed);
 }
-
-void LevelThree::setNorandom(bool norandom) {
-  this->norandom = norandom;   
-}
-
 
 // get the next block on this level
 std::unique_ptr<Block> LevelThree::getNext() {
@@ -34,7 +15,6 @@ std::unique_ptr<Block> LevelThree::getNext() {
     return Block::create(sequence[current++]);
   }
 
-  srand(time(null));
   int randNum = rand() % 9;
   char blockType = 'I';
   if (randNum < 2) {
@@ -57,14 +37,16 @@ std::unique_ptr<Block> LevelThree::getNext() {
 
 // Change the location of current block by calling the move function of block
 // params: direction(n, s, e, w), distance(>=0)
-void LeveThree::move(char direction, int steps) {
-  board.cur->move(direction, steps);
-  board.cur->move('d', 1);
+void LevelThree::move(char direction, int steps) {
+  Level::move(direction, steps);
+  this->getCur()->move('d', 1);
 }
 
 // Perform a rotation by calling the current block's rotate function
 // params: isClockWise(true, false)
 void LevelThree::rotate(bool isClockwise) {
-  board.cur->rotate(isClockwise);
-  board.cur->move('d', 1);
+  Level::rotate(isClockwise);
+  this->getCur()->move('d', 1);
 }
+
+LevelThree::~LevelThree() {}

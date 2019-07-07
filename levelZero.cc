@@ -9,8 +9,7 @@ void LevelZero::setSequence(std::string fileName) {
   }
 }
 
-LevelZero::LevelZero(std::shared_ptr<Board> board) {
-  this->board = board;
+LevelZero::LevelZero(std::shared_ptr<Board> board): Level(board) {
   setSequence(scriptFile);
 }
 

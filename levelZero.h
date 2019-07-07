@@ -3,7 +3,6 @@
 
 #include "level.h"
 #include <memory>
-#include <vector>
 
 class LevelZero: public Level {
 

@@ -3,8 +3,6 @@
 
 #include "level.h"
 #include <memory>
-#include <vector>
-
 
 class LevelOne: public Level {
   public:

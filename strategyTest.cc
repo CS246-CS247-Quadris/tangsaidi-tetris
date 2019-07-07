@@ -43,5 +43,17 @@ int main(void) {
   level2->rotate(true);
   level2->rotate(false);
 
+  unique_ptr<Level> level3 = Level::create(3, board);
+  level3->setNorandom(true);
+  level3->setSequence("sequence.txt");
+  level3->getNext();
+  level3->getNext();
+  level3->getNext();
+  level3->getNext();
+  level3->getNext();
+  level3->move('s', 2);
+  level3->rotate(true);
+  level3->rotate(false);
+
   return 0;
 }
