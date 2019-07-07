@@ -40,8 +40,6 @@ private:
 	class StateNode {
 	public:
 		StateNode(const std::string&);
-//		bool isAccepted();
-//		std::shared_ptr<StateNode> append(const std::string&, char);
 	private:
 		//size_t idx;
 		std::string strAccept;

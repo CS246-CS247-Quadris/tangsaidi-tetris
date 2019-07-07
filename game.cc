@@ -137,7 +137,7 @@ std::string Game::getCommandByPrefix(const std::string& prefix) {
 	return cur->strAccept;
 }
 
-void Game::parseCommand(const std::string& cmd) {
+void Game::parseCommand(const string& cmd) {
 	// split number and command
 	int pos=-1, cnt;
 	string arg;
@@ -160,15 +160,18 @@ void Game::parseCommand(const std::string& cmd) {
 	
 	arg = cmd.substr(pos+1, cmd.length());
 	
-//	cout << cnt << " " << arg << endl;
-//	cout << "Command lookup: " << endl;
-//	cout << "  Command map: ";
-//	if(command.count(arg) > 0) cout << "pass" << endl;
-//	else cout << "fail" << endl;
-//	cout << "  Macro map: ";
-//	if(macro.count(arg) > 0) cout << "pass" << endl;
-//	else cout << "fail" << endl;
-//	cout << "  Prefix lookup: ";
-//	if(!getCommandByPrefix(arg).empty()) cout << "pass(" << getCommandByPrefix(arg) << ")" << endl;
-//	else cout << "fail" << endl;
+	// TODO: while getline to fetch input in line basis
+	// TODO: recognize macro (suffix colon), and sequence &&
+	
+	cout << cnt << " " << arg << endl;
+	cout << "Command lookup: " << endl;
+	cout << "  Command map: ";
+	if(command.count(arg) > 0) cout << "pass" << endl;
+	else cout << "fail" << endl;
+	cout << "  Macro map: ";
+	if(macro.count(arg) > 0) cout << "pass" << endl;
+	else cout << "fail" << endl;
+	cout << "  Prefix lookup: ";
+	if(!getCommandByPrefix(arg).empty()) cout << "pass(" << getCommandByPrefix(arg) << ")" << endl;
+	else cout << "fail" << endl;
 }
