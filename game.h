@@ -36,14 +36,29 @@ private:
 		COMMAND_RENAME
 	};
 	
-	// Node class for the compressed prefix tree
+	// Node class for the uncompressed prefix tree
 	class StateNode {
+	public:
+		StateNode(const std::string&);
+//		bool isAccepted();
+//		std::shared_ptr<StateNode> append(const std::string&, char);
 	private:
-		StateNode();
+		//size_t idx;
+		std::string strAccept;
+		std::vector<std::shared_ptr<StateNode>> next;
+		std::map<char, size_t> path;
+		
+		friend class Game;
 	};
 	
 	std::istream& in;
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
 	std::map<std::string, std::vector<std::string>> macro;
+	std::shared_ptr<StateNode> prefixTree;
+	
+	bool ifDuplicated(const std::string&);
+	void addCommandPrefixLookup(const std::string&);
+	std::string getCommandByPrefix(const std::string&);
+	void debugPrintTree(const std::shared_ptr<StateNode>& root, int k=0);
 };
