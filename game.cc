@@ -1,3 +1,6 @@
+#include <sstream>
+#include <iterator>
+#include <algorithm>
 #include "game.h"
 using namespace std;
 
@@ -36,7 +39,8 @@ Game::Game(bool isTextMode, int level, istream& is):
 		{"S", DEBUG_REPLACE_S},
 		{"Z", DEBUG_REPLACE_Z},
 		{"T", DEBUG_REPLACE_T},
-		{"rename", COMMAND_RENAME}}
+		{"rename", COMMAND_RENAME},
+		{"&&", COMMAND_AMP}}
 {
 	addCommandPrefixLookup("left");
 	addCommandPrefixLookup("right");
@@ -59,6 +63,7 @@ Game::Game(bool isTextMode, int level, istream& is):
 	addCommandPrefixLookup("Z");
 	addCommandPrefixLookup("T");
 	addCommandPrefixLookup("rename");
+	addCommandPrefixLookup("&&");
 	
 //	cout<<"Debug Tree:"<<endl;
 //	debugPrintTree(prefixTree);
@@ -121,7 +126,7 @@ void Game::addCommandPrefixLookup(const string& command) {
 	cur->strAccept = command;
 }
 
-std::string Game::getCommandByPrefix(const std::string& prefix) {
+std::string Game::getCommandByPrefix(const string& prefix) {
 	shared_ptr<StateNode> cur = prefixTree;
 	string::const_iterator it = prefix.begin();
 	while (it != prefix.end()) {
@@ -137,13 +142,151 @@ std::string Game::getCommandByPrefix(const std::string& prefix) {
 	return cur->strAccept;
 }
 
-void Game::parseCommand(const string& cmd) {
-	// split number and command
-	int pos=-1, cnt;
-	string arg;
+bool Game::test(const string& token) {
+	if(command.count(token) > 0) {
+		return true;
+	}
+	else if(macro.count(token) > 0) {
+		return true;
+	}
+	else {
+		string s = getCommandByPrefix(token);
+		return s.empty() ? false : true;
+	}
+}
+
+bool Game::perform(const vector<string>& tokens, size_t& index, const int& rept) {
+	CommandType type;
+	string token = tokens.at(index);
 	
-	for(int i=0;i<cmd.length();i++) {
-		if(isdigit(cmd[i])) {
+	if(command.count(token) > 0) {
+		type = command.at(token);
+	}
+	else if(macro.count(token) > 0) {
+		vector<string> m = vector.at(token);
+		for(auto v& : m) {
+			perform(tokens, index, rept);
+		}
+	}
+	else {
+		string s = getCommandByPrefix(token);
+		if(!s.empty()) {
+			type = command.at(s);
+		}
+		else {
+			cout<<"Error: "<<token<<" not found."<<endl;
+			return false;
+		}
+	}
+	
+	switch(type) {
+		case CONTROL_LEFT:
+			// TODO: left
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_RIGHT:
+			// TODO: right
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_DOWN:
+			// TODO: down
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_CLOCKWISE:
+			// TODO: clockwise
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_CC:
+			// TODO: counterclockwise
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_DROP:
+			// TODO: drop
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_LEVELUP:
+			// TODO: levelup
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_LEVELDOWN:
+			// TODO: leveldown
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_RND:
+			// TODO: random
+			// ignore multiplier
+			break;
+		case CONTROL_NORND:
+			// TODO: norandom <file>
+			// TODO: level 3 and 4 only
+			// ignore multiplier
+			break;
+		case CONTROL_SEQUENCE:
+			// TODO: sequence <file>
+			// TODO: set istream to the file, call 
+			// parseCommand, then restore istream
+			for(int c=0;c<rept;c++) {
+			}
+			break;
+		case CONTROL_RESTART:
+			// TODO: restart
+			// ignore multiplier
+			break;
+		case CONTROL_HINT:
+			// TODO: hint
+			// ignore multiplier
+			break;
+		case DEBUG_REPLACE_I:
+			// TODO: I
+			// actually, repeat this is meaningless
+			break;
+		case DEBUG_REPLACE_J:
+			// TODO: J
+			
+			break;
+		case DEBUG_REPLACE_L:
+			// TODO: I
+			
+			break;
+		case DEBUG_REPLACE_O:
+			// TODO: O
+			
+			break;
+		case DEBUG_REPLACE_S:
+			// TODO: S
+			break;
+		case DEBUG_REPLACE_Z:
+			// TODO: Z
+			break;
+		case DEBUG_REPLACE_T:
+			// TODO: T
+			break;
+		case COMMAND_RENAME:
+			// TODO: rename
+			// repeating is also meaningless
+			break;
+		case COMMAND_AMP:
+		default:
+			break;
+	}
+	
+	return true
+}
+
+// split number out of a token
+void Game::splitToken(const string& token, string& cmd, int& rept) {
+	int pos=-1;
+	
+	for(int i=0;i<token.length();i++) {
+		if(isdigit(token[i])) {
 			pos = i;
 		}
 		else {
@@ -152,26 +295,47 @@ void Game::parseCommand(const string& cmd) {
 	}
 	
 	if(pos == -1) {
-		cnt = 1;
+		rept = 1;
 	}
 	else {
-		cnt = stoi(cmd.substr(0, pos+1));
+		rept = stoi(token.substr(0, pos+1));
 	}
+	cmd = token.substr(pos+1, token.length());
+}
+
+void Game::parseCommand() {
+	string s;
+	vector<string> tokens;
+	int cnt;
+//	while(true) {
+//		getline(in, s);
+//	}
+	cout<<"Command: ";
+	getline(in, s);
+	istringstream iss(s);
+	copy(istream_iterator<string>(iss), 
+			istream_iterator<string>(), 
+			back_inserter(tokens));
 	
-	arg = cmd.substr(pos+1, cmd.length());
+	splitToken(tokens[0], s, cnt);
 	
-	// TODO: while getline to fetch input in line basis
-	// TODO: recognize macro (suffix colon), and sequence &&
-	
-	cout << cnt << " " << arg << endl;
-	cout << "Command lookup: " << endl;
-	cout << "  Command map: ";
-	if(command.count(arg) > 0) cout << "pass" << endl;
-	else cout << "fail" << endl;
-	cout << "  Macro map: ";
-	if(macro.count(arg) > 0) cout << "pass" << endl;
-	else cout << "fail" << endl;
-	cout << "  Prefix lookup: ";
-	if(!getCommandByPrefix(arg).empty()) cout << "pass(" << getCommandByPrefix(arg) << ")" << endl;
-	else cout << "fail" << endl;
+	// test if the first token is used for defining macro
+	if(s.back() == ':') {
+		s.pop_back();
+		tokens.erase(tokens.begin());
+		for(auto& it : tokens) {
+			if(!test(it)) {
+				cout<<"Error: "<<it<<" not found."<<endl;
+				return;
+			}
+		}
+		macro[s] = tokens;
+	}
+	else {
+		// perform first one
+		
+		for(int i=1;i<tokens.size();i++) {
+			splitToken(tokens[i], s, cnt);
+		}
+	}
 }

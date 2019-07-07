@@ -8,8 +8,7 @@
 class Game {
 public:
 	Game(bool, int, std::istream&);
-	void parseCommand(const std::string&);
-	
+	void parseCommand();
 private:
 	enum CommandType {
 		CONTROL_LEFT = 0,
@@ -33,7 +32,8 @@ private:
 		DEBUG_REPLACE_S,
 		DEBUG_REPLACE_Z,
 		DEBUG_REPLACE_T,
-		COMMAND_RENAME
+		COMMAND_RENAME,
+		COMMAND_AMP
 	};
 	
 	// Node class for the uncompressed prefix tree
@@ -59,4 +59,8 @@ private:
 	void addCommandPrefixLookup(const std::string&);
 	std::string getCommandByPrefix(const std::string&);
 	void debugPrintTree(const std::shared_ptr<StateNode>& root, int k=0);
+	
+	bool test(const std::string&);
+	bool perform(const vector<string>&, size_t&, const int&);
+	void splitToken(const std::string&, std::string&, int&);
 };
