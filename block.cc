@@ -94,7 +94,31 @@ ZBlock::ZBlock(Board& b):Block('Z',b){}
 TBlock::TBlock(Board& b):Block('T',b){}
 
 void IBlock::rotate(bool isClockwise) {
+	int x=coordinate[0].first, y=coordinate[0].second;
+	for(auto& v:coordinate) {
+		if(v.first < x) {
+			x = v.first;
+		}
+		if(v.second < y) {
+			y = v.second;
+		}
+	}
 	
+	// if horizontal, rotate it to vertical
+	if(coordinate[0].first != coordinate[1].second) {
+		for(int i=0;i<coordinate.size();i++) {
+			coordinate[i].first = x;
+			coordinate[i].second = y+i;
+		}
+	}
+	// rotate it to horizontal otherwise
+	else {
+		for(int i=0;i<coordinate.size();i++) {
+			coordinate[i].first = x+i;
+			coordinate[i].second = y;
+		}
+	}
 }
 
+// O block remains unchanged after any rotation
 void OBlock::rotate(bool isClockwise) {}
