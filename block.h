@@ -13,13 +13,13 @@ public:
     // Take in capital chars
 //    static std::unique_ptr<Block> create(char);
     void move(char, int);
-    void rotate(bool);
-    virtual std::vector<std::pair<int,int>> getComponents()=0;
-    virtual ~Block(){}
+    virtual void rotate(bool);
+    virtual std::vector<std::pair<int,int>> getComponents() const;
+    virtual ~Block()=0;
 protected:
 	Block(char, Board&);
 //	int orientation;
-	std::pair<int, int> coordinate;
+	std::vector<std::pair<int,int>> coordinate;
 private:
 	char type;
 	Board& board;
@@ -28,37 +28,39 @@ private:
 
 class IBlock : public Block {
 public:
-	IBlock();
+	IBlock(Board&);
+	void rotate(bool) override;
 };
 
 class JBlock : public Block {
 public:
-	JBlock();
+	JBlock(Board&);
 };
 
 class LBlock : public Block {
 public:
-	LBlock();
+	LBlock(Board&);
 };
 
 class OBlock : public Block {
 public:
-	OBlock();
+	OBlock(Board&);
+	void rotate(bool) override;
 };
 
 class SBlock : public Block {
 public:
-	SBlock();
+	SBlock(Board&);
 };
 
 class ZBlock : public Block {
 public:
-	ZBlock();
+	ZBlock(Board&);
 };
 
 class TBlock : public Block {
 public:
-	TBlock();
+	TBlock(Board&);
 };
 
 #endif /* __BLOCK_H__ */
