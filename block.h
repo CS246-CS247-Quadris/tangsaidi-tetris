@@ -11,7 +11,7 @@ class Board;
 class Block {
 public:
     // Take in capital chars
-//    static std::unique_ptr<Block> create(char);
+    static std::unique_ptr<Block> create(char, Board&);
     void move(char, int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;

@@ -2,10 +2,27 @@
 #include <iostream>
 using namespace std;
 
-//std::unique_ptr<Block> Block::create(char type) {
-//	std::cout << "Block " << type << " created" << std::endl;
-//	return std::make_unique<Block>();
-//}
+unique_ptr<Block> Block::create(char type, Board& b) {
+	cout << "Block " << type << " created" << endl;
+	switch(type) {
+		case 'I':
+			return make_unique<IBlock>(b);
+		case 'J':
+			return make_unique<JBlock>(b);
+		case 'L':
+			return make_unique<LBlock>(b);
+		case 'O':
+			return make_unique<OBlock>(b);
+		case 'S':
+			return make_unique<SBlock>(b);
+		case 'Z':
+			return make_unique<ZBlock>(b);
+		case 'T':
+			return make_unique<TBlock>(b);
+		default:
+			return nullptr;
+	}
+}
 
 Block::Block(char t, Board& b):type{t},board{b}{}
 Block::~Block(){}
