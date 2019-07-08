@@ -6,6 +6,7 @@
 #include <memory>
 
 class Block;
+class Board;
 
 class Level {
   protected:

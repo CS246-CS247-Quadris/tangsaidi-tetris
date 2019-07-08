@@ -6,6 +6,7 @@
 #include "block.h"
 #include "score.h"
 #include "level.h"
+#include "row.h"
 
 class Block;
 
@@ -16,7 +17,7 @@ class Board {
 		Board(int level);
 		int getCurrentLevel() const;
 		bool checkWin();
-		bool isValid(vector<pair<int, int>> coord);
+		bool isValid(std::vector<std::pair<int, int>> coord);
 		void hint();
 		void drop();
 		void move(char direction, int steps);
@@ -31,7 +32,7 @@ class Board {
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
 
-		void createSettler(vector<pair<int, int>> coord, char blockType, int blockLevel);
+		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
 };
 
 #endif /* __BOARD_H__ */

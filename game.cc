@@ -270,7 +270,7 @@ bool Game::perform(const vector<string>& tokens, size_t& index, const int& rept)
 			// TODO: T
 			break;
 		case COMMAND_RENAME:
-			// TODO: rename
+			// TODO: rename <original> <new>
 			// repeating is also meaningless
 			break;
 		case COMMAND_AMP:
@@ -310,7 +310,7 @@ void Game::parseCommand() {
 //	while(true) {
 //		getline(in, s);
 //	}
-	cout<<"Command: ";
+	//cout<<"Command: ";
 	getline(in, s);
 	istringstream iss(s);
 	copy(istream_iterator<string>(iss), 
@@ -330,6 +330,7 @@ void Game::parseCommand() {
 			}
 		}
 		macro[s] = tokens;
+		addCommandPrefixLookup(s);
 	}
 	else {
 		// perform first one

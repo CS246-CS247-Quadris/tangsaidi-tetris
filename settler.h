@@ -2,6 +2,7 @@
 #define SETTLER
 
 #include <iostream>
+#include <memory>
 #include "score.h"
 
 class Settler {

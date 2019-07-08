@@ -161,3 +161,7 @@ void IBlock::rotate(bool isClockwise) {
 
 // O block remains unchanged after any rotation
 void OBlock::rotate(bool isClockwise) {}
+
+void testBlock() {
+	
+}
