@@ -1,5 +1,6 @@
 #include "block.h"
 #include <iostream>
+using namespace std;
 
 //std::unique_ptr<Block> Block::create(char type) {
 //	std::cout << "Block " << type << " created" << std::endl;
@@ -9,7 +10,7 @@
 Block::Block(char t, Board& b):type{t},board{b}{}
 Block::~Block(){}
 
-std::vector<std::pair<int,int>> Block::getComponents() const {
+std::vector<pair<int,int>> Block::getComponents() const {
 	return coordinate;
 }
 
@@ -20,7 +21,7 @@ std::vector<std::pair<int,int>> Block::getComponents() const {
  * assumption: the coordinate system of the board has origin at bottom-left corner
  */
 void Block::move(char direction, int steps) {
-	std::cout << "Moved direction: " << direction << "  distance: " << steps << std::endl;
+	cout << "Moved direction: " << direction << "  distance: " << steps << endl;
 	switch(direction) {
 		case 'l':
 			for(auto& v:coordinate) {
@@ -41,7 +42,7 @@ void Block::move(char direction, int steps) {
 }
 
 void Block::rotate(bool isClockwise) {
-	std::cout << "Rotated clockwise: " << isClockwise << std::endl;
+	cout << "Rotated clockwise: " << isClockwise << endl;
 	int x=coordinate[0].first, y=coordinate[0].second;
 	for(auto& v:coordinate) {
 		// since the size of bounding box is known, so min is enough
@@ -85,13 +86,34 @@ void Block::rotate(bool isClockwise) {
 	}
 }
 
-IBlock::IBlock(Board& b):Block('I',b){}
-JBlock::JBlock(Board& b):Block('J',b){}
-LBlock::LBlock(Board& b):Block('L',b){}
-OBlock::OBlock(Board& b):Block('O',b){}
-SBlock::SBlock(Board& b):Block('S',b){}
-ZBlock::ZBlock(Board& b):Block('Z',b){}
-TBlock::TBlock(Board& b):Block('T',b){}
+// 11 col, 15 row
+IBlock::IBlock(Board& b):Block('I',b) {
+	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{3,14}};
+}
+
+JBlock::JBlock(Board& b):Block('J',b) {
+	coordinate = vector<pair<int,int>>{{0,14},{0,13},{1,13},{2,13}};
+}
+
+LBlock::LBlock(Board& b):Block('L',b) {
+	coordinate = vector<pair<int,int>>{{0,13},{1,13},{2,13},{2,14}};
+}
+
+OBlock::OBlock(Board& b):Block('O',b) {
+	coordinate = vector<pair<int,int>>{{0,14},{1,14},{0,13},{1,13}};
+}
+
+SBlock::SBlock(Board& b):Block('S',b) {
+	coordinate = vector<pair<int,int>>{{0,13},{1,13},{1,14},{2,14}};
+}
+
+ZBlock::ZBlock(Board& b):Block('Z',b) {
+	coordinate = vector<pair<int,int>>{{0,14},{1,14},{1,13},{2,13}};
+}
+
+TBlock::TBlock(Board& b):Block('T',b) {
+	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
+}
 
 void IBlock::rotate(bool isClockwise) {
 	int x=coordinate[0].first, y=coordinate[0].second;
