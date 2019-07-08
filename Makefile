@@ -1,8 +1,8 @@
 # Project: Genesis
 
 CPP      = g++
-OBJ      = main.o game.o board.o
-LINKOBJ  = main.o game.o board.o
+OBJ      = main.o game.o board.o block.o
+LINKOBJ  = main.o game.o board.o block.o
 BIN      = Genesis
 CXXFLAGS = -std=c++14
 RM       = rm -f
@@ -25,3 +25,6 @@ game.o: game.cc
 
 board.o: board.cc
 	$(CPP) -c board.cc -o board.o $(CXXFLAGS)
+
+block.o: block.cc
+	$(CPP) -c block.cc -o block.o $(CXXFLAGS)
