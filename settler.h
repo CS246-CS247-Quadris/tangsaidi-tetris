@@ -6,10 +6,10 @@
 
 class Settler {
 	int level;
-	Score & score;
+	std::shared_ptr<Score> score;
 
   public:
-  	Settler(int, Score &);
+  	Settler(int, std::shared_ptr<Score>);
   	//requires the level for "*"-1-element-block is -1
   	~Settler();
 };

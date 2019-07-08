@@ -2,11 +2,11 @@
 #include <cmath>
 using namespace std;
 
-Settler::Settler(int curLevel, Score & scr) : level{curLevel}, score{scr} {}
+Settler::Settler(int curLevel, shared_ptr<Score> scr) : level{curLevel}, score{scr} {}
 
 Settler::~Settler(){
-	if (!score.gameEnded()) {
+	if (!score->gameEnded()) {
 		int blockScore = pow((level + 1), 2);
-		score.increment(blockScore);
+		score->increment(blockScore);
 	}
 }

@@ -4,7 +4,7 @@
 using namespace std;
 
 //used to create shared_ptr and the settler, could be modified
-void createSettler(vector<Row> & rows, vector<pair<int, int>> & coord, char blockType, int level, Score & score) {
+void createSettler(vector<Row> & rows, vector<pair<int, int>> & coord, char blockType, int level, shared_ptr<Score> score) {
 	shared_ptr<Settler> s = make_shared<Settler>(level, score);
 	for (auto &i : coord) {
 		rows.at(i.first).setRowAt(i.second, blockType, s);
@@ -14,7 +14,7 @@ void createSettler(vector<Row> & rows, vector<pair<int, int>> & coord, char bloc
 int main() {
 
 	vector<Row> rows;
-	Score score;
+	shared_ptr<Score> score = make_shared<Score>();
 	const int RowNo = 18;
 
 	for(int i = 0; i < RowNo; ++i){
@@ -23,8 +23,8 @@ int main() {
 	}
 
 	cout << "------------------" << endl;
-	cout << "Score: " << score.getCurrentScore() << endl;
-	cout << "Hi Score: " << score.getHighestScore() << endl;
+	cout << "Score: " << score->getCurrentScore() << endl;
+	cout << "Hi Score: " << score->getHighestScore() << endl;
 	cout << "------------------" << endl;
 
 	for (auto &i : rows) {
@@ -42,8 +42,8 @@ int main() {
 	createSettler(rows, b1, 'I', 0, score);
 
 	cout << "------------------" << endl;
-	cout << "Score: " << score.getCurrentScore() << endl;
-	cout << "Hi Score: " << score.getHighestScore() << endl;
+	cout << "Score: " << score->getCurrentScore() << endl;
+	cout << "Hi Score: " << score->getHighestScore() << endl;
 	cout << "------------------" << endl;
 
 	for (auto &i : rows) {
@@ -60,8 +60,8 @@ int main() {
 	createSettler(rows, b2, 'J', 1, score);
 
 	cout << "------------------" << endl;
-	cout << "Score: " << score.getCurrentScore() << endl;
-	cout << "Hi Score: " << score.getHighestScore() << endl;
+	cout << "Score: " << score->getCurrentScore() << endl;
+	cout << "Hi Score: " << score->getHighestScore() << endl;
 	cout << "------------------" << endl;
 
 	for (auto &i : rows) {
@@ -78,8 +78,8 @@ int main() {
 	createSettler(rows, b3, 'L', 2, score);
 
 	cout << "------------------" << endl;
-	cout << "Score: " << score.getCurrentScore() << endl;
-	cout << "Hi Score: " << score.getHighestScore() << endl;
+	cout << "Score: " << score->getCurrentScore() << endl;
+	cout << "Hi Score: " << score->getHighestScore() << endl;
 	cout << "------------------" << endl;
 
 	for (auto &i : rows) {
@@ -93,8 +93,8 @@ int main() {
 	rows.emplace(rows.begin(), rEmpty);
 
 	cout << "------------------" << endl;
-	cout << "Score: " << score.getCurrentScore() << endl;
-	cout << "Hi Score: " << score.getHighestScore() << endl;
+	cout << "Score: " << score->getCurrentScore() << endl;
+	cout << "Hi Score: " << score->getHighestScore() << endl;
 	cout << "------------------" << endl;
 
 	for (auto &i : rows) {
@@ -119,7 +119,7 @@ int main() {
 	// cout << "Is last row removable? " << rows.at(17).isRemovable() << endl;
 
 	//must be called before deallocating all variables
-	score.endGame();
+	score->endGame();
 
 	return 0;
 }

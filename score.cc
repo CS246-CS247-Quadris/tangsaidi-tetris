@@ -17,6 +17,8 @@ Score::Score() {
 	}
 }
 
+Score::~Score(){}
+
 int Score::getCurrentScore() {
 	return score;
 }

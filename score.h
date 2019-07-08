@@ -14,6 +14,7 @@ class Score {
   public:
   	//requires:if data/score.txt exist, the input is a valid integer
   	Score();
+    ~Score();
   	int getCurrentScore();
   	int getHighestScore();
   	//note: endGame() must be called to end score counting before deallocating all objects
