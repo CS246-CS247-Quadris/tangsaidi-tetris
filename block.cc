@@ -144,7 +144,7 @@ void IBlock::rotate(bool isClockwise) {
 	}
 	
 	// if horizontal, rotate it to vertical
-	if(coordinate[0].first != coordinate[1].second) {
+	if(coordinate[0].second == coordinate[1].second) {
 		for(int i=0;i<coordinate.size();i++) {
 			coordinate[i].first = x;
 			coordinate[i].second = y+i;
@@ -161,7 +161,3 @@ void IBlock::rotate(bool isClockwise) {
 
 // O block remains unchanged after any rotation
 void OBlock::rotate(bool isClockwise) {}
-
-void testBlock() {
-	
-}

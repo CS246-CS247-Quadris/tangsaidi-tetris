@@ -81,6 +81,8 @@ bool isNumber(const string& s)
     return !s.empty() && it == s.end();
 }
 
+void testBlock();
+
 int main(int argc, char *argv[]) {
 	// Argument parsing
 	string cmd;
@@ -199,8 +201,64 @@ int main(int argc, char *argv[]) {
 //	game->parseCommand("3ri");
 //	game->parseCommand("counterc");
 //	game->parseCommand("co");
-	game->parseCommand();
+//	game->parseCommand();
 	
+	testBlock();
 	
 	return 0;
+}
+
+void printBoard(const unique_ptr<Block>& b) {
+	for(int r=14;r>=0;r--) {
+		cout<<r<<"\t|";
+		for(int c=0;c<11;c++) {
+			vector<pair<int,int>> comp = b->getComponents();
+			bool ifHit=false;
+			for(auto& v:comp) {
+				if(v.first == c && v.second == r) {
+					cout<<'Z';//<<'('<<c<<','<<r<<')';
+					ifHit=true;
+				}
+			}
+			if(!ifHit)
+				cout<<' ';
+		}
+		cout<<endl;
+	}
+	cout<<"\t+";
+	for(int c=0;c<11;c++)
+		cout<<'-';
+	cout<<endl;
+	cout<<"\t ";
+	for(int c=0;c<11;c++)
+		cout<<c;
+	cout<<endl;
+}
+
+void testBlock() {
+	Board board(0);
+	unique_ptr<Block> z = Block::create('I', board);
+	
+	cout<<"Init"<<endl;
+	printBoard(z);
+	
+	cout<<"Move down 2"<<endl;
+	z->move('d', 2);
+	printBoard(z);
+	
+	cout<<"Move right 2"<<endl;
+	z->move('r', 2);
+	printBoard(z);
+	
+	cout<<"Move left 1"<<endl;
+	z->move('l', 1);
+	printBoard(z);
+	
+	cout<<"Rotate c"<<endl;
+	z->rotate(true);
+	printBoard(z);
+	
+	cout<<"Rotate cc"<<endl;
+	z->rotate(false);
+	printBoard(z);
 }
