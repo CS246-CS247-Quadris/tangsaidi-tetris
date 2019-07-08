@@ -8,6 +8,5 @@ Settler::~Settler(){
 	if (!score.gameEnded()) {
 		int blockScore = pow((level + 1), 2);
 		score.increment(blockScore);
-		cout << "Destructor called, score incremented by : " << blockScore << endl; 
 	}
 }

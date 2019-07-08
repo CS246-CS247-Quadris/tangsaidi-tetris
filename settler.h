@@ -10,6 +10,7 @@ class Settler {
 
   public:
   	Settler(int, Score &);
+  	//requires the level for "*"-1-element-block is -1
   	~Settler();
 };
 
