@@ -5,12 +5,14 @@
 #include <memory>
 #include "block.h"
 
+class Block;
+
 class Board {
 	friend class Level;
 
 	public:
 		Board(int level);
-
+		int getCurrentLevel() const;
 
 	private:
 		std::unique_ptr<Block> cur;
