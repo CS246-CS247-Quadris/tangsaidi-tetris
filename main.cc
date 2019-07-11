@@ -203,7 +203,12 @@ int main(int argc, char *argv[]) {
 //	game->parseCommand("co");
 //	game->parseCommand();
 	
-	testBlock();
+//	testBlock();
+	while(true) {
+		cout<<"> ";
+		if(!game->parseCommand())
+			break;
+	}
 	
 	return 0;
 }

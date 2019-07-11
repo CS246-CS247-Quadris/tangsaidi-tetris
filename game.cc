@@ -155,124 +155,178 @@ bool Game::test(const string& token) {
 	}
 }
 
-bool Game::perform(const vector<string>& tokens, size_t& index, const int& rept) {
+// perform i^th command, mutate index if necessary
+bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/) {
 	CommandType type;
-	string token = tokens.at(index);
+	string token;
+	int rept;
+	
+	splitToken(tokens.at(index), token, rept);
+	
+	// fix the token first
+	if(command.count(token)<=0 && macro.count(token)<=0) {
+		token = getCommandByPrefix(token);
+		if(token.empty()) {
+			cout<<"Error: "<<tokens.at(index)<<" not found."<<endl;
+			return false;
+		}
+	}
 	
 	if(command.count(token) > 0) {
 		type = command.at(token);
 	}
-	else if(macro.count(token) > 0) {
+	else /*if(macro.count(token) > 0)*/ {
 		vector<string> m = macro.at(token);
-		for(auto &v : m) {
-			perform(tokens, index, rept);
-		}
-	}
-	else {
-		string s = getCommandByPrefix(token);
-		if(!s.empty()) {
-			type = command.at(s);
-		}
-		else {
-			cout<<"Error: "<<token<<" not found."<<endl;
-			return false;
+		for(int i=0; i<m.size(); i++) {
+			if(!perform(m, i))
+				return false;
 		}
 	}
 	
 	switch(type) {
 		case CONTROL_LEFT:
 			// TODO: left
+			cout<<"DEBUG: left "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_RIGHT:
 			// TODO: right
+			cout<<"DEBUG: right "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_DOWN:
 			// TODO: down
+			cout<<"DEBUG: down "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_CLOCKWISE:
 			// TODO: clockwise
+			cout<<"DEBUG: clockwise "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_CC:
 			// TODO: counterclockwise
+			cout<<"DEBUG: counterclockwise "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_DROP:
 			// TODO: drop
+			cout<<"DEBUG: drop "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_LEVELUP:
 			// TODO: levelup
+			cout<<"DEBUG: levelup "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_LEVELDOWN:
 			// TODO: leveldown
+			cout<<"DEBUG: leveldown "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_RND:
 			// TODO: random
 			// ignore multiplier
+			cout<<"DEBUG: random "<<rept<<endl;
 			break;
 		case CONTROL_NORND:
 			// TODO: norandom <file>
 			// TODO: level 3 and 4 only
 			// ignore multiplier
+			cout<<"DEBUG: norandom "<<rept<<endl;
 			break;
 		case CONTROL_SEQUENCE:
 			// TODO: sequence <file>
 			// TODO: set istream to the file, call 
 			// parseCommand, then restore istream
+			cout<<"DEBUG: sequence "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 			}
 			break;
 		case CONTROL_RESTART:
 			// TODO: restart
 			// ignore multiplier
+			cout<<"DEBUG: restart "<<rept<<endl;
 			break;
 		case CONTROL_HINT:
 			// TODO: hint
 			// ignore multiplier
+			cout<<"DEBUG: hint "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_I:
 			// TODO: I
 			// actually, repeat this is meaningless
+			cout<<"DEBUG: I "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_J:
 			// TODO: J
-			
+			cout<<"DEBUG: J "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_L:
 			// TODO: I
-			
+			cout<<"DEBUG: L "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_O:
 			// TODO: O
-			
+			cout<<"DEBUG: O "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_S:
 			// TODO: S
+			cout<<"DEBUG: S "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_Z:
 			// TODO: Z
+			cout<<"DEBUG: Z "<<rept<<endl;
 			break;
 		case DEBUG_REPLACE_T:
 			// TODO: T
+			cout<<"DEBUG: T "<<rept<<endl;
 			break;
 		case COMMAND_RENAME:
+		{
 			// TODO: rename <original> <new>
 			// repeating is also meaningless
+			if(tokens.size()-index-1<2) {
+				cout<<"Error: Missing argument of 'rename'."<<endl;
+				return false;
+			}
+			string src = tokens.at(++index);
+			string dest = tokens.at(++index);
+			
+			cout<<"DEBUG: rename "<<src<<" "<<dest<<endl;
+			
+			if(test(dest)) {
+				cout<<"Error: "<<"'"<<dest<<"' already exists."<<endl;
+				return false;
+			}
+			
+			// fix the src name first
+			if(command.count(src)<=0 && macro.count(src)<=0) {
+				src = getCommandByPrefix(src);
+				if(src.empty()) {
+					cout<<"Error: "<<tokens.at(index-1)<<" not found."<<endl;
+					return false;
+				}
+			}
+			
+			if(command.count(src) > 0) {
+				command[dest] = command.at(src);
+			}
+			else /*if(macro.count(src) > 0)*/ {
+				macro[dest] = macro.at(src);
+			}
+			
+			addCommandPrefixLookup(dest);
 			break;
+		}
 		case COMMAND_AMP:
 		default:
 			break;
@@ -303,40 +357,35 @@ void Game::splitToken(const string& token, string& cmd, int& rept) {
 	cmd = token.substr(pos+1, token.length());
 }
 
-void Game::parseCommand() {
+bool Game::parseCommand() {
 	string s;
 	vector<string> tokens;
 	int cnt;
-//	while(true) {
-//		getline(in, s);
-//	}
-	//cout<<"Command: ";
+
 	getline(in, s);
 	istringstream iss(s);
 	copy(istream_iterator<string>(iss), 
 			istream_iterator<string>(), 
 			back_inserter(tokens));
 	
-	splitToken(tokens[0], s, cnt);
-	
 	// test if the first token is used for defining macro
+	splitToken(tokens[0], s, cnt);
 	if(s.back() == ':') {
 		s.pop_back();
 		tokens.erase(tokens.begin());
 		for(auto& it : tokens) {
 			if(!test(it)) {
 				cout<<"Error: "<<it<<" not found."<<endl;
-				return;
+				return false;
 			}
 		}
 		macro[s] = tokens;
 		addCommandPrefixLookup(s);
 	}
 	else {
-		// perform first one
-		
-		for(int i=1;i<tokens.size();i++) {
-			splitToken(tokens[i], s, cnt);
+		for(int i=0;i<tokens.size();i++) {
+			if(!perform(tokens, i))
+				return false;
 		}
 	}
 }
