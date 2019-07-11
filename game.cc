@@ -143,14 +143,17 @@ std::string Game::getCommandByPrefix(const string& prefix) {
 }
 
 bool Game::test(const string& token) {
-	if(command.count(token) > 0) {
+	string s;
+	int c;
+	splitToken(token, s, c);
+	if(command.count(s) > 0) {
 		return true;
 	}
-	else if(macro.count(token) > 0) {
+	else if(macro.count(s) > 0) {
 		return true;
 	}
 	else {
-		string s = getCommandByPrefix(token);
+		s = getCommandByPrefix(s);
 		return s.empty() ? false : true;
 	}
 }
@@ -317,6 +320,8 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 				}
 			}
 			
+			cout<<"  DEBUG: rename "<<src<<" "<<dest<<endl;
+			
 			if(command.count(src) > 0) {
 				command[dest] = command.at(src);
 			}
@@ -352,6 +357,7 @@ void Game::splitToken(const string& token, string& cmd, int& rept) {
 		rept = 1;
 	}
 	else {
+		// TODO: might cause exception
 		rept = stoi(token.substr(0, pos+1));
 	}
 	cmd = token.substr(pos+1, token.length());
@@ -381,6 +387,11 @@ bool Game::parseCommand() {
 		}
 		macro[s] = tokens;
 		addCommandPrefixLookup(s);
+		
+		cout<<"DEBUG: Add macro '"<<s<<"' => ";
+		for(auto it : tokens)
+			cout<<it<<" ";
+		cout<<endl;
 	}
 	else {
 		for(int i=0;i<tokens.size();i++) {
