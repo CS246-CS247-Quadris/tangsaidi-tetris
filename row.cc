@@ -35,6 +35,11 @@ bool Row::isRemovable() {
 	return true;
 }
 
+bool Row::isOccuppied(int i) {
+	if (i >= data.size() || i < 0) return false;
+	return data.at(i).isOccupied();
+}
+
 ostream& operator<<(std::ostream & out, const Row & r) {
 	for (auto &d : r.data) {
 		out << d;

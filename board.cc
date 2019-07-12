@@ -19,6 +19,14 @@ int Board::getCurrentLevel() const {
 	return curLevel;
 }
 
+bool Board::isValid(std::vector<std::pair<int, int>> coord) {
+	for (auto &i : coord) {
+		if (i.second >= board.size() || i.second < 0) return false;
+		if (board.at(i.second).isOccuppied(i.first)) return false;
+	}
+	return true;
+}
+
 void Board::move(char direction, int steps) {
 	// TODO: check level and strategy
 	cur->move(direction, steps);
@@ -33,4 +41,26 @@ void Board::changeLevel(int delta) {
 	int dest = curLevel+delta;
 	if(dest>=0 && dest<=4)
 		curLevel = dest;
+}
+
+void Board::createSettler(std::pair<int, int> coord) {
+	//did not perform unit test for this method, to be tested
+	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
+	board.at(coord.second).setRowAt(coord.first, '*', s);
+}
+
+void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel) {
+	shared_ptr<Settler> s = make_shared<Settler>(blockLevel, score);
+	for (auto &i : coord) {
+		board.at(i.second).setRowAt(i.first, blockType, s);
+	}
+}
+
+void Board::hint(){
+	//penalize height, holes, blockade(blocks directly above holes)
+	//reward clears
+
+	//Step1: look at all possible combinations of current and next block (stage1: current only)
+	//Step2: obtain a score for each of the position
+	//Step3: display the pisition with the highest score (TODO: if create settler, how to delete?)
 }
