@@ -30,11 +30,15 @@ bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 void Board::move(char direction, int steps) {
 	// TODO: check level and strategy
 	cur->move(direction, steps);
+	if(!isValid(cur->getComponents()))
+		cur->move(direction, -steps);
 }
 
 void Board::rotate(bool isClockWise) {
 	// TODO: check level and strategy
 	cur->rotate(isClockWise);
+	if(!isValid(cur->getComponents()))
+		cur->rotate(!isClockWise);
 }
 
 void Board::changeLevel(int delta) {

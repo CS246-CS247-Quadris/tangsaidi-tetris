@@ -58,7 +58,6 @@ public:
 class ZBlock : public Block {
 public:
 	ZBlock(const std::shared_ptr<Board>&);
-//	void move(char d, int s) override {Block::move(d,s);}
 };
 
 class TBlock : public Block {
