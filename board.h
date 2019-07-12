@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <fstream>
 #include "block.h"
 #include "score.h"
 #include "level.h"
@@ -23,6 +24,7 @@ class Board {
 		void move(char direction, int steps);
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
+		void sequenceFile(const std::string&);
 
 	private:
 		std::shared_ptr<Score> score;
@@ -31,8 +33,11 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
+		std::ifstream fin;
 
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
+		
+		static const char level1DistrTable[12];
 };
 
 #endif /* __BOARD_H__ */
