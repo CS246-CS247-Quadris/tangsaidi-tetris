@@ -25,45 +25,44 @@ protected:
 private:
 	char type;
 //	Board& board;
-	std::shared_ptr<Board> board;
 	int level;
 };
 
 class IBlock : public Block {
 public:
-	IBlock(const std::shared_ptr<Board>&);
+	IBlock();
 	void rotate(bool) override;
 };
 
 class JBlock : public Block {
 public:
-	JBlock(const std::shared_ptr<Board>&);
+	JBlock();
 };
 
 class LBlock : public Block {
 public:
-	LBlock(const std::shared_ptr<Board>&);
+	LBlock();
 };
 
 class OBlock : public Block {
 public:
-	OBlock(const std::shared_ptr<Board>&);
+	OBlock();
 	void rotate(bool) override;
 };
 
 class SBlock : public Block {
 public:
-	SBlock(const std::shared_ptr<Board>&);
+	SBlock();
 };
 
 class ZBlock : public Block {
 public:
-	ZBlock(const std::shared_ptr<Board>&);
+	ZBlock();
 };
 
 class TBlock : public Block {
 public:
-	TBlock(const std::shared_ptr<Board>&);
+	TBlock();
 };
 
 #endif /* __BLOCK_H__ */

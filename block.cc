@@ -30,7 +30,6 @@ Block::~Block(){}
 Block& Block::operator=(const Block& other) {
 	if(this != &other) {
 		type = other.type;
-		board = other.board;
 		level = other.level;
 	}
 	return *this;
