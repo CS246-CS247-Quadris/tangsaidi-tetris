@@ -13,7 +13,7 @@ class Block {
 public:
     // Take in capital chars
     static std::unique_ptr<Block> create(char, Board&);
-    void move(char, int);
+    void move(char, unsigned int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;
     virtual ~Block()=0;

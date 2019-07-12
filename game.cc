@@ -188,22 +188,19 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 	
 	switch(type) {
 		case CONTROL_LEFT:
-			// TODO: left
+			// left
 			cout<<"DEBUG: left "<<rept<<endl;
-			for(int c=0;c<rept;c++) {
-			}
+			game->move('l', rept);
 			break;
 		case CONTROL_RIGHT:
-			// TODO: right
+			// right
 			cout<<"DEBUG: right "<<rept<<endl;
-			for(int c=0;c<rept;c++) {
-			}
+			game->move('r', rept);
 			break;
 		case CONTROL_DOWN:
-			// TODO: down
+			// down
 			cout<<"DEBUG: down "<<rept<<endl;
-			for(int c=0;c<rept;c++) {
-			}
+			game->move('d', rept);
 			break;
 		case CONTROL_CLOCKWISE:
 			// TODO: clockwise
@@ -224,12 +221,12 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			}
 			break;
 		case CONTROL_LEVELUP:
-			// TODO: levelup
+			// levelup
 			cout<<"DEBUG: levelup "<<rept<<endl;
 			game->changeLevel(rept);
 			break;
 		case CONTROL_LEVELDOWN:
-			// TODO: leveldown
+			// leveldown
 			cout<<"DEBUG: leveldown "<<rept<<endl;
 			game->changeLevel(-rept);
 			break;
