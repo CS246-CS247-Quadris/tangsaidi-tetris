@@ -53,7 +53,7 @@ private:
 	};
 	
 	std::istream& in;
-	std::unique_ptr<Board> game;
+	std::shared_ptr<Board> game;
 	std::map<std::string, CommandType> command;
 	std::map<std::string, std::vector<std::string>> macro;
 	std::shared_ptr<StateNode> prefixTree;

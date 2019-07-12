@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-unique_ptr<Block> Block::create(char type, Board& b) {
+unique_ptr<Block> Block::create(char type, const shared_ptr<Board>& b) {
 	cout << "Block " << type << " created" << endl;
 	switch(type) {
 		case 'I':
@@ -24,8 +24,17 @@ unique_ptr<Block> Block::create(char type, Board& b) {
 	}
 }
 
-Block::Block(char t, Board& b):type{t},board{b}{}
+Block::Block(char t, const shared_ptr<Board>& b):type{t},board{b}{}
 Block::~Block(){}
+
+Block& Block::operator=(const Block& other) {
+	if(this != &other) {
+		type = other.type;
+		board = other.board;
+		level = other.level;
+	}
+	return *this;
+}
 
 std::vector<pair<int,int>> Block::getComponents() const {
 	return coordinate;
@@ -104,31 +113,31 @@ void Block::rotate(bool isClockwise) {
 }
 
 // 11 col, 15 row
-IBlock::IBlock(Board& b):Block('I',b) {
+IBlock::IBlock(const shared_ptr<Board>& b):Block('I',b) {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{3,14}};
 }
 
-JBlock::JBlock(Board& b):Block('J',b) {
+JBlock::JBlock(const shared_ptr<Board>& b):Block('J',b) {
 	coordinate = vector<pair<int,int>>{{0,14},{0,13},{1,13},{2,13}};
 }
 
-LBlock::LBlock(Board& b):Block('L',b) {
+LBlock::LBlock(const shared_ptr<Board>& b):Block('L',b) {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{2,13},{2,14}};
 }
 
-OBlock::OBlock(Board& b):Block('O',b) {
+OBlock::OBlock(const shared_ptr<Board>& b):Block('O',b) {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{0,13},{1,13}};
 }
 
-SBlock::SBlock(Board& b):Block('S',b) {
+SBlock::SBlock(const shared_ptr<Board>& b):Block('S',b) {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{1,14},{2,14}};
 }
 
-ZBlock::ZBlock(Board& b):Block('Z',b) {
+ZBlock::ZBlock(const shared_ptr<Board>& b):Block('Z',b) {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{1,13},{2,13}};
 }
 
-TBlock::TBlock(Board& b):Block('T',b) {
+TBlock::TBlock(const shared_ptr<Board>& b):Block('T',b) {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
 }
 

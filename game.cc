@@ -16,7 +16,7 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 
 Game::Game(bool isTextMode, int level, istream& is): 
 	in{is}, 
-	game{make_unique<Board>(level)}, 
+	game{make_shared<Board>(level)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
 	command{
 		{"left", CONTROL_LEFT},
@@ -203,15 +203,17 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			game->move('d', rept);
 			break;
 		case CONTROL_CLOCKWISE:
-			// TODO: clockwise
+			// clockwise
 			cout<<"DEBUG: clockwise "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
+				game->rotate(true);
 			}
 			break;
 		case CONTROL_CC:
-			// TODO: counterclockwise
+			// counterclockwise
 			cout<<"DEBUG: counterclockwise "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
+				game->rotate(false);
 			}
 			break;
 		case CONTROL_DROP:
@@ -233,7 +235,7 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 		case CONTROL_RND:
 			// TODO: random
 			// ignore multiplier
-			cout<<"DEBUG: random "<<rept<<endl;
+			cout<<"DEBUG: random"<<endl;
 			break;
 		case CONTROL_NORND:
 			// TODO: norandom <file>

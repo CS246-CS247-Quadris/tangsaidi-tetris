@@ -12,57 +12,58 @@ class Board;
 class Block {
 public:
     // Take in capital chars
-    static std::unique_ptr<Block> create(char, Board&);
+    static std::unique_ptr<Block> create(char, const std::shared_ptr<Board>&);
     void move(char, unsigned int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;
     virtual ~Block()=0;
+    Block& operator=(const Block&);
 protected:
-	Block(char, Board&);
-//	int orientation;
+	Block(char, const std::shared_ptr<Board>&);
 	std::vector<std::pair<int,int>> coordinate;
 private:
 	char type;
-	Board& board;
+//	Board& board;
+	std::shared_ptr<Board> board;
 	int level;
 };
 
 class IBlock : public Block {
 public:
-	IBlock(Board&);
+	IBlock(const std::shared_ptr<Board>&);
 	void rotate(bool) override;
 };
 
 class JBlock : public Block {
 public:
-	JBlock(Board&);
+	JBlock(const std::shared_ptr<Board>&);
 };
 
 class LBlock : public Block {
 public:
-	LBlock(Board&);
+	LBlock(const std::shared_ptr<Board>&);
 };
 
 class OBlock : public Block {
 public:
-	OBlock(Board&);
+	OBlock(const std::shared_ptr<Board>&);
 	void rotate(bool) override;
 };
 
 class SBlock : public Block {
 public:
-	SBlock(Board&);
+	SBlock(const std::shared_ptr<Board>&);
 };
 
 class ZBlock : public Block {
 public:
-	ZBlock(Board&);
+	ZBlock(const std::shared_ptr<Board>&);
 //	void move(char d, int s) override {Block::move(d,s);}
 };
 
 class TBlock : public Block {
 public:
-	TBlock(Board&);
+	TBlock(const std::shared_ptr<Board>&);
 };
 
 #endif /* __BLOCK_H__ */

@@ -35,8 +35,6 @@ class Board {
 		std::unique_ptr<Level> strategy;
 		std::ifstream fin;
 
-		//overloaded the method for single block (* type) initialization
-		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
 		
 		static const char level1DistrTable[12];

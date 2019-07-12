@@ -241,7 +241,7 @@ void printBoard(const unique_ptr<Block>& b) {
 }
 
 void testBlock() {
-	Board board(0);
+	shared_ptr<Board> board = make_shared<Board>(0);
 	unique_ptr<Block> z = Block::create('I', board);
 	
 	cout<<"Init"<<endl;
