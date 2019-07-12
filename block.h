@@ -8,18 +8,19 @@
 #include "board.h"
 
 class Board;
+class Level;
 
 class Block {
 public:
     // Take in capital chars
-    static std::unique_ptr<Block> create(char, const std::shared_ptr<Board>&);
+    static std::unique_ptr<Block> create(char);
     void move(char, unsigned int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;
     virtual ~Block()=0;
     Block& operator=(const Block&);
 protected:
-	Block(char, const std::shared_ptr<Board>&);
+	Block(char);
 	std::vector<std::pair<int,int>> coordinate;
 private:
 	char type;

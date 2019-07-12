@@ -6,8 +6,10 @@
 #include <fstream>
 #include "block.h"
 #include "score.h"
-#include "level.h"
 #include "row.h"
+#include "level.h"
+#include "settler.h"
+
 
 class Block;
 
@@ -35,6 +37,7 @@ class Board {
 		std::unique_ptr<Level> strategy;
 		std::ifstream fin;
 
+		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
 		
 		static const char level1DistrTable[12];

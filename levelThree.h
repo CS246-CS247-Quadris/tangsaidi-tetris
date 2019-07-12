@@ -9,7 +9,7 @@ class LevelThree: public Level {
     LevelThree(std::shared_ptr<Board> board);
 
     // get the next block on this level
-    std::unique_ptr<Block> getNext() override;
+    virtual std::unique_ptr<Block> getNext() override;
     // Change the location of current block by calling the move function of block
     // params: direction(n, s, e, w), distance(>=0)
     void move(char, int) override;

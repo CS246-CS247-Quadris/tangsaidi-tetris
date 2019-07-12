@@ -2,29 +2,29 @@
 #include <iostream>
 using namespace std;
 
-unique_ptr<Block> Block::create(char type, const shared_ptr<Board>& b) {
+unique_ptr<Block> Block::create(char type) {
 	cout << "Block " << type << " created" << endl;
 	switch(type) {
 		case 'I':
-			return make_unique<IBlock>(b);
+			return make_unique<IBlock>();
 		case 'J':
-			return make_unique<JBlock>(b);
+			return make_unique<JBlock>();
 		case 'L':
-			return make_unique<LBlock>(b);
+			return make_unique<LBlock>();
 		case 'O':
-			return make_unique<OBlock>(b);
+			return make_unique<OBlock>();
 		case 'S':
-			return make_unique<SBlock>(b);
+			return make_unique<SBlock>();
 		case 'Z':
-			return make_unique<ZBlock>(b);
+			return make_unique<ZBlock>();
 		case 'T':
-			return make_unique<TBlock>(b);
+			return make_unique<TBlock>();
 		default:
 			return nullptr;
 	}
 }
 
-Block::Block(char t, const shared_ptr<Board>& b):type{t},board{b}{}
+Block::Block(char t):type{t} {}
 Block::~Block(){}
 
 Block& Block::operator=(const Block& other) {
@@ -113,31 +113,31 @@ void Block::rotate(bool isClockwise) {
 }
 
 // 11 col, 15 row
-IBlock::IBlock(const shared_ptr<Board>& b):Block('I',b) {
+IBlock::IBlock():Block('I') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{3,14}};
 }
 
-JBlock::JBlock(const shared_ptr<Board>& b):Block('J',b) {
+JBlock::JBlock():Block('J') {
 	coordinate = vector<pair<int,int>>{{0,14},{0,13},{1,13},{2,13}};
 }
 
-LBlock::LBlock(const shared_ptr<Board>& b):Block('L',b) {
+LBlock::LBlock():Block('L') {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{2,13},{2,14}};
 }
 
-OBlock::OBlock(const shared_ptr<Board>& b):Block('O',b) {
+OBlock::OBlock():Block('O') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{0,13},{1,13}};
 }
 
-SBlock::SBlock(const shared_ptr<Board>& b):Block('S',b) {
+SBlock::SBlock():Block('S') {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{1,14},{2,14}};
 }
 
-ZBlock::ZBlock(const shared_ptr<Board>& b):Block('Z',b) {
+ZBlock::ZBlock():Block('Z') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{1,13},{2,13}};
 }
 
-TBlock::TBlock(const shared_ptr<Board>& b):Block('T',b) {
+TBlock::TBlock():Block('T') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
 }
 
