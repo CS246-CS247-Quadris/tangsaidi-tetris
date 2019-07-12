@@ -28,3 +28,9 @@ void Board::rotate(bool isClockWise) {
 	// TODO: check level and strategy
 	cur->rotate(isClockWise);
 }
+
+void Board::changeLevel(int delta) {
+	int dest = curLevel+delta;
+	if(dest>=0 && dest<=4)
+		curLevel = dest;
+}

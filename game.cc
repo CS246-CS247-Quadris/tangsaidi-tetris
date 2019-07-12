@@ -226,14 +226,12 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 		case CONTROL_LEVELUP:
 			// TODO: levelup
 			cout<<"DEBUG: levelup "<<rept<<endl;
-			for(int c=0;c<rept;c++) {
-			}
+			game->changeLevel(rept);
 			break;
 		case CONTROL_LEVELDOWN:
 			// TODO: leveldown
 			cout<<"DEBUG: leveldown "<<rept<<endl;
-			for(int c=0;c<rept;c++) {
-			}
+			game->changeLevel(-rept);
 			break;
 		case CONTROL_RND:
 			// TODO: random
