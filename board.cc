@@ -3,7 +3,7 @@ using namespace std;
 
 const char Board::level1DistrTable[12] = {'S', 'Z', 'I', 'I', 'J', 'J', 'L', 'L', 'O', 'O', 'T', 'T'};
 
-Board::Board(int level, const string& script): curLevel{level} {
+Board::Board(int level, const string& script): curLevel{level}, board{15} {
 	strategy = Level::create(curLevel, this);
 	if(!script.empty())
 		strategy->setScriptFile(script);
@@ -45,6 +45,7 @@ void Board::changeLevel(int delta) {
 }
 
 void Board::print() {
+	cout<<board.size()<<endl;
 	for(auto v:board) {
 		cout<<v<<endl;
 	}
