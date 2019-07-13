@@ -25,7 +25,7 @@ int Board::getCurrentLevel() const {
 bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
 		if (i.second >= board.size() || i.second < 0) return false;
-		if (board.at(i.second).isOccuppied(i.first)) return false;
+		if (board.at(i.second).isOccupied(i.first)) return false;
 	}
 	return true;
 }

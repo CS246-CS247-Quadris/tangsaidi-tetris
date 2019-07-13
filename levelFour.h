@@ -1,12 +1,13 @@
 #ifndef LEVELFOUR
 #define LEVELFOUR
 
-#include "level.h"
+#include "levelThree.h"
 #include <memory>
 
 class LevelFour: public LevelThree {
   private:
     int counter = 0;
+    bool hasRemovable();
   public:
     LevelFour(Board* board);
 

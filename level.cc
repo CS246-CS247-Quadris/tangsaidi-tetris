@@ -17,6 +17,10 @@ Block* Level::getCur() {
   return board->cur.get();
 }
 
+std::vector<Row>* Level::getBoard() {
+  return &(board->board);
+}
+
 void Level::setNorandom(bool norandom) {
   this->norandom = norandom;
 }

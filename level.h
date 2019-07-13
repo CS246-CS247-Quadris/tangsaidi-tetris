@@ -3,10 +3,12 @@
 
 #include "board.h"
 #include "block.h"
+#include <vector>
 #include <memory>
 
 class Block;
 class Board;
+class Row;
 
 class Level {
   protected:
@@ -20,6 +22,8 @@ class Level {
     // on the board, which is guranteed to live longer than this created Block pointer, because it is only
     // generated when move and rotation are performed and is not stored anywhere.
     Block* getCur();
+    std::vector<Row>* getBoard();
+    
   public:
     Level(Board*);
     // factory method

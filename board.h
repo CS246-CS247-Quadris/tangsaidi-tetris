@@ -22,11 +22,14 @@ class Board {
 		bool checkWin();
 		bool isValid(std::vector<std::pair<int, int>> coord);
 		void hint();
-		void drop();
+		void drop(); // remember to clear rows only after getNext()
 		void move(char direction, int steps);
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
 		void sequenceFile(const std::string&);
+
+		void createSettler(std::pair<int, int> coord);
+		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
 
 	private:
 		std::shared_ptr<Score> score;
@@ -37,9 +40,7 @@ class Board {
 		std::unique_ptr<Level> strategy;
 		std::ifstream fin;
 
-		void createSettler(std::pair<int, int> coord);
-		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
-		
+
 		static const char level1DistrTable[12];
 };
 

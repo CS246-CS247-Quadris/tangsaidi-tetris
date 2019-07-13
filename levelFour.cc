@@ -1,31 +1,45 @@
 #include "levelFour.h"
 #include <cstdlib> 
+#include <utility>
 
 
 LevelFour::LevelFour(Board* board): LevelThree(board){
   srand(Level::seed);
 }
 
-// get the next block on this level
-std::unique_ptr<Block> LevelOne::getNext() {
-  int randNum = rand() % 12;
-  char blockType = 'I';
-  if (randNum < 1) {
-    blockType = 'S';
-  } else if (randNum < 2) {
-    blockType = 'Z';
-  } else if (randNum < 4) {
-    blockType = 'I';
-  } else if (randNum < 6) {
-    blockType = 'J';
-  } else if (randNum < 8) {
-    blockType = 'L';
-  } else if (randNum < 10) {
-    blockType = 'O';
-  } else if (randNum < 12) {
-    blockType = 'T';
+// Check if we have removable rows
+bool LevelFour::hasRemovable() {
+  for (auto &r: *(getBoard())) {
+    if (r.isRemovable()) {
+      return true;
+    }
   }
-  return Block::create(blockType);
+  return false;
 }
 
-LevelOne::~LevelOne() {}
+// get the next block on this level
+// **TEST REQUIRED**
+std::unique_ptr<Block> LevelFour::getNext() {
+  std::unique_ptr<Block> ret = LevelThree::getNext();
+  counter++;
+  if (hasRemovable()) {
+    counter = 0;
+  }
+  if (counter != 0 && counter % 5 == 0) {
+    int dropRow = 14;
+    int const mid = 5;
+    if (!getBoard()->at(dropRow).isOccupied(mid)) {
+      for (int i = 14; i>-1; --i) {
+        if (getBoard()->at(dropRow).isOccupied(mid)) {
+          break;
+        } else {
+          dropRow--;
+        }
+      }
+      board->createSettler(std::make_pair(mid, dropRow));
+    }
+  }
+  return std::move(ret);
+}
+
+LevelFour::~LevelFour() {}

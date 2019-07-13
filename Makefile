@@ -1,8 +1,8 @@
 # Project: Genesis
 
 CPP      = g++
-OBJ      = main.o game.o board.o block.o row.o pixel.o level.o score.o levelZero.o levelOne.o levelTwo.o levelThree.o settler.o
-LINKOBJ  = main.o game.o board.o block.o row.o pixel.o level.o score.o levelZero.o levelOne.o levelTwo.o levelThree.o settler.o
+OBJ      = main.o game.o board.o block.o row.o pixel.o level.o score.o levelZero.o levelOne.o levelTwo.o levelThree.o levelFour.o settler.o
+LINKOBJ  = main.o game.o board.o block.o row.o pixel.o level.o score.o levelZero.o levelOne.o levelTwo.o levelThree.o levelFour.o settler.o
 BIN      = Genesis
 CXXFLAGS = -std=c++14
 RM       = rm -f
@@ -46,6 +46,9 @@ levelTwo.o: levelTwo.cc
 
 levelThree.o: levelThree.cc
 	$(CPP) -c levelThree.cc -o levelThree.o $(CXXFLAGS)
+
+levelFour.o: levelFour.cc
+	$(CPP) -c levelFour.cc -o levelFour.o $(CXXFLAGS)
 
 level.o: level.cc
 	$(CPP) -c level.cc -o level.o $(CXXFLAGS)
