@@ -14,7 +14,7 @@ class Block {
 public:
     // Take in capital chars
     static std::unique_ptr<Block> create(char);
-    void move(char, unsigned int);
+    void move(char, int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;
     virtual ~Block()=0;
@@ -24,7 +24,6 @@ protected:
 	std::vector<std::pair<int,int>> coordinate;
 private:
 	char type;
-//	Board& board;
 	int level;
 };
 

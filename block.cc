@@ -45,7 +45,7 @@ std::vector<pair<int,int>> Block::getComponents() const {
  *
  * assumption: the coordinate system of the board has origin at bottom-left corner
  */
-void Block::move(char direction, unsigned int steps) {
+void Block::move(char direction, int steps) {
 	cout << "Moved direction: " << direction << "  distance: " << steps << endl;
 	switch(direction) {
 		case 'l':
