@@ -6,7 +6,7 @@
 
 class LevelThree: public Level {
   public:
-    LevelThree(std::shared_ptr<Board> board);
+    LevelThree(Board* board);
 
     // get the next block on this level
     virtual std::unique_ptr<Block> getNext() override;

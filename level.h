@@ -10,7 +10,7 @@ class Board;
 
 class Level {
   protected:
-    std::shared_ptr<Board> board;
+    Board* board;
     std::vector<char> sequence;
     int current = 0;
     bool norandom = false;
@@ -21,10 +21,10 @@ class Level {
     // generated when move and rotation are performed and is not stored anywhere.
     Block* getCur();
   public:
-    Level(std::shared_ptr<Board>);
+    Level(Board*);
     // factory method
     // param: level (0-4)
-    static std::unique_ptr<Level> create(int, std::shared_ptr<Board>);
+    static std::unique_ptr<Level> create(int, Board*);
 
     // static methods that sets configs for all
     static void setSeed(int seed);

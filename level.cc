@@ -10,7 +10,7 @@
 int Level::seed = 0;
 std::string Level::scriptFile = "sequence.txt";
 
-Level::Level(std::shared_ptr<Board> board): board(board) {} 
+Level::Level(Board* board): board(board) {} 
 
 
 Block* Level::getCur() {
@@ -45,7 +45,7 @@ void Level::setScriptFile(std::string scriptFile) {
   Level::scriptFile = scriptFile;
 }
 
-std::unique_ptr<Level> Level::create(int level, std::shared_ptr<Board> board) {
+std::unique_ptr<Level> Level::create(int level, Board* board) {
   switch(level) {
     case 0: {
       return std::make_unique<LevelZero>(board);

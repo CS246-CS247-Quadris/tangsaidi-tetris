@@ -8,7 +8,7 @@ class LevelFour: public LevelThree {
   private:
     int counter = 0;
   public:
-    LevelFour(std::shared_ptr<Board> board);
+    LevelFour(Board* board);
 
     // get the next block on this level
     std::unique_ptr<Block> getNext() override;

@@ -2,7 +2,7 @@
 #include <cstdlib> 
 
 
-LevelFour::LevelFour(std::shared_ptr<Board> board): LevelThree(board){
+LevelFour::LevelFour(Board* board): LevelThree(board){
   srand(Level::seed);
 }
 

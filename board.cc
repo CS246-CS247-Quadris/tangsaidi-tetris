@@ -6,6 +6,9 @@ const char Board::level1DistrTable[12] = {'S', 'Z', 'I', 'I', 'J', 'J', 'L', 'L'
 Board::Board(int level): curLevel{level} {
 	if(level == 0)
 		fin.open("sequence.txt", ifstream::in);
+
+	strategy = Level::create(curLevel, this);
+	cur = strategy->getNext();
 }
 
 void Board::sequenceFile(const string& name) {

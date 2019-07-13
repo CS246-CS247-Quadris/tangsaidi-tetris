@@ -9,7 +9,7 @@ void LevelZero::setSequence(std::string fileName) {
   }
 }
 
-LevelZero::LevelZero(std::shared_ptr<Board> board): Level(board) {
+LevelZero::LevelZero(Board* board): Level(board) {
   setSequence(scriptFile);
 }
 
