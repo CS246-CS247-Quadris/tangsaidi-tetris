@@ -27,6 +27,8 @@ class Board {
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
 		void print();
+		void norand(bool isNoRandom, string file="");
+		void setSeed(int seed);
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);

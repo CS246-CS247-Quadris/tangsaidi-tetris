@@ -14,7 +14,8 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 	}
 }
 
-Game::Game(bool isTextMode, int level, const string& script, istream& is): 
+Game::Game(bool isTextMode, int level, int rndSeed, const string& script, istream& is): 
+	seed{rndSeed},
 	in{is}, 
 	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
@@ -217,9 +218,10 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			}
 			break;
 		case CONTROL_DROP:
-			// TODO: drop
+			// drop
 			cout<<"DEBUG: drop "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
+				game->drop();
 			}
 			break;
 		case CONTROL_LEVELUP:
@@ -233,15 +235,25 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			game->changeLevel(-rept);
 			break;
 		case CONTROL_RND:
-			// TODO: random
+			// random
 			// ignore multiplier
 			cout<<"DEBUG: random"<<endl;
+			game->norand(false);
+			game->setSeed(rndSeed);
 			break;
 		case CONTROL_NORND:
-			// TODO: norandom <file>
-			// TODO: level 3 and 4 only
+			// norandom <file>
 			// ignore multiplier
 			cout<<"DEBUG: norandom "<<rept<<endl;
+			string fileName="";
+			if(index < tokens.size()-1) {
+				fileName = tokens.at(++index);
+			}
+			else {
+				cout<<"Error: file name not specified for 'norandom'."<<endl;
+				return false;
+			}
+			game->norand(true, fielName);
 			break;
 		case CONTROL_SEQUENCE:
 			// TODO: sequence <file>
@@ -260,6 +272,7 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			// TODO: hint
 			// ignore multiplier
 			cout<<"DEBUG: hint "<<rept<<endl;
+			game->hint();
 			break;
 		case DEBUG_REPLACE_I:
 			// TODO: I
@@ -292,7 +305,7 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			break;
 		case COMMAND_RENAME:
 		{
-			// TODO: rename <original> <new>
+			// rename <original> <new>
 			// repeating is also meaningless
 			if(tokens.size()-index-1<2) {
 				cout<<"Error: Missing argument of 'rename'."<<endl;

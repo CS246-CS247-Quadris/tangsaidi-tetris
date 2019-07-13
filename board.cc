@@ -10,7 +10,6 @@ Board::Board(int level, const string& script): curLevel{level}, board{15} {
 	cur = strategy->getNext();
 }
 
-
 int Board::getCurrentLevel() const {
 	return curLevel;
 }
@@ -39,9 +38,10 @@ void Board::rotate(bool isClockWise) {
 
 void Board::changeLevel(int delta) {
 	int dest = curLevel+delta;
-	if(dest>=0 && dest<=4)
+	if(dest>=0 && dest<=4) {
 		curLevel = dest;
-	strategy = Level::create(curLevel, this);
+		strategy = Level::create(curLevel, this);
+	}
 }
 
 void Board::print() {
@@ -49,6 +49,16 @@ void Board::print() {
 	for(auto v:board) {
 		cout<<v<<endl;
 	}
+}
+
+void Board::norand(bool isNoRandom, string file) {
+	strategy->setNorandom(isNoRandom);
+	if(isNoRandom)
+		strategy->setSequence(file);
+}
+
+void Board::setSeed(int seed) {
+	strategy->setSeed(seed);
 }
 
 void Board::createSettler(std::pair<int, int> coord) {

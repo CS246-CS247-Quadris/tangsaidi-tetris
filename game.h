@@ -53,6 +53,7 @@ private:
 		friend class Game;
 	};
 	
+	int seed;
 	std::istream& in;
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
