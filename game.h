@@ -10,7 +10,7 @@
 
 class Game {
 public:
-	Game(bool, int, std::istream&);
+	Game(bool, int, const std::string&, std::istream&);
 	bool parseCommand();
 private:
 	enum CommandType {
@@ -53,7 +53,7 @@ private:
 	};
 	
 	std::istream& in;
-	std::shared_ptr<Board> game;
+	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
 	std::map<std::string, std::vector<std::string>> macro;
 	std::shared_ptr<StateNode> prefixTree;

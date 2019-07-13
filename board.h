@@ -17,7 +17,7 @@ class Board {
 	friend class Level;
 
 	public:
-		Board(int level);
+		Board(int level, const std::string& script);
 		int getCurrentLevel() const;
 		bool checkWin();
 		bool isValid(std::vector<std::pair<int, int>> coord);
@@ -26,7 +26,7 @@ class Board {
 		void move(char direction, int steps);
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
-		void sequenceFile(const std::string&);
+//		void sequenceFile(const std::string&);
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
@@ -38,7 +38,7 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
-		std::ifstream fin;
+//		std::ifstream fin;
 
 
 		static const char level1DistrTable[12];

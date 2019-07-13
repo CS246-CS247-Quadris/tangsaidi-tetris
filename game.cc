@@ -14,9 +14,9 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 	}
 }
 
-Game::Game(bool isTextMode, int level, istream& is): 
+Game::Game(bool isTextMode, int level, const string& script, istream& is): 
 	in{is}, 
-	game{make_shared<Board>(level)}, 
+	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
 	command{
 		{"left", CONTROL_LEFT},
@@ -396,4 +396,6 @@ bool Game::parseCommand() {
 				return false;
 		}
 	}
+	
+	return true;
 }

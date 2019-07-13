@@ -58,9 +58,9 @@ void printHelp(bool verbose) {
 	     << endl;
 	
 	cout << "Options:\n"
-	     << "  -text                 Start game in text-only mode\n"
-	     << "  -seed <number>        Set random seed for random generator\n"
-	     << "  -scriptfile <file>    Load a script to drive the game\n"
+	     << "  -text                 Start game in text-only mode [default: false]\n"
+	     << "  -seed <number>        Set random seed for random generator [default: 0]\n"
+	     << "  -scriptfile <file>    Load a block sequence to drive the game [default: sequence.txt]\n"
 	     << "  -startlevel <number>  Set the start level [default: 0]\n"
 	     << "  -help                 Print verbose help message\n"
 	     << endl;
@@ -74,6 +74,7 @@ void printErrorMessage(string option, string msg, bool needHelp=true) {
 		printHelp(false);
 }
 
+// Need unsigned integer for seed and level (0~4), so checking in this way will suffice
 bool isNumber(const string& s)
 {
     string::const_iterator it = s.begin();
@@ -85,15 +86,11 @@ void testBlock();
 
 int main(int argc, char *argv[]) {
 	// Argument parsing
-	string cmd;
-	map<ArgumentType, string> argument = {
-		{ARG_SEED, "0"},
-		{ARG_LEVEL, "0"}
-	};
+	string cmd, str_seed="0", str_level="0";
 	// Configuration variables
 	int startLevel=0;
-	ifstream fs;
 	bool enableTextMode=false; 
+	string fScript;
 	// Game interface
 	unique_ptr<Game> game;
 	
@@ -107,12 +104,15 @@ int main(int argc, char *argv[]) {
 		
 		switch(mode.at(cmd)) {
 			case ARG_TEXT:
-				argument[ARG_TEXT] = "";
+				enableTextMode = true;
 				break;
 			case ARG_SEED:
 				if(opt != argc-1) {
-					cmd = argv[++opt];
-					argument[ARG_SEED] = cmd;
+					str_seed = argv[++opt];
+					if(!isNumber(str_seed)) {
+						printErrorMessage("-seed", str_seed + " is not a legal number.");
+						return 3;
+					}
 				}
 				else {
 					printErrorMessage(cmd, "Missing argument, expect number.");
@@ -121,8 +121,7 @@ int main(int argc, char *argv[]) {
 				break;
 			case ARG_SCRIPT:
 				if(opt != argc-1) {
-					cmd = argv[++opt];
-					argument[ARG_SCRIPT] = cmd;
+					fScript = argv[++opt];
 				}
 				else {
 					printErrorMessage(cmd, "Missing argument, expect string.");
@@ -131,17 +130,21 @@ int main(int argc, char *argv[]) {
 				break;
 			case ARG_LEVEL:
 				if(opt != argc-1) {
-					cmd = argv[++opt];
-					argument[ARG_LEVEL] = cmd;
+					str_level = argv[++opt];
+					if(!isNumber(str_level)) {
+						printErrorMessage("-startlevel", str_level + " is not a legal number.");
+						return 3;
+					}
 				}
 				else {
-					printErrorMessage(cmd, "Missing argument, expect number.");
+					printErrorMessage(cmd, "Missing argument, expect number [0~4].");
 					return 2;
 				}
 				break;
 			case ARG_HELP:
-				argument[ARG_HELP] = "";
-				break;
+				// -help option takes highest priority and discard rest if there is any
+				printHelp(true);
+				return 0;
 			default:
 				// deprecated arguments will be ignored (i.e. do nothing)
 				cout << "Deprecated argument: " << cmd << endl;
@@ -150,60 +153,13 @@ int main(int argc, char *argv[]) {
 	}
 	
 	/* Now process configurations */
-	// -help option takes highest priority and discard rest if there is any
-	if(argument.count(ARG_HELP) > 0) {
-		printHelp(true);
-		return 0;
-	}
-	else {
-		string str_seed = argument.at(ARG_SEED);
-		string str_level = argument.at(ARG_LEVEL);
-		string str_file;
-		
-		if(!isNumber(str_seed)) {
-			printErrorMessage("-seed", str_seed + " is not a number.");
-			return 3;
-		}
-		if(!isNumber(str_level)) {
-			printErrorMessage("-startlevel", str_level + " is not a number.");
-			return 3;
-		}
-		
-		srand((unsigned int)stoi(str_seed));
-		startLevel = stoi(str_level);
-		
-		if(argument.count(ARG_TEXT) > 0) {
-			enableTextMode = true;
-		}
-		
-		if(argument.count(ARG_SCRIPT) > 0) {
-			str_file = argument.at(ARG_SCRIPT);
-			fs.open(str_file.c_str(), ifstream::in);
-			
-			if(fs.fail()) {
-				printErrorMessage("-scriptfile", "Cannot open script file \""+str_file+"\".", false);
-				// TODO: should we terminate?
-				return 4;
-			}
-		}
-	}
+	// TODO: might cause exception
+	srand((unsigned int)stoi(str_seed));
+	startLevel = stoi(str_level);
 	
 	// Now start the game
-//	cout << "Text mode: " << (enableTextMode?"true":"false") << endl;
-//	cout << "Start Level: " << startLevel << endl;
-//	cout << "Stream: " << (argument.count(ARG_SCRIPT)>0 ? "file" : "standard") << endl;
-	game = make_unique<Game>(enableTextMode, startLevel, argument.count(ARG_SCRIPT)>0 ? fs : cin);
+	game = make_unique<Game>(enableTextMode, startLevel, fScript, cin);
 	
-//	game->parseCommand("123left");
-//	game->parseCommand("1left");
-//	game->parseCommand("0left");
-//	game->parseCommand("left");
-//	game->parseCommand("3ri");
-//	game->parseCommand("counterc");
-//	game->parseCommand("co");
-//	game->parseCommand();
-	
-//	testBlock();
 	while(true) {
 		cout<<"> ";
 		if(!game->parseCommand())
@@ -221,7 +177,7 @@ void printBoard(const unique_ptr<Block>& b) {
 			bool ifHit=false;
 			for(auto& v:comp) {
 				if(v.first == c && v.second == r) {
-					cout<<'Z';//<<'('<<c<<','<<r<<')';
+					cout<<'Z';
 					ifHit=true;
 				}
 			}
@@ -238,32 +194,4 @@ void printBoard(const unique_ptr<Block>& b) {
 	for(int c=0;c<11;c++)
 		cout<<c;
 	cout<<endl;
-}
-
-void testBlock() {
-	shared_ptr<Board> board = make_shared<Board>(0);
-	unique_ptr<Block> z = Block::create('I');
-	
-	cout<<"Init"<<endl;
-	printBoard(z);
-	
-	cout<<"Move down 2"<<endl;
-	z->move('d', 2);
-	printBoard(z);
-	
-	cout<<"Move right 2"<<endl;
-	z->move('r', 2);
-	printBoard(z);
-	
-	cout<<"Move left 1"<<endl;
-	z->move('l', 1);
-	printBoard(z);
-	
-	cout<<"Rotate c"<<endl;
-	z->rotate(true);
-	printBoard(z);
-	
-	cout<<"Rotate cc"<<endl;
-	z->rotate(false);
-	printBoard(z);
 }

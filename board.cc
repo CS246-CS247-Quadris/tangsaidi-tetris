@@ -3,20 +3,19 @@ using namespace std;
 
 const char Board::level1DistrTable[12] = {'S', 'Z', 'I', 'I', 'J', 'J', 'L', 'L', 'O', 'O', 'T', 'T'};
 
-Board::Board(int level): curLevel{level} {
-	if(level == 0)
-		fin.open("sequence.txt", ifstream::in);
-
+Board::Board(int level, const string& script): curLevel{level} {
 	strategy = Level::create(curLevel, this);
+	if(!script.empty())
+		strategy->setScriptFile(script);
 	cur = strategy->getNext();
 }
 
-void Board::sequenceFile(const string& name) {
-	if(fin.is_open())
-		fin.close();
-	fin.clear();
-	fin.open(name.c_str(), ifstream::in);
-}
+//void Board::sequenceFile(const string& name) {
+//	if(fin.is_open())
+//		fin.close();
+//	fin.clear();
+//	fin.open(name.c_str(), ifstream::in);
+//}
 
 int Board::getCurrentLevel() const {
 	return curLevel;
