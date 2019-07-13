@@ -26,7 +26,6 @@ class Board {
 		void move(char direction, int steps);
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
-//		void sequenceFile(const std::string&);
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
@@ -38,12 +37,6 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
-<<<<<<< HEAD
-//		std::ifstream fin;
-=======
-		// std::ifstream fin;
->>>>>>> d781a953165829448b84ee13ff078042d2a30e13
-
 
 		static const char level1DistrTable[12];
 };

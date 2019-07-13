@@ -364,7 +364,8 @@ bool Game::parseCommand() {
 	string s;
 	vector<string> tokens;
 	int cnt;
-
+	
+	// fetch a line and tokenize it
 	getline(in, s);
 	istringstream iss(s);
 	copy(istream_iterator<string>(iss), 
