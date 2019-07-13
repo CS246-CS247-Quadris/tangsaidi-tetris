@@ -161,7 +161,11 @@ int main(int argc, char *argv[]) {
 	game = make_unique<Game>(enableTextMode, startLevel, fScript, cin);
 	
 	while(true) {
+		game->printBoard();
 		cout<<"> ";
+		// DEBUG ONLY: game main loop can be terminated by invalid input when debugging
+		// TODO: do not break loop for invalid input, only terminate for special command
+		// 'quit' for example
 		if(!game->parseCommand())
 			break;
 	}

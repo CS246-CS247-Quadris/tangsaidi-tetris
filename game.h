@@ -11,6 +11,7 @@
 class Game {
 public:
 	Game(bool, int, const std::string&, std::istream&);
+	void printBoard();
 	bool parseCommand();
 private:
 	enum CommandType {

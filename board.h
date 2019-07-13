@@ -26,6 +26,7 @@ class Board {
 		void move(char direction, int steps);
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
+		void print();
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);

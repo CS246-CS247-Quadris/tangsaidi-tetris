@@ -400,3 +400,7 @@ bool Game::parseCommand() {
 	
 	return true;
 }
+
+void Game::printBoard() {
+	game->print();
+}

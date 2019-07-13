@@ -44,6 +44,6 @@ ostream& operator<<(std::ostream & out, const Row & r) {
 	for (auto &d : r.data) {
 		out << d;
 	}
-	out << endl;
+	//out << endl;
 	return out;
 }

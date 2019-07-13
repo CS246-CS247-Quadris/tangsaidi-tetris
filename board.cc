@@ -44,6 +44,12 @@ void Board::changeLevel(int delta) {
 	strategy = Level::create(curLevel, this);
 }
 
+void Board::print() {
+	for(auto v:board) {
+		cout<<v<<endl;
+	}
+}
+
 void Board::createSettler(std::pair<int, int> coord) {
 	//did not perform unit test for this method, to be tested
 	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
