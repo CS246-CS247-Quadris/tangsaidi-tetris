@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
 	startLevel = stoi(str_level);
 	
 	// Now start the game
-	game = make_unique<Game>(enableTextMode, startLevel, fScript, cin);
+	game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript, cin);
 	
 	while(true) {
 		game->printBoard();

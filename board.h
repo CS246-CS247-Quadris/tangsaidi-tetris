@@ -27,7 +27,7 @@ class Board {
 		void rotate(bool isClockWise);
 		void changeLevel(int delta);
 		void print();
-		void norand(bool isNoRandom, string file="");
+		void norand(bool isNoRandom, std::string file="");
 		void setSeed(int seed);
 
 		void createSettler(std::pair<int, int> coord);

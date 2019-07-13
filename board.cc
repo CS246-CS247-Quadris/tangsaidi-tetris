@@ -45,7 +45,6 @@ void Board::changeLevel(int delta) {
 }
 
 void Board::print() {
-	cout<<board.size()<<endl;
 	for(auto v:board) {
 		cout<<v<<endl;
 	}
@@ -81,4 +80,7 @@ void Board::hint(){
 	//Step1: look at all possible combinations of current and next block (stage1: current only)
 	//Step2: obtain a score for each of the position
 	//Step3: display the pisition with the highest score (TODO: if create settler, how to delete?)
+}
+
+void Board::drop() {
 }

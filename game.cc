@@ -239,9 +239,10 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			// ignore multiplier
 			cout<<"DEBUG: random"<<endl;
 			game->norand(false);
-			game->setSeed(rndSeed);
+			game->setSeed(seed);
 			break;
 		case CONTROL_NORND:
+		{
 			// norandom <file>
 			// ignore multiplier
 			cout<<"DEBUG: norandom "<<rept<<endl;
@@ -253,8 +254,9 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 				cout<<"Error: file name not specified for 'norandom'."<<endl;
 				return false;
 			}
-			game->norand(true, fielName);
+			game->norand(true, fileName);
 			break;
+		}
 		case CONTROL_SEQUENCE:
 			// TODO: sequence <file>
 			// TODO: set istream to the file, call 
@@ -373,13 +375,20 @@ void Game::splitToken(const string& token, string& cmd, int& rept) {
 	cmd = token.substr(pos+1, token.length());
 }
 
+/**
+ * Game::parseCommand()
+ *
+ * return false if reaching EOF
+ **/
 bool Game::parseCommand() {
 	string s;
 	vector<string> tokens;
 	int cnt;
 	
 	// fetch a line and tokenize it
-	getline(in, s);
+	if(!getline(in, s)) {
+		return false;
+	}
 	istringstream iss(s);
 	copy(istream_iterator<string>(iss), 
 			istream_iterator<string>(), 
@@ -393,7 +402,7 @@ bool Game::parseCommand() {
 		for(auto& it : tokens) {
 			if(!test(it)) {
 				cout<<"Error: "<<it<<" not found."<<endl;
-				return false;
+				return true;
 			}
 		}
 		macro[s] = tokens;
@@ -406,8 +415,7 @@ bool Game::parseCommand() {
 	}
 	else {
 		for(int i=0;i<tokens.size();i++) {
-			if(!perform(tokens, i))
-				return false;
+			perform(tokens, i);
 		}
 	}
 	
