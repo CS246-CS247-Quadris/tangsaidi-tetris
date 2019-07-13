@@ -38,7 +38,7 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
-		std::ifstream fin;
+		// std::ifstream fin;
 
 
 		static const char level1DistrTable[12];
