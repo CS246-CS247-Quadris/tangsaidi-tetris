@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include <fstream>
 #include "game.h"
 using namespace std;
 
@@ -14,9 +15,9 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 	}
 }
 
-Game::Game(bool isTextMode, int level, int rndSeed, const string& script, istream& is): 
+Game::Game(bool isTextMode, int level, int rndSeed, const string& script/*, istream& is*/): 
 	seed{rndSeed},
-	in{is}, 
+	/*in{is}, */
 	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
 	command{
@@ -262,7 +263,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			}
 			else {
 				cout<<"Error: file name not specified for 'norandom'."<<endl;
-				//return true;
 				break;
 			}
 			game->norand(true, fileName);
@@ -271,8 +271,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		case CONTROL_SEQUENCE:
 		{
 			// TODO: sequence <file>
-			// TODO: set istream to the file, call 
-			// parseCommand, then restore istream
 			cout<<"DEBUG: sequence "<<rept<<endl;
 			string fileName;
 			ifstream ifs;
@@ -289,7 +287,9 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			}
 			
 			for(int c=0;c<rept;c++) {
-				parseCommand();
+				while(parseCommand(ifs));
+				ifs.clear();
+				ifs.seekg(0, ios::beg);
 			}
 			break;
 		}
@@ -420,7 +420,7 @@ void Game::splitToken(const string& token, string& cmd, int& rept) {
  *
  * return false if reaching EOF
  **/
-bool Game::parseCommand() {
+bool Game::parseCommand(istream& in) {
 	string s;
 	vector<string> tokens;
 	int cnt;

@@ -10,9 +10,9 @@
 
 class Game {
 public:
-	Game(bool, int, int, const std::string&, std::istream&);
+	Game(bool, int, int, const std::string&/*, std::istream&*/);
 	void printBoard();
-	bool parseCommand();
+	bool parseCommand(std::istream&);
 private:
 	enum CommandType {
 		CONTROL_LEFT = 0,
@@ -54,7 +54,7 @@ private:
 	};
 	
 	int seed;
-	std::istream& in;
+//	std::istream& in;
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
 	std::map<std::string, std::vector<std::string>> macro;
