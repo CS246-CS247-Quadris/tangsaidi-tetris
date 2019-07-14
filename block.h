@@ -13,6 +13,7 @@ class Level;
 // TODO: Add level control interface
 class Block {
 public:
+	Block(const Block&);
     // Take in capital chars
     static std::unique_ptr<Block> create(char);
     char getBlockType() const;

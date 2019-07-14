@@ -26,6 +26,7 @@ unique_ptr<Block> Block::create(char type) {
 
 Block::Block(char t):type{t} {}
 Block::~Block(){}
+Block::Block(const Block& other): type{other.type}, level{other.level} {}
 
 Block& Block::operator=(const Block& other) {
 	if(this != &other) {
