@@ -269,13 +269,30 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			break;
 		}
 		case CONTROL_SEQUENCE:
+		{
 			// TODO: sequence <file>
 			// TODO: set istream to the file, call 
 			// parseCommand, then restore istream
 			cout<<"DEBUG: sequence "<<rept<<endl;
+			string fileName;
+			ifstream ifs;
+			if(index >= tokens.size()-1) {
+				cout<<"Error: file name not specified for 'sequence'."<<endl;
+				break;
+			}
+			fileName = tokens.at(++index);
+			
+			ifs.open(fileName.c_str());
+			if(ifs.fail()) {
+				cout<<"Error: fail to open dequence file '"<<fileName<<"'."<<endl;
+				break;
+			}
+			
 			for(int c=0;c<rept;c++) {
+				parseCommand();
 			}
 			break;
+		}
 		case CONTROL_RESTART:
 			// TODO: restart
 			// ignore multiplier
@@ -288,34 +305,40 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			game->hint();
 			break;
 		case DEBUG_REPLACE_I:
-			// TODO: I
+			// I
 			// actually, repeat this is meaningless
 			cout<<"DEBUG: I "<<rept<<endl;
 			game->replaceCurrentBlock('I');
 			break;
 		case DEBUG_REPLACE_J:
-			// TODO: J
+			// J
 			cout<<"DEBUG: J "<<rept<<endl;
+			game->replaceCurrentBlock('J');
 			break;
 		case DEBUG_REPLACE_L:
-			// TODO: I
+			// L
 			cout<<"DEBUG: L "<<rept<<endl;
+			game->replaceCurrentBlock('L');
 			break;
 		case DEBUG_REPLACE_O:
-			// TODO: O
+			// O
 			cout<<"DEBUG: O "<<rept<<endl;
+			game->replaceCurrentBlock('O');
 			break;
 		case DEBUG_REPLACE_S:
-			// TODO: S
+			// S
 			cout<<"DEBUG: S "<<rept<<endl;
+			game->replaceCurrentBlock('S');
 			break;
 		case DEBUG_REPLACE_Z:
-			// TODO: Z
+			// Z
 			cout<<"DEBUG: Z "<<rept<<endl;
+			game->replaceCurrentBlock('Z');
 			break;
 		case DEBUG_REPLACE_T:
-			// TODO: T
+			// T
 			cout<<"DEBUG: T "<<rept<<endl;
+			game->replaceCurrentBlock('T');
 			break;
 		case COMMAND_RENAME:
 		{

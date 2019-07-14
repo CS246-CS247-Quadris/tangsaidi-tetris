@@ -20,9 +20,9 @@ int Board::getCurrentLevel() const {
 
 bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
-		if(i.first<0 || i.first>10) cerr<<"err1"<<endl;//return false;
-		if (i.second > board.size()+2 || i.second < 0) cerr<<"err2"<<endl;//return false;
-		if (i.second < board.size() && board.at(i.second).isOccupied(i.first)) cerr<<"err3"<<endl;//return false;
+		if(i.first<0 || i.first>10) return false;
+		if (i.second > board.size()+2 || i.second < 0) return false;
+		if (i.second < board.size() && board.at(i.second).isOccupied(i.first)) return false;
 	}
 	return true;
 }
