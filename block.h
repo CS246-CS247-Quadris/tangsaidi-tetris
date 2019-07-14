@@ -22,6 +22,8 @@ public:
     virtual std::vector<std::pair<int,int>> getComponents() const;
     virtual ~Block()=0;
     Block& operator=(const Block&);
+	char getBlockType();
+	int getBlockLevel();
 protected:
 	Block(char);
 	std::vector<std::pair<int,int>> coordinate;

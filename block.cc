@@ -177,3 +177,12 @@ void IBlock::rotate(bool isClockwise) {
 
 // O block remains unchanged after any rotation
 void OBlock::rotate(bool isClockwise) {}
+
+// Get block types
+char Block::getBlockType() {
+	return type;
+}
+
+int Block::getBlockLevel() {
+	return level;
+}
