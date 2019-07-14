@@ -1,3 +1,4 @@
+#include <sstream>
 #include "board.h"
 using namespace std;
 
@@ -16,6 +17,7 @@ int Board::getCurrentLevel() const {
 
 bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
+		if(i.first<0 || i.first>11) return false;
 		if (i.second >= board.size() || i.second < 0) return false;
 		if (board.at(i.second).isOccupied(i.first)) return false;
 	}
@@ -45,8 +47,44 @@ void Board::changeLevel(int delta) {
 }
 
 void Board::print() {
-	for(auto v:board) {
-		cout<<v<<endl;
+	// First, check first 3 reserved row
+	int nRows = board.size();
+	for(int y=nRows+2;y>=nRows;y--) {
+		for(int x=0;x<11;x++) {
+			vector<pair<int,int>> comp = cur->getComponents();
+			bool ifHit=false;
+			for(auto& v:comp) {
+				if(v.first == x && v.second == y) {
+					cout<<cur->getBlockType();
+					ifHit=true;
+				}
+			}
+			if(!ifHit)
+				cout<<' ';
+		}
+		cout<<endl;
+	}
+	for(int y=nRows-1;y>=0;y--) {
+		stringstream ss;
+		string tmp;
+		ss<<board.at(nRows-y-1);
+		tmp = ss.str();
+		
+		for(int x=0;x<11;x++) {
+			vector<pair<int,int>> comp = cur->getComponents();
+			bool ifHit=false;
+			for(auto& v:comp) {
+				if(v.first == x && v.second == y) {
+					cout<<cur->getBlockType();
+					ifHit=true;
+				}
+			}
+			if(!ifHit)
+				cout<<' ';
+		}
+		cout<<endl;
+		
+		ss.str(string());
 	}
 }
 

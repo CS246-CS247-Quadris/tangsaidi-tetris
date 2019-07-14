@@ -10,10 +10,13 @@
 class Board;
 class Level;
 
+// TODO: Add level control interface
 class Block {
 public:
     // Take in capital chars
     static std::unique_ptr<Block> create(char);
+    char getBlockType() const;
+    int getBlockLevel() const;
     void move(char, int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;
