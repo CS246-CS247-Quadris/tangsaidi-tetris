@@ -147,3 +147,7 @@ void Board::drop() {
 		board.erase(board.begin(), board.begin() + *it);
 	}
 }
+
+bool Board::checkEnd() {
+	return !isValid(cur->getComponents());
+}

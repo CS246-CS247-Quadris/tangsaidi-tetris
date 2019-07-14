@@ -19,7 +19,7 @@ class Board {
 	public:
 		Board(int level, const std::string& script);
 		int getCurrentLevel() const;
-		bool checkWin();
+		bool checkEnd();
 		bool isValid(std::vector<std::pair<int, int>> coord);
 		void hint();
 		void drop(); // remember to clear rows only after getNext()
