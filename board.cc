@@ -91,8 +91,37 @@ void Board::print() {
 	}
 	cout<<"-----------"<<endl;
 	
-	cout<<"Next:"<<endl;
-	// TODO
+	cout<<"Next: "<<endl;
+	if(next == nullptr) {
+		cout<<"  N/A"<<endl;
+		return;
+	}
+	switch(next->getBlockType()) {
+		case 'I':
+			cout<<"\nIIII"<<endl;
+			break;
+		case 'J':
+			cout<<"J\nJJJ"<<endl;
+			break;
+		case 'L':
+			cout<<"  L\nLLL"<<endl;
+			break;
+		case 'O':
+			cout<<"OO\nOO"<<endl;
+			break;
+		case 'S':
+			cout<<" SS\nSS"<<endl;
+			break;
+		case 'Z':
+			cout<<"ZZ\n ZZ"<<endl;
+			break;
+		case 'T':
+			cout<<"TTT\n T"<<endl;
+			break;
+		default:
+			cerr<<"Failed reading shape of next block."<<endl;
+			break;
+	}
 }
 
 void Board::norand(bool isNoRandom, string file) {
