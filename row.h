@@ -20,6 +20,7 @@ class Row {
   	void setRowAt(int, char, std::shared_ptr<Settler>);
   	bool isRemovable();
     bool isOccupied(int);
+	char getData(int);
 
   	friend std::ostream& operator<<(std::ostream &, const Row &);
 };

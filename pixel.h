@@ -12,6 +12,7 @@ class Pixel {
   	Pixel();
   	void setPixel(char, std::shared_ptr<Settler>);
   	~Pixel();
+	char getData() const;
   	bool isOccupied() const;
 
   	friend std::ostream& operator<<(std::ostream &, const Pixel &);

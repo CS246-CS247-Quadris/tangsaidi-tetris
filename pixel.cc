@@ -18,6 +18,10 @@ bool Pixel::isOccupied() const {
 	else return true;
 }
 
+char Pixel::getData() const {
+	return data;
+}
+
 ostream& operator<<(std::ostream & out, const Pixel & p) {
 	if (p.isOccupied()) {
 		out << p.data;
