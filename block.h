@@ -24,6 +24,7 @@ public:
     Block& operator=(const Block&);
 	char getBlockType();
 	int getBlockLevel();
+	std::vector<std::pair<int, int>> ifDropNow();
 protected:
 	Block(char);
 	std::vector<std::pair<int,int>> coordinate;

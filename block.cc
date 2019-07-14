@@ -186,3 +186,8 @@ char Block::getBlockType() {
 int Block::getBlockLevel() {
 	return level;
 }
+
+vector<pair<int, int>> Block::ifDropNow() {
+	//TODO: return the coordinates if we were to drop the block now
+	return coordinate;
+}

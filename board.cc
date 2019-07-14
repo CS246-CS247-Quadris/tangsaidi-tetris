@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iomanip>
+#include <set>
 #include "board.h"
 using namespace std;
 
@@ -117,6 +118,110 @@ void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType
 	}
 }
 
+int Board::findHoles(const vector<pair<int,int>> & block) {
+	int numOfHoles = 0;
+	set<pair<int, int>> preserved;
+	for (auto &i : block) {
+		preserved.insert(i);
+	}
+
+	for (int i = 0; i < board.size(); ++i) {
+		for (int j = 0; j < 11; ++j) {
+			if (!board.at(i).isOccupied(j) 
+				&& (board.at(i-1).isOccupied(j) || preserved.find(make_pair(i-1, j)) != preserved.end())
+				&& (board.at(i+1).isOccupied(j) || preserved.find(make_pair(i+1, j)) != preserved.end()) 
+				&& (board.at(i).isOccupied(j+1) || preserved.find(make_pair(i, j+1)) != preserved.end())) {
+				numOfHoles ++;
+			}
+		}
+	}
+	return numOfHoles;
+}
+
+int Board::findMaxHeight(const vector<pair<int,int>> & block) {
+	int maxHeight = -1;
+	for (auto &i : block) {
+		if (i.second > maxHeight) maxHeight = i.second;
+	}
+	int i = board.size() - 1;
+	while (i > maxHeight && i >= 0) {
+		for (int j = 0; j < 11; ++j) {
+			if (board.at(i).isOccupied(j)) {
+				maxHeight = i;
+				j = 11;
+			}
+		}
+		i--;
+	}
+	return maxHeight + 1;
+}
+
+vector<pair<int,int>> Board::singleOrientationHint(unique_ptr<Block> b) {
+	vector<pair<int, int>> bestCoord;
+	int bestHole = -1; 
+	int bestHeight = -1;
+	//TODO:
+	// unique_ptr<Block> tmp = b;
+	unique_ptr<Block> tmp;
+	//try all possible positions as the block is moved to the left
+	while(isValid(tmp->getComponents())) {
+		vector<pair<int, int>> tmpPos = tmp->ifDropNow();
+		int holes = findHoles(tmpPos);
+		int maxHeight = findMaxHeight(tmpPos);
+		//find the number of holes and max height with position after drop
+		if (bestHole >= 0 && bestHeight >= 0) {
+			//compare the result with the best result from before, determine new best result
+			if (holes < bestHole) {
+				bestCoord = tmpPos;
+				bestHole = holes;
+				bestHeight = maxHeight;
+			} else if (holes == bestHole && maxHeight < bestHeight) {
+				bestCoord = tmpPos;
+				bestHole = holes;
+				bestHeight = maxHeight;
+			}
+		} else {
+			//if not initialized, current result is the best
+			bestCoord = tmpPos;
+			bestHole = holes;
+			bestHeight = maxHeight;
+		}
+		tmp->move('l', 1);
+	}
+	//try all possible positions on the right
+	//TODO:
+	// tmp = b;
+	tmp->move('r', 1);
+	while(isValid(tmp->getComponents())) {
+		vector<pair<int, int>> tmpPos = tmp->ifDropNow();
+		int holes = findHoles(tmpPos);
+		int maxHeight = findMaxHeight(tmpPos);
+		//find the number of holes and max height with position after drop
+		if (bestHole >= 0 && bestHeight >= 0) {
+			//compare the result with the best result from before, determine new best result
+			if (holes < bestHole) {
+				bestCoord = tmpPos;
+				bestHole = holes;
+				bestHeight = maxHeight;
+			} else if (holes == bestHole && maxHeight < bestHeight) {
+				bestCoord = tmpPos;
+				bestHole = holes;
+				bestHeight = maxHeight;
+			}
+		} else {
+			//if not initialized, current result is the best
+			bestCoord = tmpPos;
+			bestHole = holes;
+			bestHeight = maxHeight;
+		}
+		tmp->move('r', 1);
+	}
+	vector<pair<int, int>> result;
+	result.emplace_back(make_pair(bestHole, bestHeight));
+	result.insert(result.end(), bestCoord.begin(), bestCoord.end());
+	return result;
+}
+
 void Board::hint(){
 	//penalize height, holes, blockade(blocks directly above holes)
 	//reward clears
@@ -124,6 +229,14 @@ void Board::hint(){
 	//Step1: look at all possible combinations of current and next block (stage1: current only)
 	//Step2: obtain a score for each of the position
 	//Step3: display the pisition with the highest score (TODO: if create settler, how to delete?)
+
+	//find the number of holes that will be produced for each possible outsome
+	//the solution wih least amount of holes win
+	//if the same, then pick the one with the least max height
+	//if same height, random for stage 1, and possibly look at next block for future use
+	// unique_ptr<Block> tmp = cur; to be added when look through all four rotations
+	//TODO:
+	// vector<pair<int, int>> hintBlock = singleOrientationHint(cur);
 }
 
 // **TEST REQUIRED**
