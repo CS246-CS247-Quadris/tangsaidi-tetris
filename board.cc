@@ -1,8 +1,10 @@
 #include <sstream>
+#include <iomanip>
 #include "board.h"
 using namespace std;
 
-Board::Board(int level, const string& script): curLevel{level}, board{15} {
+Board::Board(int level, const string& script): 
+	curLevel{level}, board{15}, score{make_shared<Score>()} {
 	strategy = Level::create(curLevel, this);
 	if(!script.empty())
 		strategy->setScriptFile(script);
@@ -17,7 +19,7 @@ int Board::getCurrentLevel() const {
 
 bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
-		if(i.first<0 || i.first>11) return false;
+		if(i.first<0 || i.first>10) return false;
 		if (i.second >= board.size() || i.second < 0) return false;
 		if (board.at(i.second).isOccupied(i.first)) return false;
 	}
@@ -46,22 +48,33 @@ void Board::changeLevel(int delta) {
 	}
 }
 
+void Board::printRow(int y) {
+	for(int x=0;x<11;x++) {
+		vector<pair<int,int>> comp = cur->getComponents();
+		bool ifHit=false;
+		for(auto& v:comp) {
+			if(v.first == x && v.second == y) {
+				cout<<cur->getBlockType();
+				ifHit=true;
+			}
+		}
+		if(!ifHit)
+			cout<<' ';
+	}
+}
+
 void Board::print() {
+	cout<<setw(10)<<left<<"Level:";
+	cout<<setw(3)<<right<<curLevel<<endl;
+	cout<<setw(10)<<left<<"Score:";
+	cout<<setw(3)<<right<<score->getCurrentScore()<<endl;
+	cout<<setw(10)<<left<<"Hi Score:";
+	cout<<setw(3)<<right<<score->getHighestScore()<<endl;
+	cout<<"-----------"<<endl;
 	// First, check first 3 reserved row
 	int nRows = board.size();
 	for(int y=nRows+2;y>=nRows;y--) {
-		for(int x=0;x<11;x++) {
-			vector<pair<int,int>> comp = cur->getComponents();
-			bool ifHit=false;
-			for(auto& v:comp) {
-				if(v.first == x && v.second == y) {
-					cout<<cur->getBlockType();
-					ifHit=true;
-				}
-			}
-			if(!ifHit)
-				cout<<' ';
-		}
+		printRow(y);
 		cout<<endl;
 	}
 	for(int y=nRows-1;y>=0;y--) {
@@ -70,22 +83,15 @@ void Board::print() {
 		ss<<board.at(nRows-y-1);
 		tmp = ss.str();
 		
-		for(int x=0;x<11;x++) {
-			vector<pair<int,int>> comp = cur->getComponents();
-			bool ifHit=false;
-			for(auto& v:comp) {
-				if(v.first == x && v.second == y) {
-					cout<<cur->getBlockType();
-					ifHit=true;
-				}
-			}
-			if(!ifHit)
-				cout<<' ';
-		}
+		printRow(y);
 		cout<<endl;
 		
 		ss.str(string());
 	}
+	cout<<"-----------"<<endl;
+	
+	cout<<"Next:"<<endl;
+	// TODO
 }
 
 void Board::norand(bool isNoRandom, string file) {

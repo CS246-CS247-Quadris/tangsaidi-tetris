@@ -40,6 +40,8 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
+		
+		void printRow(int y);
 };
 
 #endif /* __BOARD_H__ */

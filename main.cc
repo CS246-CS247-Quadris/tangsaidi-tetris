@@ -170,29 +170,3 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-void printBoard(const unique_ptr<Block>& b) {
-	for(int r=14;r>=0;r--) {
-		cout<<r<<"\t|";
-		for(int c=0;c<11;c++) {
-			vector<pair<int,int>> comp = b->getComponents();
-			bool ifHit=false;
-			for(auto& v:comp) {
-				if(v.first == c && v.second == r) {
-					cout<<'Z';
-					ifHit=true;
-				}
-			}
-			if(!ifHit)
-				cout<<' ';
-		}
-		cout<<endl;
-	}
-	cout<<"\t+";
-	for(int c=0;c<11;c++)
-		cout<<'-';
-	cout<<endl;
-	cout<<"\t ";
-	for(int c=0;c<11;c++)
-		cout<<c;
-	cout<<endl;
-}
