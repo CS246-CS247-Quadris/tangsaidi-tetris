@@ -40,8 +40,6 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
-
-		static const char level1DistrTable[12];
 };
 
 #endif /* __BOARD_H__ */

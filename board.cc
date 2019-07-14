@@ -1,13 +1,13 @@
 #include "board.h"
 using namespace std;
 
-const char Board::level1DistrTable[12] = {'S', 'Z', 'I', 'I', 'J', 'J', 'L', 'L', 'O', 'O', 'T', 'T'};
-
 Board::Board(int level, const string& script): curLevel{level}, board{15} {
 	strategy = Level::create(curLevel, this);
 	if(!script.empty())
 		strategy->setScriptFile(script);
+	// need to check off by one case here for level 4
 	cur = strategy->getNext();
+	next= strategy->getNext();
 }
 
 int Board::getCurrentLevel() const {
@@ -82,5 +82,24 @@ void Board::hint(){
 	//Step3: display the pisition with the highest score (TODO: if create settler, how to delete?)
 }
 
+// **TEST REQUIRED**
 void Board::drop() {
+	while (isValid(cur->getComponents())) {
+		strategy->move('d', 1);
+	}
+	strategy->move('d', -1);
+	createSettler(cur->getComponents(), cur->getBlockType(), cur->getBlockLevel());
+	cur = std::move(next);
+	next= strategy->getNext();
+	vector<int> toBeRemoved;
+	for (int i = 0; i < board.size(); ++i) {
+		if (board[i].isRemovable()) {
+			toBeRemoved.push_back(i);
+		}
+	}
+
+	for (auto it = toBeRemoved.rbegin(); it != toBeRemoved.rend(); ++it) {
+		board.push_back(Row());
+		board.erase(board.begin(), board.begin() + *it);
+	}
 }
