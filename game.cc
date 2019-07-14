@@ -159,11 +159,20 @@ bool Game::test(const string& token) {
 	}
 }
 
-// perform i^th command, mutate index if necessary
-bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/) {
+/**
+ * Game::perform()
+ * 
+ * Perform i^th command, mutate index if necessary
+ * Return false if game over
+ **/
+bool Game::perform(const vector<string>& tokens, int& index) {
 	CommandType type;
 	string token;
 	int rept;
+	
+	// check if game is over
+	if(game->checkEnd())
+		return false;
 	
 	splitToken(tokens.at(index), token, rept);
 	
@@ -172,7 +181,7 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 		token = getCommandByPrefix(token);
 		if(token.empty()) {
 			cout<<"Error: "<<tokens.at(index)<<" not found."<<endl;
-			return false;
+			return true;
 		}
 	}
 	
@@ -183,7 +192,7 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 		vector<string> m = macro.at(token);
 		for(int i=0; i<m.size(); i++) {
 			if(!perform(m, i))
-				return false;
+				return true;
 		}
 	}
 	
@@ -252,7 +261,8 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			}
 			else {
 				cout<<"Error: file name not specified for 'norandom'."<<endl;
-				return false;
+				//return true;
+				break;
 			}
 			game->norand(true, fileName);
 			break;
@@ -271,7 +281,7 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			cout<<"DEBUG: restart "<<rept<<endl;
 			break;
 		case CONTROL_HINT:
-			// TODO: hint
+			// hint
 			// ignore multiplier
 			cout<<"DEBUG: hint "<<rept<<endl;
 			game->hint();
@@ -311,7 +321,8 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			// repeating is also meaningless
 			if(tokens.size()-index-1<2) {
 				cout<<"Error: Missing argument of 'rename'."<<endl;
-				return false;
+				//return true;
+				break;
 			}
 			string src = tokens.at(++index);
 			string dest = tokens.at(++index);
@@ -320,7 +331,8 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 			
 			if(test(dest)) {
 				cout<<"Error: "<<"'"<<dest<<"' already exists."<<endl;
-				return false;
+				//return true;
+				break;
 			}
 			
 			// fix the src name first
@@ -328,7 +340,8 @@ bool Game::perform(const vector<string>& tokens, int& index/*, const int& rept*/
 				src = getCommandByPrefix(src);
 				if(src.empty()) {
 					cout<<"Error: "<<tokens.at(index-1)<<" not found."<<endl;
-					return false;
+					//return true;
+					break;
 				}
 			}
 			
@@ -415,7 +428,8 @@ bool Game::parseCommand() {
 	}
 	else {
 		for(int i=0;i<tokens.size();i++) {
-			perform(tokens, i);
+			if(!perform(tokens, i))
+				return false;
 		}
 	}
 	
