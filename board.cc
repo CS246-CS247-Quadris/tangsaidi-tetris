@@ -52,15 +52,20 @@ void Board::changeLevel(int delta) {
 void Board::printRow(int y) {
 	for(int x=0;x<11;x++) {
 		vector<pair<int,int>> comp = cur->getComponents();
-		bool ifHit=false;
+		bool ifHit = false;
 		for(auto& v:comp) {
 			if(v.first == x && v.second == y) {
-				cout<<cur->getBlockType();
-				ifHit=true;
+				cout << cur->getBlockType();
+				ifHit = true;
 			}
 		}
-		if(!ifHit)
+		if (y < 15 && board.at(y).isOccupied(x)) {
+			cout << board.at(y).getData(x);
+			ifHit = true;
+		}
+		if(!ifHit) {
 			cout<<' ';
+		}
 	}
 }
 
@@ -305,7 +310,9 @@ void Board::hint(){
 	// vector<pair<int, int>> hintBlock = singleOrientationHint(cur);
 }
 
-// **TEST REQUIRED**
+/* Drops a block onto the board and turn it into a settler
+ * Check whether there's removable rows, if there is, remove them
+ */
 void Board::drop() {
 	while (isValid(cur->getComponents())) {
 		strategy->move('d', 1);
@@ -323,7 +330,7 @@ void Board::drop() {
 
 	for (auto it = toBeRemoved.rbegin(); it != toBeRemoved.rend(); ++it) {
 		board.push_back(Row());
-		board.erase(board.begin(), board.begin() + *it);
+		board.erase(board.begin() + *it);
 	}
 }
 

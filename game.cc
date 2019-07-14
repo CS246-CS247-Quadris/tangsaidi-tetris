@@ -170,9 +170,9 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 	string token;
 	int rept;
 	
-	// check if game is over
-	if(game->checkEnd())
-		return false;
+	// // check if game is over
+	// if(game->checkEnd())
+	// 	return false;
 	
 	splitToken(tokens.at(index), token, rept);
 	
@@ -231,6 +231,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			cout<<"DEBUG: drop "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 				game->drop();
+				if(game->checkEnd()) return false;
 			}
 			break;
 		case CONTROL_LEVELUP:
@@ -362,6 +363,8 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		default:
 			break;
 	}
+	// check if game is after each command, in case debug statement switch to an invalid block
+	if(game->checkEnd()) return false;
 	
 	return true;
 }
