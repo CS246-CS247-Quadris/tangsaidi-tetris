@@ -273,7 +273,9 @@ void Board::hint(){
 	// vector<pair<int, int>> hintBlock = singleOrientationHint(cur);
 }
 
-// **TEST REQUIRED**
+/* Drops a block onto the board and turn it into a settler
+ * Check whether there's removable rows, if there is, remove them
+ */
 void Board::drop() {
 	while (isValid(cur->getComponents())) {
 		strategy->move('d', 1);
@@ -291,7 +293,7 @@ void Board::drop() {
 
 	for (auto it = toBeRemoved.rbegin(); it != toBeRemoved.rend(); ++it) {
 		board.push_back(Row());
-		board.erase(board.begin(), board.begin() + *it);
+		board.erase(board.begin() + *it);
 	}
 }
 
