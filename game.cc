@@ -290,6 +290,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			// TODO: I
 			// actually, repeat this is meaningless
 			cout<<"DEBUG: I "<<rept<<endl;
+			game->replaceCurrentBlock('I');
 			break;
 		case DEBUG_REPLACE_J:
 			// TODO: J

@@ -30,6 +30,7 @@ protected:
 	Block(char);
 	std::vector<std::pair<int,int>> coordinate;
 private:
+	std::pair<int,int> rotCenter;
 	char type;
 	int level;
 };

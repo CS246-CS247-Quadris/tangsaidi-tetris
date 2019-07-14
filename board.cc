@@ -20,9 +20,9 @@ int Board::getCurrentLevel() const {
 
 bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
-		if(i.first<0 || i.first>10) return false;
-		if (i.second >= board.size() || i.second < 0) return false;
-		if (board.at(i.second).isOccupied(i.first)) return false;
+		if(i.first<0 || i.first>10) cerr<<"err1"<<endl;//return false;
+		if (i.second > board.size()+2 || i.second < 0) cerr<<"err2"<<endl;//return false;
+		if (i.second < board.size() && board.at(i.second).isOccupied(i.first)) cerr<<"err3"<<endl;//return false;
 	}
 	return true;
 }
@@ -132,6 +132,43 @@ void Board::norand(bool isNoRandom, string file) {
 
 void Board::setSeed(int seed) {
 	strategy->setSeed(seed);
+}
+
+void Board::replaceCurrentBlock(char cType) {
+	if(cType == cur->getBlockType())
+		return;
+	
+	int srcXmin, srcYmin, destXmin, destYmin;
+	vector<std::pair<int,int>> comp = cur->getComponents();
+	
+	destXmin = comp.at(0).first;
+	destYmin = comp.at(0).second;
+	for(auto v:comp) {
+		if(v.first < destXmin && v.second < destYmin) {
+			destXmin = v.first;
+			destYmin = v.second;
+		}
+	}
+	
+	cur = Block::create(cType);
+	comp = cur->getComponents();
+	
+	srcXmin = comp.at(0).first;
+	srcYmin = comp.at(0).second;
+	for(auto v:comp) {
+		if(v.first < srcXmin && v.second < srcYmin) {
+			srcXmin = v.first;
+			srcYmin = v.second;
+		}
+	}
+	
+	// x needs to be fixed when changing from:
+	// any to horizontal I
+	strategy->move('r', destXmin-srcXmin);
+	while (!isValid(cur->getComponents())) {
+		strategy->move('l', 1);
+	}
+	strategy->move('d', destYmin-srcYmin);
 }
 
 void Board::createSettler(std::pair<int, int> coord) {

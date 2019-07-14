@@ -24,7 +24,7 @@ unique_ptr<Block> Block::create(char type) {
 	}
 }
 
-Block::Block(char t):type{t} {}
+Block::Block(char t):type{t}, rotCenter{1,14} {}
 Block::~Block(){}
 Block::Block(const Block& other): type{other.type}, level{other.level} {}
 
@@ -61,36 +61,26 @@ void Block::move(char direction, int steps) {
 			for(auto& v:coordinate) {
 				v.first -= steps;
 			}
+			rotCenter.first -= steps;
 			break;
 		case 'r':
 			for(auto& v:coordinate) {
 				v.first += steps;
 			}
+			rotCenter.first += steps;
 			break;
 		case 'd':
 			for(auto& v:coordinate) {
 				v.second -= steps;
 			}
+			rotCenter.second -= steps;
 			break;
 	}
 }
 
 void Block::rotate(bool isClockwise) {
 	cout << "Rotated clockwise: " << isClockwise << endl;
-	int x=coordinate[0].first, y=coordinate[0].second;
-	for(auto& v:coordinate) {
-		// since the size of bounding box is known, so min is enough
-		if(v.first < x) {
-			x = v.first;
-		}
-		if(v.second < y) {
-			y = v.second;
-		}
-	}
-	// find center of 3x3 bounding box
-	// assumption: x,y always positive
-	x += 1;
-	y += 1;
+	int x=rotCenter.first, y=rotCenter.second;
 	// transform coordinates
 	for(auto& v:coordinate) {
 		v.first -= x;
@@ -123,30 +113,38 @@ void Block::rotate(bool isClockwise) {
 // 11 col, 15 row
 IBlock::IBlock():Block('I') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{3,14}};
+//	rotCenter = make_pair<int,int>(0,14);
 }
 
 JBlock::JBlock():Block('J') {
 	coordinate = vector<pair<int,int>>{{0,14},{0,13},{1,13},{2,13}};
+//	rotCenter = make_pair<int,int>(1,14);
 }
 
 LBlock::LBlock():Block('L') {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{2,13},{2,14}};
+//	rotCenter = make_pair<int,int>(1,14);
 }
 
 OBlock::OBlock():Block('O') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{0,13},{1,13}};
+	// O block never use it
+//	rotCenter = make_pair<int,int>(0,13);
 }
 
 SBlock::SBlock():Block('S') {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{1,14},{2,14}};
+//	rotCenter = make_pair<int,int>(1,14);
 }
 
 ZBlock::ZBlock():Block('Z') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{1,13},{2,13}};
+//	rotCenter = make_pair<int,int>(1,14);
 }
 
 TBlock::TBlock():Block('T') {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
+//	rotCenter = make_pair<int,int>(1,14);
 }
 
 void IBlock::rotate(bool isClockwise) {

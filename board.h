@@ -29,6 +29,7 @@ class Board {
 		void print();
 		void norand(bool isNoRandom, std::string file="");
 		void setSeed(int seed);
+		void replaceCurrentBlock(char cType);
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
