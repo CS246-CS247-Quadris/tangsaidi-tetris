@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iomanip>
 #include <set>
+#include <cmath>
 #include "board.h"
 using namespace std;
 
@@ -259,6 +260,10 @@ int Board::findMaxHeight(const vector<pair<int,int>> & block) {
 	return maxHeight + 1;
 }
 
+int Board::findEdges(const vector<pair<int,int>> & block) {
+	return 1;
+}
+
 vector<pair<int,int>> Board::singleOrientationHint() {
 	vector<pair<int, int>> bestCoord;
 	int bestHole = -1; 
@@ -366,7 +371,8 @@ void Board::drop() {
 			toBeRemoved.push_back(i);
 		}
 	}
-
+	int rowScore = pow((curLevel + toBeRemoved.size()), 2);
+	score->increment(rowScore);
 	for (auto it = toBeRemoved.rbegin(); it != toBeRemoved.rend(); ++it) {
 		board.push_back(Row());
 		board.erase(board.begin() + *it);

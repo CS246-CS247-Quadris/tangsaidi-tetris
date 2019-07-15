@@ -48,6 +48,7 @@ class Board {
 		bool isHole(int, int, const std::set<std::pair<int, int>> &);
 		int findHoles(const std::vector<std::pair<int,int>> &);
 		int findMaxHeight(const std::vector<std::pair<int,int>> &);
+		int findEdges(const std::vector<std::pair<int,int>> &);
 		std::vector<std::pair<int,int>> singleOrientationHint();
 		void createHintSettler(std::vector<std::pair<int, int>> coord);
 		void deleteHintSettler(std::vector<std::pair<int, int>> coord);
