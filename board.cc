@@ -214,14 +214,18 @@ vector<pair<int, int>> Board::ifDropNow(const vector<pair<int,int>> & block) {
 	return result;
 }
 
-bool Board::isHole(int i, int j, const set<pair<int, int>> & preserved) {
-	if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end()) return false;
-	if (j - 1 >= 0 && !board.at(i).isOccupied(j-1) && preserved.find(make_pair(j-1, i)) == preserved.end()) 
-		return false;
-	if (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) 
-		return false;
-	if (i + 1 < board.size() && !board.at(i+1).isOccupied(j) && preserved.find(make_pair(j, i+1)) == preserved.end()) 
-		return false;
+bool Board::isHole(int row, int right, int left, const set<pair<int, int>> & preserved) {
+	// if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end()) return false;
+	// if (j - 1 >= 0 && !board.at(i).isOccupied(j-1) && preserved.find(make_pair(j-1, i)) == preserved.end()) 
+	// 	return false;
+	// if (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) 
+	// 	return false;
+	// if (i + 1 < board.size() && !board.at(i+1).isOccupied(j) && preserved.find(make_pair(j, i+1)) == preserved.end()) 
+	// 	return false;
+	for (int i = right; i <= left; ++i) {
+		if (row + 1 < board.size() && !board.at(row+1).isOccupied(i) && preserved.find(make_pair(i, row+1)) == preserved.end())
+			return false;
+	}
 	return true;
 }
 
@@ -229,7 +233,11 @@ int Board::findHoles(const set<pair<int, int>> & preserved) {
 	int numOfHoles = 0;
 	for (int i = 0; i < board.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
-			if (isHole(i, j, preserved)) {
+			int right = j;
+			while (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) {
+				j++;
+			}
+			if (isHole(i, right, j, preserved)) {
 				numOfHoles ++;
 			}
 		}
@@ -253,11 +261,31 @@ pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) 
 			maxHeight = j;
 		}
 	}
-	pair<int, int> curPosition = make_pair(0, prevHeight);
-	char curDirection = 'l';
-	while (curPosition.second < 11) {
-		if (board.at(curPosition.second + 1).isOccupied(curPosition.first + 1)) edgeNum ++;
+	//TODO: find the total edge of the current shape.
+	//search all 4*4, if three empty then a vertex?
+	for (int i = 0; i + 1 < 11; ++i) {
+		for (int j = 0; j + 1 < board.size(); ++j) {
+			int emptyPixel = 0;
+			int sameLevelEmpty = 0;
+			if (!board.at(j).isOccupied(i) && preserved.find(make_pair(i, j)) == preserved.end()) {
+				emptyPixel++;
+				sameLevelEmpty++;
+			}
+			if (!board.at(j + 1).isOccupied(i) && preserved.find(make_pair(i, j + 1)) == preserved.end()) emptyPixel++;
+			if (!board.at(j).isOccupied(i + 1) && preserved.find(make_pair(i + 1, j)) == preserved.end()) {
+				emptyPixel++;
+				sameLevelEmpty++;
+			}
+			if (!board.at(j + 1).isOccupied(i + 1) && preserved.find(make_pair(i + 1, j + 1)) == preserved.end()) emptyPixel++;
+			if (emptyPixel == 3 || emptyPixel == 1) edgeNum++;
+			if (j == 0 && sameLevelEmpty == 1) edgeNum++;
+		}
 	}
+	// pair<int, int> curPosition = make_pair(0, prevHeight);
+	// char curDirection = 'l';
+	// while (curPosition.second < 11) {
+	// 	if (board.at(curPosition.second + 1).isOccupied(curPosition.first + 1)) edgeNum ++;
+	// }
 	
 	return make_pair(edgeNum, maxHeight);
 }

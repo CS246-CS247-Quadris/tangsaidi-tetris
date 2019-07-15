@@ -45,7 +45,7 @@ class Board {
 		
 		void printRow(int y);
 		std::vector<std::pair<int, int>> ifDropNow(const std::vector<std::pair<int,int>> &);
-		bool isHole(int, int, const std::set<std::pair<int, int>> &);
+		bool isHole(int, int, int, const std::set<std::pair<int, int>> &);
 		int findHoles(const std::set<std::pair<int, int>> &);
 		std::pair<int, int> findEdgesAndHeight(const std::set<std::pair<int, int>> &);
 		std::vector<std::pair<int,int>> singleOrientationHint();
