@@ -24,7 +24,9 @@ unique_ptr<Block> Block::create(char type, int level) {
 	}
 }
 
-Block::Block(char t, int level):type{t}, rotCenter{1,14}, level{level} {}
+// Lower-left bounding box is preserved, so rotate with respect to 
+// lower-left corner
+Block::Block(char t, int level):type{t}, rotCenter{0,13}, level{level} {}
 
 vector<pair<int,int>> Block::getComponents() const {
 	return coordinate;
@@ -86,75 +88,75 @@ void Block::rotate(bool isClockwise) {
 			v.second = tmp;
 		}
 	}
+	// determine new lower-left corner
+	int xMin=coordinate.at(0).first, yMin=coordinate.at(0).second;
+	for(auto v:coordinate) {
+		if(v.first < xMin) xMin = v.first;
+		if(v.second < yMin) yMin = v.second;
+	}
 	// transform coordinates
 	for(auto& v:coordinate) {
-		v.first += x;
-		v.second += y;
+		v.first += (x-xMin);
+		v.second += (y-yMin);
 	}
 }
 
 // 11 col, 15 row
 IBlock::IBlock(int level):Block{'I', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{3,14}};
-//	rotCenter = make_pair<int,int>(0,14);
+	rotCenter = make_pair<int,int>(0,14);
 }
 
 JBlock::JBlock(int level):Block{'J', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{0,13},{1,13},{2,13}};
-//	rotCenter = make_pair<int,int>(1,14);
 }
 
 LBlock::LBlock(int level):Block{'L', level} {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{2,13},{2,14}};
-//	rotCenter = make_pair<int,int>(1,14);
 }
 
 OBlock::OBlock(int level):Block{'O', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{0,13},{1,13}};
-	// O block never use it
-//	rotCenter = make_pair<int,int>(0,13);
 }
 
 SBlock::SBlock(int level):Block{'S', level} {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{1,14},{2,14}};
-//	rotCenter = make_pair<int,int>(1,14);
 }
 
 ZBlock::ZBlock(int level):Block{'Z', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{1,13},{2,13}};
-//	rotCenter = make_pair<int,int>(1,14);
 }
 
 TBlock::TBlock(int level):Block{'T', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
-//	rotCenter = make_pair<int,int>(1,14);
 }
 
 void IBlock::rotate(bool isClockwise) {
-	int x=coordinate[0].first, y=coordinate[0].second;
-	for(auto& v:coordinate) {
-		if(v.first < x) {
-			x = v.first;
-		}
-		if(v.second < y) {
-			y = v.second;
-		}
-	}
-	
-	// if horizontal, rotate it to vertical
-	if(coordinate[0].second == coordinate[1].second) {
-		for(int i=0;i<coordinate.size();i++) {
-			coordinate[i].first = x;
-			coordinate[i].second = y+i;
-		}
-	}
-	// rotate it to horizontal otherwise
-	else {
-		for(int i=0;i<coordinate.size();i++) {
-			coordinate[i].first = x+i;
-			coordinate[i].second = y;
-		}
-	}
+//	int x=coordinate[0].first, y=coordinate[0].second;
+//	for(auto& v:coordinate) {
+//		if(v.first < x) {
+//			x = v.first;
+//		}
+//		if(v.second < y) {
+//			y = v.second;
+//		}
+//	}
+//	
+//	// if horizontal, rotate it to vertical
+//	if(coordinate[0].second == coordinate[1].second) {
+//		for(int i=0;i<coordinate.size();i++) {
+//			coordinate[i].first = x;
+//			coordinate[i].second = y+i;
+//		}
+//	}
+//	// rotate it to horizontal otherwise
+//	else {
+//		for(int i=0;i<coordinate.size();i++) {
+//			coordinate[i].first = x+i;
+//			coordinate[i].second = y;
+//		}
+//	}
+	Block::rotate(isClockwise);
 }
 
 // O block remains unchanged after any rotation

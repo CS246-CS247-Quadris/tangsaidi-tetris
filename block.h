@@ -24,8 +24,8 @@ public:
 protected:
 	Block(char, int);
 	std::vector<std::pair<int,int>> coordinate;
-private:
 	std::pair<int,int> rotCenter;
+private:
 	char type;
 	int level;
 };
