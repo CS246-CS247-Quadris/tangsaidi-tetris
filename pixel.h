@@ -11,6 +11,7 @@ class Pixel {
   public:
   	Pixel();
   	void setPixel(char, std::shared_ptr<Settler>);
+  	void clearPixel();
   	~Pixel();
 	char getData() const;
   	bool isOccupied() const;

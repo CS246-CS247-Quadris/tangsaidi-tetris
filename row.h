@@ -18,6 +18,7 @@ class Row {
 	  Row& operator=(Row &&);
   	~Row();
   	void setRowAt(int, char, std::shared_ptr<Settler>);
+    void clearPixelAt(int);
   	bool isRemovable();
     bool isOccupied(int);
 	char getData(int);

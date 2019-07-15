@@ -178,11 +178,37 @@ void Board::createSettler(std::pair<int, int> coord) {
 	board.at(coord.second).setRowAt(coord.first, '*', s);
 }
 
+void Board::createHintSettler(vector<pair<int, int>> coord) {
+	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
+	for (auto &i : coord) {
+		board.at(i.second).setRowAt(i.first, '?', s);
+	}
+}
+
+void Board::deleteHintSettler(vector<pair<int, int>> coord) {
+	for (auto &i : coord) {
+		board.at(i.second).clearPixelAt(i.first);
+	}
+}
+
 void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel) {
 	shared_ptr<Settler> s = make_shared<Settler>(blockLevel, score);
 	for (auto &i : coord) {
 		board.at(i.second).setRowAt(i.first, blockType, s);
 	}
+}
+
+vector<pair<int, int>> Board::ifDropNow(const vector<pair<int,int>> & block) {
+	vector<pair<int, int>> result = block;
+	do {
+		for (auto &i : result) {
+			i.second -= 1;
+		}
+	} while (isValid(result));
+	for (auto &i : result) {
+		i.second += 1;
+	}
+	return result;
 }
 
 int Board::findHoles(const vector<pair<int,int>> & block) {
@@ -223,16 +249,14 @@ int Board::findMaxHeight(const vector<pair<int,int>> & block) {
 	return maxHeight + 1;
 }
 
-vector<pair<int,int>> Board::singleOrientationHint(unique_ptr<Block> b) {
+vector<pair<int,int>> Board::singleOrientationHint() {
 	vector<pair<int, int>> bestCoord;
 	int bestHole = -1; 
 	int bestHeight = -1;
-	//TODO:
-	// unique_ptr<Block> tmp = b;
-	unique_ptr<Block> tmp;
 	//try all possible positions as the block is moved to the left
-	while(isValid(tmp->getComponents())) {
-		vector<pair<int, int>> tmpPos = tmp->ifDropNow();
+	int i = 0;
+	while(isValid(cur->getComponents())) {
+		vector<pair<int, int>> tmpPos = ifDropNow(cur->getComponents());
 		int holes = findHoles(tmpPos);
 		int maxHeight = findMaxHeight(tmpPos);
 		//find the number of holes and max height with position after drop
@@ -253,14 +277,15 @@ vector<pair<int,int>> Board::singleOrientationHint(unique_ptr<Block> b) {
 			bestHole = holes;
 			bestHeight = maxHeight;
 		}
-		tmp->move('l', 1);
+		cur->move('l', 1);
+		i++;
 	}
-	//try all possible positions on the right
-	//TODO:
-	// tmp = b;
-	tmp->move('r', 1);
-	while(isValid(tmp->getComponents())) {
-		vector<pair<int, int>> tmpPos = tmp->ifDropNow();
+	//revert cur to original state and continue to check the right side
+	cur->move('r', i + 1);
+	cur->move('r', 1);
+	i = 1;
+	while(isValid(cur->getComponents())) {
+		vector<pair<int, int>> tmpPos = ifDropNow(cur->getComponents());
 		int holes = findHoles(tmpPos);
 		int maxHeight = findMaxHeight(tmpPos);
 		//find the number of holes and max height with position after drop
@@ -281,8 +306,12 @@ vector<pair<int,int>> Board::singleOrientationHint(unique_ptr<Block> b) {
 			bestHole = holes;
 			bestHeight = maxHeight;
 		}
-		tmp->move('r', 1);
+		cur->move('r', 1);
+		i++;
 	}
+	//revert back the original block
+	cur->move('l', i);
+	//return results
 	vector<pair<int, int>> result;
 	result.emplace_back(make_pair(bestHole, bestHeight));
 	result.insert(result.end(), bestCoord.begin(), bestCoord.end());
@@ -290,20 +319,26 @@ vector<pair<int,int>> Board::singleOrientationHint(unique_ptr<Block> b) {
 }
 
 void Board::hint(){
-	//penalize height, holes, blockade(blocks directly above holes)
-	//reward clears
-
-	//Step1: look at all possible combinations of current and next block (stage1: current only)
-	//Step2: obtain a score for each of the position
-	//Step3: display the pisition with the highest score (TODO: if create settler, how to delete?)
-
 	//find the number of holes that will be produced for each possible outsome
 	//the solution wih least amount of holes win
 	//if the same, then pick the one with the least max height
 	//if same height, random for stage 1, and possibly look at next block for future use
-	// unique_ptr<Block> tmp = cur; to be added when look through all four rotations
-	//TODO:
-	// vector<pair<int, int>> hintBlock = singleOrientationHint(cur);
+	vector<pair<int, int>> hintBlock = singleOrientationHint();
+	for (int i = 0; i < 3; ++i) {
+		cur->rotate(true);
+		vector<pair<int, int>> tmpBlock = singleOrientationHint();
+		if (tmpBlock.at(0).first < hintBlock.at(0).first) {
+			hintBlock = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(0).second < hintBlock.at(0).second) {
+			hintBlock = tmpBlock;
+		}	
+	}
+	cur->rotate(true);
+	hintBlock.erase(hintBlock.begin());
+	//print board
+	createHintSettler(hintBlock);
+	print();
+	deleteHintSettler(hintBlock);
 }
 
 /* Drops a block onto the board and turn it into a settler
