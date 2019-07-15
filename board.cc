@@ -84,15 +84,8 @@ void Board::print() {
 		cout<<endl;
 	}
 	for(int y=nRows-1;y>=0;y--) {
-		stringstream ss;
-		string tmp;
-		ss<<board.at(nRows-y-1);
-		tmp = ss.str();
-		
 		printRow(y);
 		cout<<endl;
-		
-		ss.str(string());
 	}
 	cout<<"-----------"<<endl;
 	
