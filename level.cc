@@ -3,6 +3,7 @@
 #include "levelOne.h"
 #include "levelTwo.h"
 #include "levelThree.h"
+#include "levelFour.h"
 
 #include <fstream>
 #include <iostream>
@@ -63,16 +64,25 @@ std::unique_ptr<Level> Level::create(int level, Board* board) {
     case 3: {
       return std::make_unique<LevelThree>(board);
     }
+    case 4: {
+      return std::make_unique<LevelFour>(board);
+    }
   }		
   return std::make_unique<LevelZero>(board);
 }
 
 void Level::move(char direction, int steps) {
   board->cur->move(direction, steps);
+  if (!board->isValid(board->cur->getComponents())) {
+    board->cur->move(direction, (-1) * steps);
+  }
 }
 
 void Level::rotate(bool isClockwise) {
   board->cur->rotate(isClockwise);
+  if (!board->isValid(board->cur->getComponents())) {
+    board->cur->rotate(1 ^ isClockwise);
+  }
 }
 
 Level::~Level() {}

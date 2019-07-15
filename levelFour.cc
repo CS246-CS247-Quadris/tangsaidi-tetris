@@ -3,6 +3,9 @@
 #include <utility>
 
 
+#include <iostream>
+using namespace std;
+
 LevelFour::LevelFour(Board* board): LevelThree(board){
   srand(Level::seed);
 }
@@ -17,7 +20,7 @@ bool LevelFour::hasRemovable() {
   return false;
 }
 
-// get the next block on this level
+// get the next block on this level, failed command also trigger heavy move
 // **TEST REQUIRED**
 std::unique_ptr<Block> LevelFour::getNext() {
   std::unique_ptr<Block> ret = LevelThree::getNext();
@@ -30,12 +33,14 @@ std::unique_ptr<Block> LevelFour::getNext() {
     int const mid = 5;
     if (!getBoard()->at(dropRow).isOccupied(mid)) {
       for (int i = 14; i>-1; --i) {
-        if (getBoard()->at(dropRow).isOccupied(mid)) {
+        if (getBoard()->at(i).isOccupied(mid)) {
+          dropRow++;
           break;
         } else {
           dropRow--;
         }
       }
+
       board->createSettler(std::make_pair(mid, dropRow));
     }
   }

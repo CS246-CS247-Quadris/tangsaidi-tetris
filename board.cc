@@ -28,17 +28,11 @@ bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 }
 
 void Board::move(char direction, int steps) {
-	// TODO: check level and strategy
 	strategy->move(direction, steps);
-	if(!isValid(cur->getComponents()))
-		strategy->move(direction, -steps);
 }
 
 void Board::rotate(bool isClockWise) {
-	// TODO: check level and strategy
 	strategy->rotate(isClockWise);
-	if(!isValid(cur->getComponents()))
-		strategy->rotate(!isClockWise);
 }
 
 void Board::changeLevel(int delta) {
@@ -139,6 +133,8 @@ void Board::setSeed(int seed) {
 	strategy->setSeed(seed);
 }
 
+// This may not be safe for higher levels
+// **TEST REQUIRED**
 void Board::replaceCurrentBlock(char cType) {
 	if(cType == cur->getBlockType())
 		return;
@@ -318,10 +314,9 @@ void Board::hint(){
  * Check whether there's removable rows, if there is, remove them
  */
 void Board::drop() {
-	while (isValid(cur->getComponents())) {
+	for (int i = 0; i < 15; i++) {
 		strategy->move('d', 1);
 	}
-	strategy->move('d', -1);
 	createSettler(cur->getComponents(), cur->getBlockType(), cur->getBlockLevel());
 	cur = std::move(next);
 	next= strategy->getNext();

@@ -1,7 +1,6 @@
 #include "levelThree.h"
 #include <cstdlib> 
 
-
 LevelThree::LevelThree(Board* board): Level(board) {
   srand(Level::seed);
 }
@@ -39,14 +38,14 @@ std::unique_ptr<Block> LevelThree::getNext() {
 // params: direction(n, s, e, w), distance(>=0)
 void LevelThree::move(char direction, int steps) {
   Level::move(direction, steps);
-  this->getCur()->move('d', 1);
+  Level::move('d', 1);
 }
 
 // Perform a rotation by calling the current block's rotate function
 // params: isClockWise(true, false)
 void LevelThree::rotate(bool isClockwise) {
   Level::rotate(isClockwise);
-  this->getCur()->move('d', 1);
+  Level::move('d', 1);
 }
 
 LevelThree::~LevelThree() {}
