@@ -10,10 +10,12 @@
 
 class Game {
 public:
-	Game(bool, int, int, const std::string&/*, std::istream&*/);
+	Game(bool, int, int, const std::string&);
 	void printBoard();
 	bool parseCommand(std::istream&);
 	bool needRestart() const;
+	bool suppressOutput() const;
+	void clear();
 private:
 	enum CommandType {
 		CONTROL_LEFT = 0,
@@ -54,8 +56,11 @@ private:
 		friend class Game;
 	};
 	
+	// Context variable, used by game main loop
 	int seed;
 	bool bRestart;
+	bool bHint;
+	
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
 	std::map<std::string, std::vector<std::string>> macro;

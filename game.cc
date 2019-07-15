@@ -15,9 +15,10 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 	}
 }
 
-Game::Game(bool isTextMode, int level, int rndSeed, const string& script/*, istream& is*/): 
+Game::Game(bool isTextMode, int level, int rndSeed, const string& script): 
 	seed{rndSeed},
 	bRestart{false},
+	bHint{false},
 	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
 	command{
@@ -305,6 +306,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			// ignore multiplier
 			cout<<"DEBUG: hint "<<rept<<endl;
 			game->hint();
+			bHint = true;
 			break;
 		case DEBUG_REPLACE_I:
 			// I
@@ -466,9 +468,15 @@ bool Game::parseCommand(istream& in) {
 }
 
 void Game::printBoard() {
-	game->print();
+	if(!bHint) {
+		game->print();
+	}
+	else {
+		bHint = false;
+	}
 }
 
 bool Game::needRestart() const {
 	return bRestart;
 }
+
