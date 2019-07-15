@@ -33,7 +33,6 @@ private:
 class IBlock : public Block {
 public:
 	IBlock(int);
-	void rotate(bool) override;
 };
 
 class JBlock : public Block {

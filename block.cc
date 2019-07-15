@@ -131,34 +131,6 @@ TBlock::TBlock(int level):Block{'T', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
 }
 
-void IBlock::rotate(bool isClockwise) {
-//	int x=coordinate[0].first, y=coordinate[0].second;
-//	for(auto& v:coordinate) {
-//		if(v.first < x) {
-//			x = v.first;
-//		}
-//		if(v.second < y) {
-//			y = v.second;
-//		}
-//	}
-//	
-//	// if horizontal, rotate it to vertical
-//	if(coordinate[0].second == coordinate[1].second) {
-//		for(int i=0;i<coordinate.size();i++) {
-//			coordinate[i].first = x;
-//			coordinate[i].second = y+i;
-//		}
-//	}
-//	// rotate it to horizontal otherwise
-//	else {
-//		for(int i=0;i<coordinate.size();i++) {
-//			coordinate[i].first = x+i;
-//			coordinate[i].second = y;
-//		}
-//	}
-	Block::rotate(isClockwise);
-}
-
 // O block remains unchanged after any rotation
 void OBlock::rotate(bool isClockwise) {}
 
