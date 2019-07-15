@@ -438,6 +438,7 @@ bool Game::parseCommand(istream& in) {
 			istream_iterator<string>(), 
 			back_inserter(tokens));
 	if(tokens.empty()) {
+		bSupressOutput = true;
 		return true;
 	}
 	
