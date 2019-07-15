@@ -15,6 +15,10 @@ Board::Board(int level, const string& script):
 	next= strategy->getNext();
 }
 
+Board::~Board() {
+	score->endGame();
+}
+
 int Board::getCurrentLevel() const {
 	return curLevel;
 }

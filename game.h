@@ -11,6 +11,7 @@
 class Game {
 public:
 	Game(bool, int, int, const std::string&);
+	~Game();
 	void printBoard();
 	bool parseCommand(std::istream&);
 	bool needRestart() const;
@@ -57,7 +58,7 @@ private:
 	// Context variable, used by game main loop
 	int seed;
 	bool bRestart;
-	bool bHint;
+	bool bSupressOutput;
 	
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;

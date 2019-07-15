@@ -19,6 +19,7 @@ class Board {
 
 	public:
 		Board(int level, const std::string& script);
+		~Board();
 		int getCurrentLevel() const;
 		bool checkEnd();
 		bool isValid(std::vector<std::pair<int, int>> coord);
