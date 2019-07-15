@@ -40,13 +40,6 @@ vector<pair<int,int>> Block::getComponents() const {
 	return coordinate;
 }
 
-char Block::getBlockType() const {
-	return type;
-}
-
-int Block::getBlockLevel() const {
-	return level;
-}
 
 /* Block::move
  *
