@@ -153,7 +153,7 @@ void Board::replaceCurrentBlock(char cType) {
 		}
 	}
 	
-	cur = Block::create(cType);
+	cur = Block::create(cType, curLevel);
 	comp = cur->getComponents();
 	
 	srcXmin = comp.at(0).first;

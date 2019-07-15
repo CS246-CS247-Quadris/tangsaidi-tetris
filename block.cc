@@ -2,39 +2,29 @@
 #include <iostream>
 using namespace std;
 
-unique_ptr<Block> Block::create(char type) {
+unique_ptr<Block> Block::create(char type, int level) {
 	cout << "Block " << type << " created" << endl;
 	switch(type) {
 		case 'I':
-			return make_unique<IBlock>();
+			return make_unique<IBlock>(level);
 		case 'J':
-			return make_unique<JBlock>();
+			return make_unique<JBlock>(level);
 		case 'L':
-			return make_unique<LBlock>();
+			return make_unique<LBlock>(level);
 		case 'O':
-			return make_unique<OBlock>();
+			return make_unique<OBlock>(level);
 		case 'S':
-			return make_unique<SBlock>();
+			return make_unique<SBlock>(level);
 		case 'Z':
-			return make_unique<ZBlock>();
+			return make_unique<ZBlock>(level);
 		case 'T':
-			return make_unique<TBlock>();
+			return make_unique<TBlock>(level);
 		default:
 			return nullptr;
 	}
 }
 
-Block::Block(char t):type{t}, rotCenter{1,14} {}
-Block::~Block(){}
-Block::Block(const Block& other): type{other.type}, level{other.level} {}
-
-Block& Block::operator=(const Block& other) {
-	if(this != &other) {
-		type = other.type;
-		level = other.level;
-	}
-	return *this;
-}
+Block::Block(char t, int level):type{t}, rotCenter{1,14}, level{level} {}
 
 vector<pair<int,int>> Block::getComponents() const {
 	return coordinate;
@@ -104,38 +94,38 @@ void Block::rotate(bool isClockwise) {
 }
 
 // 11 col, 15 row
-IBlock::IBlock():Block('I') {
+IBlock::IBlock(int level):Block{'I', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{3,14}};
 //	rotCenter = make_pair<int,int>(0,14);
 }
 
-JBlock::JBlock():Block('J') {
+JBlock::JBlock(int level):Block{'J', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{0,13},{1,13},{2,13}};
 //	rotCenter = make_pair<int,int>(1,14);
 }
 
-LBlock::LBlock():Block('L') {
+LBlock::LBlock(int level):Block{'L', level} {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{2,13},{2,14}};
 //	rotCenter = make_pair<int,int>(1,14);
 }
 
-OBlock::OBlock():Block('O') {
+OBlock::OBlock(int level):Block{'O', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{0,13},{1,13}};
 	// O block never use it
 //	rotCenter = make_pair<int,int>(0,13);
 }
 
-SBlock::SBlock():Block('S') {
+SBlock::SBlock(int level):Block{'S', level} {
 	coordinate = vector<pair<int,int>>{{0,13},{1,13},{1,14},{2,14}};
 //	rotCenter = make_pair<int,int>(1,14);
 }
 
-ZBlock::ZBlock():Block('Z') {
+ZBlock::ZBlock(int level):Block{'Z', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{1,13},{2,13}};
 //	rotCenter = make_pair<int,int>(1,14);
 }
 
-TBlock::TBlock():Block('T') {
+TBlock::TBlock(int level):Block{'T', level} {
 	coordinate = vector<pair<int,int>>{{0,14},{1,14},{2,14},{1,13}};
 //	rotCenter = make_pair<int,int>(1,14);
 }
@@ -178,3 +168,5 @@ char Block::getBlockType() {
 int Block::getBlockLevel() {
 	return level;
 }
+
+Block::~Block() {}

@@ -25,7 +25,7 @@ std::unique_ptr<Block> LevelOne::getNext() {
   } else if (randNum < 12) {
     blockType = 'T';
   }
-  return Block::create(blockType);
+  return Block::create(blockType, board->getCurrentLevel());
 }
 
 LevelOne::~LevelOne() {}
