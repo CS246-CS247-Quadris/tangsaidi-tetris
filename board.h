@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <fstream>
+#include <set>
 #include "block.h"
 #include "score.h"
 #include "row.h"
