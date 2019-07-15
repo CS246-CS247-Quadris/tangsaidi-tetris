@@ -3,6 +3,11 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <memory>
+
+#include <QtWidgets>
+#include "tetrixwindow.h"
+
 #include "game.h"
 using namespace std;
 
@@ -158,14 +163,22 @@ int main(int argc, char *argv[]) {
 	startLevel = stoi(str_level);
 	
 	// Now start the game
-	game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
+	game = std::make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
 	
+	if (!enableTextMode) {
+		QApplication app(argc, argv);
+    	TetrixWindow window;
+		window.show();
+		qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+
+	}
+
 	while(true) {
 		game->printBoard();
 		cout<<"> ";
 		if(!game->parseCommand(cin)) {
 			if(game->needRestart())
-				game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
+				game = std::make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
 			else
 				break;
 		}
