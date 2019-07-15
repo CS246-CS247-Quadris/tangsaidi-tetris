@@ -11,7 +11,7 @@ std::unique_ptr<Block> LevelThree::getNext() {
     if (current == sequence.size()) {
       current = 0;
     }
-    return Block::create(sequence[current++]);
+    return Block::create(sequence[current++], board->getCurrentLevel());
   }
 
   int randNum = rand() % 9;
@@ -31,7 +31,7 @@ std::unique_ptr<Block> LevelThree::getNext() {
   } else if (randNum < 9) {
     blockType = 'T';
   }
-  return Block::create(blockType);
+  return Block::create(blockType, board->getCurrentLevel());
 }
 
 // Change the location of current block by calling the move function of block

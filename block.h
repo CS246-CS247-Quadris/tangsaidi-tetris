@@ -13,18 +13,16 @@ class Level;
 // TODO: Add level control interface
 class Block {
 public:
-	Block(const Block&);
     // Take in capital chars
-    static std::unique_ptr<Block> create(char);
+    static std::unique_ptr<Block> create(char, int);
     void move(char, int);
     virtual void rotate(bool);
     virtual std::vector<std::pair<int,int>> getComponents() const;
     virtual ~Block()=0;
-    Block& operator=(const Block&);
 	char getBlockType();
 	int getBlockLevel();
 protected:
-	Block(char);
+	Block(char, int);
 	std::vector<std::pair<int,int>> coordinate;
 private:
 	std::pair<int,int> rotCenter;
@@ -34,39 +32,39 @@ private:
 
 class IBlock : public Block {
 public:
-	IBlock();
+	IBlock(int);
 	void rotate(bool) override;
 };
 
 class JBlock : public Block {
 public:
-	JBlock();
+	JBlock(int);
 };
 
 class LBlock : public Block {
 public:
-	LBlock();
+	LBlock(int);
 };
 
 class OBlock : public Block {
 public:
-	OBlock();
+	OBlock(int);
 	void rotate(bool) override;
 };
 
 class SBlock : public Block {
 public:
-	SBlock();
+	SBlock(int);
 };
 
 class ZBlock : public Block {
 public:
-	ZBlock();
+	ZBlock(int);
 };
 
 class TBlock : public Block {
 public:
-	TBlock();
+	TBlock(int);
 };
 
 #endif /* __BLOCK_H__ */
