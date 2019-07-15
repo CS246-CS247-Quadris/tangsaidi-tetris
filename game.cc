@@ -174,10 +174,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 	string token;
 	int rept;
 	
-	// // check if game is over
-	// if(game->checkEnd())
-	// 	return false;
-	
 	splitToken(tokens.at(index), token, rept);
 	
 	// fix the token first
@@ -196,7 +192,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		vector<string> m = macro.at(token);
 		for(int i=0; i<m.size(); i++) {
 			if(!perform(m, i))
-				return true;
+				return false;
 		}
 	}
 	

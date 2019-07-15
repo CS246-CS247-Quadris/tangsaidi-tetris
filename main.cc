@@ -171,6 +171,9 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	
+	game->printBoard();
+	cout<<"\nGame over.\n"<<endl;
+	
 	return 0;
 }
 

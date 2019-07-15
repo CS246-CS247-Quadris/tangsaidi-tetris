@@ -53,7 +53,7 @@ void Board::printRow(int y) {
 		vector<pair<int,int>> comp = cur->getComponents();
 		bool ifHit = false;
 		for(auto& v:comp) {
-			if(v.first == x && v.second == y) {
+			if(v.first == x && v.second == y && !checkEnd()) {
 				cout << cur->getBlockType();
 				ifHit = true;
 			}
@@ -69,6 +69,7 @@ void Board::printRow(int y) {
 }
 
 void Board::print() {
+	cout << "\033[2J\033[1;1H"; // clear screen
 	cout<<setw(10)<<left<<"Level:";
 	cout<<setw(3)<<right<<curLevel<<endl;
 	cout<<setw(10)<<left<<"Score:";
