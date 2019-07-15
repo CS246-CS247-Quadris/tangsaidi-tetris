@@ -158,13 +158,17 @@ int main(int argc, char *argv[]) {
 	startLevel = stoi(str_level);
 	
 	// Now start the game
-	game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript/*, cin*/);
+	game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
 	
 	while(true) {
 		game->printBoard();
 		cout<<"> ";
-		if(!game->parseCommand(cin))
-			break;
+		if(!game->parseCommand(cin)) {
+			if(game->needRestart())
+				game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
+			else
+				break;
+		}
 	}
 	
 	return 0;

@@ -167,13 +167,17 @@ void Board::replaceCurrentBlock(char cType) {
 		}
 	}
 	
-	// x needs to be fixed when changing from:
-	// any to horizontal I
-	strategy->move('r', destXmin-srcXmin);
-	while (!isValid(cur->getComponents())) {
-		strategy->move('l', 1);
+	// coordinates need to be fixed
+	for(int c=destXmin-srcXmin;c>0;c--) {
+		cur->move('r', 1);
+		if(!isValid(cur->getComponents()))
+			cur->move('r', -1);
 	}
-	strategy->move('d', destYmin-srcYmin);
+	for(int c=destYmin-srcYmin;c>0;c--) {
+		cur->move('d', 1);
+		if(!isValid(cur->getComponents()))
+			cur->move('d', -1);
+	}
 }
 
 void Board::createSettler(std::pair<int, int> coord) {

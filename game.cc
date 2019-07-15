@@ -17,7 +17,7 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 
 Game::Game(bool isTextMode, int level, int rndSeed, const string& script/*, istream& is*/): 
 	seed{rndSeed},
-	/*in{is}, */
+	bRestart{false},
 	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
 	command{
@@ -294,10 +294,12 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			break;
 		}
 		case CONTROL_RESTART:
-			// TODO: restart
+			// restart
 			// ignore multiplier
 			cout<<"DEBUG: restart "<<rept<<endl;
-			break;
+			// quit the game, Game context will be recreated by main
+			bRestart = true;
+			return false;
 		case CONTROL_HINT:
 			// hint
 			// ignore multiplier
@@ -346,7 +348,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			// repeating is also meaningless
 			if(tokens.size()-index-1<2) {
 				cout<<"Error: Missing argument of 'rename'."<<endl;
-				//return true;
 				break;
 			}
 			string src = tokens.at(++index);
@@ -356,7 +357,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			
 			if(test(dest)) {
 				cout<<"Error: "<<"'"<<dest<<"' already exists."<<endl;
-				//return true;
 				break;
 			}
 			
@@ -365,7 +365,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 				src = getCommandByPrefix(src);
 				if(src.empty()) {
 					cout<<"Error: "<<tokens.at(index-1)<<" not found."<<endl;
-					//return true;
 					break;
 				}
 			}
@@ -433,6 +432,9 @@ bool Game::parseCommand(istream& in) {
 	copy(istream_iterator<string>(iss), 
 			istream_iterator<string>(), 
 			back_inserter(tokens));
+	if(tokens.empty()) {
+		return true;
+	}
 	
 	// test if the first token is used for defining macro
 	splitToken(tokens[0], s, cnt);
@@ -465,4 +467,8 @@ bool Game::parseCommand(istream& in) {
 
 void Game::printBoard() {
 	game->print();
+}
+
+bool Game::needRestart() const {
+	return bRestart;
 }
