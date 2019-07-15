@@ -213,6 +213,17 @@ vector<pair<int, int>> Board::ifDropNow(const vector<pair<int,int>> & block) {
 	return result;
 }
 
+bool Board::isHole(int i, int j, const set<pair<int, int>> & preserved) {
+	if (board.at(i).isOccupied(j) || preserved.find(make_pair(i, j)) != preserved.end()) return false;
+	if (i - 1 >= 0 && !board.at(i-1).isOccupied(j) && preserved.find(make_pair(i-1, j)) == preserved.end()) 
+		return false;
+	if (i + 1 < board.size() && !board.at(i+1).isOccupied(j) && preserved.find(make_pair(i+1, j)) == preserved.end()) 
+		return false;
+	if (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(i, j+1)) == preserved.end()) 
+		return false;
+	return true;
+}
+
 int Board::findHoles(const vector<pair<int,int>> & block) {
 	int numOfHoles = 0;
 	set<pair<int, int>> preserved;
@@ -222,10 +233,7 @@ int Board::findHoles(const vector<pair<int,int>> & block) {
 
 	for (int i = 0; i < board.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
-			if (!board.at(i).isOccupied(j) 
-				&& (board.at(i-1).isOccupied(j) || preserved.find(make_pair(i-1, j)) != preserved.end())
-				&& (board.at(i+1).isOccupied(j) || preserved.find(make_pair(i+1, j)) != preserved.end()) 
-				&& (board.at(i).isOccupied(j+1) || preserved.find(make_pair(i, j+1)) != preserved.end())) {
+			if (isHole(i, j, preserved)) {
 				numOfHoles ++;
 			}
 		}
@@ -284,7 +292,6 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 	}
 	//revert cur to original state and continue to check the right side
 	cur->move('r', i + 1);
-	cur->move('r', 1);
 	i = 1;
 	while(isValid(cur->getComponents())) {
 		vector<pair<int, int>> tmpPos = ifDropNow(cur->getComponents());
