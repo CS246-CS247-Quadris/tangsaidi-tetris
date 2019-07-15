@@ -9,7 +9,10 @@ void Pixel::setPixel(char d, shared_ptr<Settler> s){
 	parent = s;
 }
 
-//TODO:copy constr? maybe, how to take care of shared ptr?
+void Pixel::clearPixel() {
+	data = '-';
+	parent = nullptr;
+}
 
 Pixel::~Pixel(){}
 

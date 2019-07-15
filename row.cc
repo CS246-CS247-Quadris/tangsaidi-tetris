@@ -28,6 +28,10 @@ void Row::setRowAt(int index, char d, shared_ptr<Settler> s) {
 	data.at(index).setPixel(d, s);
 }
 
+void Row::clearPixelAt(int index) {
+	data.at(index).clearPixel();
+}
+
 char Row::getData(int i) {
 	if (i >= data.size() || i < 0) return -1;
 	return data.at(i).getData();

@@ -43,9 +43,12 @@ class Board {
 		std::unique_ptr<Level> strategy;
 		
 		void printRow(int y);
+		std::vector<std::pair<int, int>> ifDropNow(const std::vector<std::pair<int,int>> &);
 		int findHoles(const std::vector<std::pair<int,int>> &);
 		int findMaxHeight(const std::vector<std::pair<int,int>> &);
-		std::vector<std::pair<int,int>> singleOrientationHint(std::unique_ptr<Block>);
+		std::vector<std::pair<int,int>> singleOrientationHint();
+		void createHintSettler(std::vector<std::pair<int, int>> coord);
+		void deleteHintSettler(std::vector<std::pair<int, int>> coord);
 };
 
 #endif /* __BOARD_H__ */
