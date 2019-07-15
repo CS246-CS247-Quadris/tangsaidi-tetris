@@ -14,8 +14,6 @@ public:
 	void printBoard();
 	bool parseCommand(std::istream&);
 	bool needRestart() const;
-	bool suppressOutput() const;
-	void clear();
 private:
 	enum CommandType {
 		CONTROL_LEFT = 0,
