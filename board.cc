@@ -220,17 +220,21 @@ bool Board::isHole(int row, int right, int left, const set<pair<int, int>> & pre
 	// 	return false;
 	// if (i + 1 < board.size() && !board.at(i+1).isOccupied(j) && preserved.find(make_pair(j, i+1)) == preserved.end()) 
 	// 	return false;
+	if (row + 1 >= board.size()) return false;
 	for (int i = right; i <= left; ++i) {
-		if (row + 1 < board.size() && !board.at(row+1).isOccupied(i) && preserved.find(make_pair(i, row+1)) == preserved.end())
+		if (!board.at(row+1).isOccupied(i) && preserved.find(make_pair(i, row+1)) == preserved.end())
 			return false;
 	}
 	return true;
 }
 
 bool Board::isHalfHole(int y, int x, const set<pair<int, int>> & preserved) {
-	if (x - 1 < 0 || y - 1 < 0 || board.at(y-1).isOccupied(x-1) || preserved.find(make_pair(x-1, y-1)) != preserved.end())
+	if (y - 1 < 0) return false;
+	if (board.at(y-1).isOccupied(x) || preserved.find(make_pair(x, y-1)) != preserved.end())
+		return false;
+	if (x - 1 < 0 || board.at(y-1).isOccupied(x-1) || preserved.find(make_pair(x-1, y-1)) != preserved.end())
 		return true;
-	if (x + 1 >= 11 || y - 1 < 0 || board.at(y-1).isOccupied(x+1) || preserved.find(make_pair(x+1, y-1)) != preserved.end())
+	if (x + 1 >= 11 || board.at(y-1).isOccupied(x+1) || preserved.find(make_pair(x+1, y-1)) != preserved.end())
 		return true;
 	return false;
 }
@@ -252,7 +256,7 @@ pair<int, int> Board::findHoles(const set<pair<int, int>> & preserved) {
 
 	for (int i = 0; i < board.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
-			if (board.at(i).isOccupied(j) && isHalfHole(i, j, preserved)) {
+			if ((board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end()) && isHalfHole(i, j, preserved)) {
 				halfHoles ++;
 			}
 		}
@@ -261,7 +265,7 @@ pair<int, int> Board::findHoles(const set<pair<int, int>> & preserved) {
 }
 
 pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) {
-	int edgeNum = 1;
+	int edgeNum = 0;
 	int prevHeight = -1;
 	int maxHeight = -1;
 	for (int i = 0; i < 11; ++i) {
@@ -302,7 +306,7 @@ pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) 
 	// 	if (board.at(curPosition.second + 1).isOccupied(curPosition.first + 1)) edgeNum ++;
 	// }
 	
-	return make_pair(edgeNum, maxHeight);
+	return make_pair(edgeNum, maxHeight + 1);
 }
 
 vector<pair<int,int>> Board::singleOrientationHint() {
@@ -325,21 +329,26 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 			if (holes.first < bestHole.first) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			} else if (holes.first == bestHole.first && holes.second < bestHole.second) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			} else if (holes.first == bestHole.first && holes.second == bestHole.second && shape.first < bestShape.first) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			} else if (holes.first == bestHole.first && holes.second == bestHole.second 
 				&& shape.first == bestShape.first && shape.second < bestShape.second) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			}
 		} else {
 			//if not initialized, current result is the best
 			bestHole = holes;
 			bestShape = shape;
+			bestCoord = tmpPos;
 		}
 		cur->move('l', 1);
 		i++;
@@ -359,23 +368,28 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 		if (bestHole.first >= 0 && bestHole.second >= 0 && bestShape.first >= 0 && bestShape.second >= 0) {
 			//compare the result with the best result from before, determine new best result
 			if (holes.first < bestHole.first) {
+				bestCoord = tmpPos;
 				bestHole = holes;
 				bestShape = shape;
 			} else if (holes.first == bestHole.first && holes.second < bestHole.second) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			} else if (holes.first == bestHole.first && holes.second == bestHole.second && shape.first < bestShape.first) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			} else if (holes.first == bestHole.first && holes.second == bestHole.second 
 				&& shape.first == bestShape.first && shape.second < bestShape.second) {
 				bestHole = holes;
 				bestShape = shape;
+				bestCoord = tmpPos;
 			}
 		} else {
 			//if not initialized, current result is the best
 			bestHole = holes;
 			bestShape = shape;
+			bestCoord = tmpPos;
 		}
 		cur->move('r', 1);
 		i++;
@@ -412,6 +426,8 @@ void Board::hint(){
 		}
 	}
 	cur->rotate(true);
+	cout << "holes: " << hintBlock.at(0).first << " halfHoles: " << hintBlock.at(0).second << endl;
+	cout << "vertices: " << hintBlock.at(1).first << " maxHeight: " << hintBlock.at(1).second << endl;
 	hintBlock.erase(hintBlock.begin());
 	hintBlock.erase(hintBlock.begin());
 	//print board
