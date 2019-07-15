@@ -145,8 +145,10 @@ void Board::replaceCurrentBlock(char cType) {
 	destXmin = comp.at(0).first;
 	destYmin = comp.at(0).second;
 	for(auto v:comp) {
-		if(v.first < destXmin && v.second < destYmin) {
+		if(v.first < destXmin) {
 			destXmin = v.first;
+		}
+		if(v.second < destYmin) {
 			destYmin = v.second;
 		}
 	}
@@ -157,19 +159,19 @@ void Board::replaceCurrentBlock(char cType) {
 	srcXmin = comp.at(0).first;
 	srcYmin = comp.at(0).second;
 	for(auto v:comp) {
-		if(v.first < srcXmin && v.second < srcYmin) {
+		if(v.first < srcXmin) {
 			srcXmin = v.first;
+		}
+		if(v.second < srcYmin) {
 			srcYmin = v.second;
 		}
 	}
 	
-	// x needs to be fixed when changing from:
-	// any to horizontal I
-	strategy->move('r', destXmin-srcXmin);
-	while (!isValid(cur->getComponents())) {
-		strategy->move('l', 1);
-	}
-	strategy->move('d', destYmin-srcYmin);
+	// coordinates need to be fixed
+	for(int c=destXmin-srcXmin;c>0;c--) cur->move('r', 1);
+	while(!isValid(cur->getComponents())) cur->move('l', 1);
+	for(int c=srcYmin-destYmin;c>0;c--) cur->move('d', 1);
+	while(!isValid(cur->getComponents())) cur->move('d', -1);
 }
 
 void Board::createSettler(std::pair<int, int> coord) {
