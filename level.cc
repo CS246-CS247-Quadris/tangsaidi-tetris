@@ -31,6 +31,7 @@ void Level::setSequence(std::string fileName) {
   inFile.open(fileName);
   if (!inFile) {
     std::cerr << "Failed to open file" << std::endl;
+    sequence.push_back('I');
     return;
   }
 
