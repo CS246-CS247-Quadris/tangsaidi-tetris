@@ -57,8 +57,9 @@ private:
 	
 	// Context variable, used by game main loop
 	int seed;
-	bool bRestart;
+	int startLevel;
 	bool bSupressOutput;
+	const std::string& script;
 	
 	std::unique_ptr<Board> game;
 	std::map<std::string, CommandType> command;
@@ -73,6 +74,7 @@ private:
 	bool test(const std::string&);
 	bool perform(const std::vector<std::string>&, int&);
 	void splitToken(const std::string&, std::string&, int&);
+	void reset();
 };
 
 #endif /* __GAME_H__ */

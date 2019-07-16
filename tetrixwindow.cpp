@@ -50,19 +50,19 @@
 
 #include <QtWidgets>
 
-#include "tetrixboard.h"
+// #include "tetrixboard.h"
 #include "tetrixwindow.h"
 
 //! [0]
 TetrixWindow::TetrixWindow()
 {
-    board = new TetrixBoard;
+    // board = new TetrixBoard;
 //! [0]
 
     nextPieceLabel = new QLabel;
     nextPieceLabel->setFrameStyle(QFrame::Box | QFrame::Raised);
     nextPieceLabel->setAlignment(Qt::AlignCenter);
-    board->setNextPieceLabel(nextPieceLabel);
+    // board->setNextPieceLabel(nextPieceLabel);
 
 //! [1]
     scoreLcd = new QLCDNumber(5);
@@ -83,14 +83,14 @@ TetrixWindow::TetrixWindow()
     pauseButton->setFocusPolicy(Qt::NoFocus);
 //! [3] //! [4]
 
-    connect(startButton, SIGNAL(clicked()), board, SLOT(start()));
-//! [4] //! [5]
-    connect(quitButton , SIGNAL(clicked()), qApp, SLOT(quit()));
-    connect(pauseButton, SIGNAL(clicked()), board, SLOT(pause()));
-    connect(board, SIGNAL(scoreChanged(int)), scoreLcd, SLOT(display(int)));
-    connect(board, SIGNAL(levelChanged(int)), levelLcd, SLOT(display(int)));
-    connect(board, SIGNAL(linesRemovedChanged(int)),
-            linesLcd, SLOT(display(int)));
+//     connect(startButton, SIGNAL(clicked()), board, SLOT(start()));
+// //! [4] //! [5]
+//     connect(quitButton , SIGNAL(clicked()), qApp, SLOT(quit()));
+//     connect(pauseButton, SIGNAL(clicked()), board, SLOT(pause()));
+//     connect(board, SIGNAL(scoreChanged(int)), scoreLcd, SLOT(display(int)));
+//     connect(board, SIGNAL(levelChanged(int)), levelLcd, SLOT(display(int)));
+//     connect(board, SIGNAL(linesRemovedChanged(int)),
+//             linesLcd, SLOT(display(int)));
 //! [5]
 
 //! [6]
@@ -100,7 +100,7 @@ TetrixWindow::TetrixWindow()
     layout->addWidget(createLabel(tr("LEVEL")), 2, 0);
     layout->addWidget(levelLcd, 3, 0);
     layout->addWidget(startButton, 4, 0);
-    layout->addWidget(board, 0, 1, 6, 1);
+    // layout->addWidget(board, 0, 1, 6, 1);
     layout->addWidget(createLabel(tr("SCORE")), 0, 2);
     layout->addWidget(scoreLcd, 1, 2);
     layout->addWidget(createLabel(tr("LINES REMOVED")), 2, 2);

@@ -1,9 +1,12 @@
 QT += widgets
+QT += core
 QMAKE_CC = gcc
 QMAKE_CXX = g++
 CONFIG += c++14
 
-HEADERS       = tetrixboard.h \
+
+HEADERS       = textGame.h \
+                tetrixboard.h \
                 tetrixpiece.h \
                 tetrixwindow.h \
                 game.h \
@@ -20,7 +23,8 @@ HEADERS       = tetrixboard.h \
                 levelFour.h \
                 settler.h
 
-SOURCES       = main.cc \
+SOURCES       = textGame.cc \
+                main.cc \
                 tetrixboard.cpp \
                 tetrixpiece.cpp \
                 tetrixwindow.cpp \
