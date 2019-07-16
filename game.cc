@@ -17,7 +17,8 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 
 Game::Game(bool isTextMode, int level, int rndSeed, const string& script): 
 	seed{rndSeed},
-	bRestart{false},
+	script{script},
+	startLevel{level},
 	bSupressOutput{false},
 	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
@@ -287,7 +288,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			
 			for(int c=0;c<rept;c++) {
 				while(parseCommand(ifs));
-				if(bRestart) return false;
 				ifs.clear();
 				ifs.seekg(0, ios::beg);
 			}
@@ -298,8 +298,8 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			// ignore multiplier
 			cout<<"DEBUG: restart "<<rept<<endl;
 			// quit the game, Game context will be recreated by main
-			bRestart = true;
-			return false;
+			reset();
+			break;
 		case CONTROL_HINT:
 			// hint
 			// ignore multiplier
@@ -476,7 +476,7 @@ void Game::printBoard() {
 	}
 }
 
-bool Game::needRestart() const {
-	return bRestart;
+void Game::reset() {
+	game = make_unique<Board>(startLevel, script);
 }
 
