@@ -185,7 +185,7 @@ void Board::createSettler(std::pair<int, int> coord) {
 	board.at(coord.second).setRowAt(coord.first, '*', s);
 }
 
-void Board::createHintSettler(vector<pair<int, int>> coord) {
+void Board::createHintSettler() {
 	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
 	hintSettlerCoord = coord;
 	for (auto &i : coord) {
@@ -197,6 +197,7 @@ void Board::deleteHintSettler() {
 	for (auto &i : hintSettlerCoord) {
 		board.at(i.second).clearPixelAt(i.first);
 	}
+	hintBlock.clear();
 }
 
 void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel) {
@@ -219,53 +220,47 @@ vector<pair<int, int>> Board::ifDropNow(const vector<pair<int,int>> & block) {
 	return result;
 }
 
-bool Board::isHole(int row, int right, int left, const set<pair<int, int>> & preserved) {
-	// if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end()) return false;
-	// if (j - 1 >= 0 && !board.at(i).isOccupied(j-1) && preserved.find(make_pair(j-1, i)) == preserved.end()) 
-	// 	return false;
-	// if (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) 
-	// 	return false;
-	// if (i + 1 < board.size() && !board.at(i+1).isOccupied(j) && preserved.find(make_pair(j, i+1)) == preserved.end()) 
-	// 	return false;
-	if (row + 1 >= board.size()) return false;
+bool Board::isHole(int row, int right, int left) {
+	if (row + 1 >= hintBoard.size()) return false;
 	for (int i = right; i <= left; ++i) {
-		if (!board.at(row+1).isOccupied(i) && preserved.find(make_pair(i, row+1)) == preserved.end())
+		if (hintBoard.at(row+1).at(i) == false)
 			return false;
 	}
 	return true;
 }
 
-bool Board::isHalfHole(int y, int x, const set<pair<int, int>> & preserved) {
+bool Board::isHalfHole(int y, int x) {
 	if (y - 1 < 0) return false;
-	if (board.at(y-1).isOccupied(x) || preserved.find(make_pair(x, y-1)) != preserved.end())
+	if (hintBoard.at(y-1).at(x) == true)
 		return false;
-	if (x - 1 < 0 || board.at(y-1).isOccupied(x-1) || preserved.find(make_pair(x-1, y-1)) != preserved.end())
+	if (x - 1 < 0 || hintBoard.at(y-1).at(x-1) == true)
 		return true;
-	if (x + 1 >= 11 || board.at(y-1).isOccupied(x+1) || preserved.find(make_pair(x+1, y-1)) != preserved.end())
+	if (x + 1 >= 11 || hintBoard.at(y-1).at(x+1) == true)
 		return true;
 	return false;
 }
 
-pair<int, int> Board::findHoles(const set<pair<int, int>> & preserved) {
+pair<int, int> Board::findHoles() {
 	int numOfHoles = 0;
 	int halfHoles = 0;
-	for (int i = 0; i < board.size(); ++i) {
+
+	for (int i = 0; i < hintBoard.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
-			if (!board.at(i).isOccupied(j) && preserved.find(make_pair(j, i)) == preserved.end()) {
+			if (hintBoard.at(i).at(j) == false) {
 				int right = j;
-				while (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) {
+				while (j + 1 < 11 && hintBoard.at(i).at(j + 1) == false) {
 					j++;
 				}
-				if (isHole(i, right, j, preserved)) {
-					numOfHoles ++;
+				if (isHole(i, right, j)) {
+					numOfHoles += j - right + 1;
 				}
 			}
 		}
 	}
 
-	for (int i = 0; i < board.size(); ++i) {
+	for (int i = 0; i < hintBoard.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
-			if ((board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end()) && isHalfHole(i, j, preserved)) {
+			if (hintBoard.at(i).at(j) == true && isHalfHole(i, j)) {
 				halfHoles ++;
 			}
 		}
@@ -273,13 +268,13 @@ pair<int, int> Board::findHoles(const set<pair<int, int>> & preserved) {
 	return make_pair(numOfHoles, halfHoles);
 }
 
-pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) {
+pair<int, int> Board::findEdgesAndHeight() {
 	int edgeNum = 0;
 	int prevHeight = -1;
 	int maxHeight = -1;
 	for (int i = 0; i < 11; ++i) {
-		int j = board.size() - 1;
-		while (j >= 0 && !board.at(j).isOccupied(i) && preserved.find(make_pair(i, j)) == preserved.end()) {
+		int j = hintBoard.size() - 1;
+		while (j >= 0 && hintBoard.at(j).at(i) == false) {
 			j--;
 		}
 		if (maxHeight == -1) {
@@ -289,44 +284,62 @@ pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) 
 			maxHeight = j;
 		}
 	}
-	//TODO: find the total edge of the current shape.
-	//search all 4*4, if three empty then a vertex?
+	//find the total edge of the current shape.
+	//search all 4*4, if three empty or one empty, central point is a vertex?
 	for (int i = 0; i + 1 < 11; ++i) {
-		for (int j = 0; j + 1 < board.size(); ++j) {
+		for (int j = 0; j + 1 < hintBoard.size(); ++j) {
 			int emptyPixel = 0;
 			int specialCase1 = 0;
 			int specialCase2 = 0;
-			if (!board.at(j).isOccupied(i) && preserved.find(make_pair(i, j)) == preserved.end()) {
+			if (hintBoard.at(j).at(i) == false) {
 				emptyPixel++;
 				if (j == 0) specialCase2++;
 			} else if (j == 0) {
 				specialCase1 ++;
 			}
-			if (!board.at(j + 1).isOccupied(i) && preserved.find(make_pair(i, j + 1)) == preserved.end()) emptyPixel++;
-			if (!board.at(j).isOccupied(i + 1) && preserved.find(make_pair(i + 1, j)) == preserved.end()) {
+			if (hintBoard.at(j + 1).at(i) == false) emptyPixel++;
+			if (hintBoard.at(j).at(i + 1) == false) {
 				emptyPixel++;
 				if (j == 0) specialCase1 ++;
 			} else if (j == 0) {
 				specialCase2 ++;
 			}
-			if (!board.at(j + 1).isOccupied(i + 1) && preserved.find(make_pair(i + 1, j + 1)) == preserved.end()) emptyPixel++;
+			if (hintBoard.at(j + 1).at(i + 1) == false) emptyPixel++;
 			if (emptyPixel == 3 || emptyPixel == 1) edgeNum++;
 			if (specialCase1 == 2 || specialCase2 == 2) edgeNum++; 
 		}
 	}
-	// pair<int, int> curPosition = make_pair(0, prevHeight);
-	// char curDirection = 'l';
-	// while (curPosition.second < 11) {
-	// 	if (board.at(curPosition.second + 1).isOccupied(curPosition.first + 1)) edgeNum ++;
-	// }
-	
 	return make_pair(maxHeight + 1, edgeNum + 1);
+}
+
+bool Board::hintIsRemovable(int i) {
+	for (int j = 0; j < 11; ++j) {
+		if (hintBoard.at(i).at(j) == false) return false;
+	}
+	return true;
+}
+
+int Board::checkAndRemoveRow() {
+	vector<int> toBeRemoved;
+	for (int i = 0; i < hintBoard.size(); ++i) {
+		if (hintIsRemovable(i)) {
+			toBeRemoved.emplace_back(i);
+		}
+	}
+	for (auto it = toBeRemoved.rbegin(); it != toBeRemoved.rend(); ++it) {
+		vector<bool> newRow(11, false);
+		hintBoard.emplace_back(newRow);
+		hintBoard.erase(hintBoard.begin() + *it);
+	}
+	return toBeRemoved.size();
 }
 
 vector<pair<int,int>> Board::singleOrientationHint() {
 	vector<pair<int, int>> bestCoord;
+	int bestScore = -1;
 	pair<int, int> bestShape = make_pair(-1, -1);
 	pair<int, int> bestHole = make_pair(-1, -1);
+	if (curLevel >= 3) cur->move('d', 1);
 	//try all possible positions as the block is moved to the left
 	int i = 0;
 	while(isValid(cur->getComponents())) {
@@ -335,31 +348,56 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 		for (auto &i : tmpPos) {
 			preserved.insert(i);
 		}
-		pair<int, int> holes = findHoles(preserved);
-		pair<int, int> shape = findEdgesAndHeight(preserved);
+		//for each possible position, set up the hintBoard to check simulated board after drop
+		hintBoard.clear();
+		vector<bool> tmpRow;
+		for (int i = 0; i < board.size() - 3; ++i) {
+			tmpRow.clear();
+			for (int j = 0; j < 11; ++j) {
+				if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end())
+					tmpRow.emplace_back(true);
+				else 
+					tmpRow.emplace_back(false);
+			}
+			hintBoard.emplace_back(tmpRow);
+		}
+		int removableRow = checkAndRemoveRow();
+		pair<int, int> holes = findHoles();
+		pair<int, int> shape = findEdgesAndHeight();
 		//find the number of holes and max height with position after drop
-		if (bestHole.first >= 0 && bestHole.second >= 0 && bestShape.first >= 0 && bestShape.second >= 0) {
+		if (bestScore >= 0 && bestHole.first >= 0 && bestHole.second >= 0 && bestShape.first >= 0 && bestShape.second >= 0) {
 			//compare the result with the best result from before, determine new best result
-			if (holes.first < bestHole.first) {
+			if (removableRow > bestScore) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
-			} else if (holes.first == bestHole.first && holes.second < bestHole.second) {
+			} else if (removableRow == bestScore && holes.first < bestHole.first) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
-			} else if (holes.first == bestHole.first && holes.second == bestHole.second && shape.first < bestShape.first) {
+			} else if (removableRow == bestScore && holes.first == bestHole.first && holes.second < bestHole.second) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
-			} else if (holes.first == bestHole.first && holes.second == bestHole.second 
+			} else if (removableRow == bestScore && holes.first == bestHole.first 
+				&& holes.second == bestHole.second && shape.first < bestShape.first) {
+				bestScore = removableRow;
+				bestHole = holes;
+				bestShape = shape;
+				bestCoord = tmpPos;
+			} else if (removableRow == bestScore && holes.first == bestHole.first && holes.second == bestHole.second 
 				&& shape.first == bestShape.first && shape.second < bestShape.second) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
 			}
 		} else {
 			//if not initialized, current result is the best
+			bestScore = removableRow;
 			bestHole = holes;
 			bestShape = shape;
 			bestCoord = tmpPos;
@@ -376,31 +414,56 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 		for (auto &i : tmpPos) {
 			preserved.insert(i);
 		}
-		pair<int, int> holes = findHoles(preserved);
-		pair<int, int> shape = findEdgesAndHeight(preserved);
+		//for each possible position, set up the hintBoard to check simulated board after drop
+		hintBoard.clear();
+		vector<bool> tmpRow;
+		for (int i = 0; i < board.size() - 3; ++i) {
+			tmpRow.clear();
+			for (int j = 0; j < 11; ++j) {
+				if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end())
+					tmpRow.emplace_back(true);
+				else 
+					tmpRow.emplace_back(false);
+			}
+			hintBoard.emplace_back(tmpRow);
+		}
+		int removableRow = checkAndRemoveRow();
+		pair<int, int> holes = findHoles();
+		pair<int, int> shape = findEdgesAndHeight();
 		//find the number of holes and max height with position after drop
-		if (bestHole.first >= 0 && bestHole.second >= 0 && bestShape.first >= 0 && bestShape.second >= 0) {
+		if (bestScore >= 0 && bestHole.first >= 0 && bestHole.second >= 0 && bestShape.first >= 0 && bestShape.second >= 0) {
 			//compare the result with the best result from before, determine new best result
-			if (holes.first < bestHole.first) {
-				bestCoord = tmpPos;
-				bestHole = holes;
-				bestShape = shape;
-			} else if (holes.first == bestHole.first && holes.second < bestHole.second) {
+			if (removableRow > bestScore) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
-			} else if (holes.first == bestHole.first && holes.second == bestHole.second && shape.first < bestShape.first) {
+			} else if (removableRow == bestScore && holes.first < bestHole.first) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
-			} else if (holes.first == bestHole.first && holes.second == bestHole.second 
+			} else if (removableRow == bestScore && holes.first == bestHole.first && holes.second < bestHole.second) {
+				bestScore = removableRow;
+				bestHole = holes;
+				bestShape = shape;
+				bestCoord = tmpPos;
+			} else if (removableRow == bestScore && holes.first == bestHole.first 
+				&& holes.second == bestHole.second && shape.first < bestShape.first) {
+				bestScore = removableRow;
+				bestHole = holes;
+				bestShape = shape;
+				bestCoord = tmpPos;
+			} else if (removableRow == bestScore && holes.first == bestHole.first && holes.second == bestHole.second 
 				&& shape.first == bestShape.first && shape.second < bestShape.second) {
+				bestScore = removableRow;
 				bestHole = holes;
 				bestShape = shape;
 				bestCoord = tmpPos;
 			}
 		} else {
 			//if not initialized, current result is the best
+			bestScore = removableRow;
 			bestHole = holes;
 			bestShape = shape;
 			bestCoord = tmpPos;
@@ -410,8 +473,10 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 	}
 	//revert back the original block
 	cur->move('l', i);
+	if (curLevel >= 3) cur->move('d', -1);
 	//return results
 	vector<pair<int, int>> result;
+	result.emplace_back(make_pair(bestScore, 0));
 	result.emplace_back(bestHole);
 	result.emplace_back(bestShape);
 	result.insert(result.end(), bestCoord.begin(), bestCoord.end());
@@ -423,44 +488,54 @@ void Board::hint(){
 	//the solution wih least amount of holes win
 	//if the same, then pick the one with the least max height
 	//if same height, random for stage 1, and possibly look at next block for future use
-	vector<pair<int, int>> hintBlock = singleOrientationHint();
+	vector<pair<int, int>> hintResult = singleOrientationHint();
 	cout << "rotation 0" << endl;
-	cout << "holes: " << hintBlock.at(0).first << " halfHoles: " << hintBlock.at(0).second << endl;
-	cout << "edges: " << hintBlock.at(1).first << " maxHeight: " << hintBlock.at(1).second << endl;	
-	for (int i = 2; i < hintBlock.size(); i++) {
-		cout << "(" << hintBlock.at(i).first << ", " << hintBlock.at(i).second << ")" << endl;	
+	cout << "removable row: " << hintResult.at(0).first << endl;
+	cout << "holes: " << hintResult.at(1).first << " halfHoles: " << hintResult.at(1).second << endl;
+	cout << "maxHeight: " << hintResult.at(2).first << " edges: " << hintResult.at(2).second << endl;	
+	for (int i = 3; i < hintResult.size(); i++) {
+		cout << "(" << hintResult.at(i).first << ", " << hintResult.at(i).second << ")" << endl;	
 	}
 	for (int i = 0; i < 3; ++i) {
 		cur->rotate(true);
 		vector<pair<int, int>> tmpBlock = singleOrientationHint();
 		cout << "rotation " << i + 1 << endl;
-		cout << "holes: " << tmpBlock.at(0).first << " halfHoles: " << tmpBlock.at(0).second << endl;
-		cout << "edges: " << tmpBlock.at(1).first << " maxHeight: " << tmpBlock.at(1).second << endl;	
-		for (int i = 2; i < tmpBlock.size(); i++) {
+		cout << "removable row: " << tmpBlock.at(0).first << endl;
+		cout << "holes: " << tmpBlock.at(1).first << " halfHoles: " << tmpBlock.at(1).second << endl;
+		cout << "maxHeight: " << tmpBlock.at(2).first << " edges: " << tmpBlock.at(2).second << endl;		
+		for (int i = 3; i < tmpBlock.size(); i++) {
 			cout << "(" << tmpBlock.at(i).first << ", " << tmpBlock.at(i).second << ")" << endl;	
 		}
-		if (tmpBlock.at(0).first < hintBlock.at(0).first) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(0).second < hintBlock.at(0).second) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(0).second == hintBlock.at(0).second
-			&& tmpBlock.at(1).first < hintBlock.at(1).first) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(0).second == hintBlock.at(0).second
-			&& tmpBlock.at(1).first == hintBlock.at(1).first && tmpBlock.at(1).second < hintBlock.at(1).second) {
-			hintBlock = tmpBlock;
+		if (tmpBlock.at(0).first > hintResult.at(0).first) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first && tmpBlock.at(1).first < hintResult.at(1).first) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first 
+			&& tmpBlock.at(1).first == hintResult.at(1).first && tmpBlock.at(1).second < hintResult.at(1).second) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first && tmpBlock.at(1).first == hintResult.at(1).first 
+			&& tmpBlock.at(1).second == hintResult.at(1).second && tmpBlock.at(2).first < hintResult.at(2).first) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first 
+			&& tmpBlock.at(1).first == hintResult.at(1).first && tmpBlock.at(1).second == hintResult.at(1).second
+			&& tmpBlock.at(2).first == hintResult.at(2).first && tmpBlock.at(2).second < hintResult.at(2).second) {
+			hintResult = tmpBlock;
 		}
 	}
 	cur->rotate(true);
 	cout << "bestHint" << endl;
-	cout << "holes: " << hintBlock.at(0).first << " halfHoles: " << hintBlock.at(0).second << endl;
-	cout << "edges: " << hintBlock.at(1).first << " maxHeight: " << hintBlock.at(1).second << endl;
-	hintBlock.erase(hintBlock.begin());
-	hintBlock.erase(hintBlock.begin());
+	cout << "removable row: " << hintResult.at(0).first << endl;
+	cout << "holes: " << hintResult.at(1).first << " halfHoles: " << hintResult.at(1).second << endl;
+	cout << "maxHeight: " << hintResult.at(2).first << " edges: " << hintResult.at(2).second << endl;
+	if (hintResult.at(0).first < 0 && hintResult.at(1).first < 0 && hintResult.at(1).second < 0
+		&& hintResult.at(2).first < 0 && hintResult.at(2).second < 0) {
+		cout << "Invalid hint. Already at bottom." << endl;
+	}
+	hintResult.erase(hintResult.begin());
+	hintResult.erase(hintResult.begin());
+	hintResult.erase(hintResult.begin());
 	//print board
 	createHintSettler(hintBlock);
-	// print();
-	// deleteHintSettler(hintBlock);
 }
 
 /* Drops a block onto the board and turn it into a settler
@@ -479,8 +554,10 @@ void Board::drop() {
 			toBeRemoved.push_back(i);
 		}
 	}
-	int rowScore = pow((curLevel + toBeRemoved.size()), 2);
-	score->increment(rowScore);
+	if (toBeRemoved.size() > 0) {
+		int rowScore = pow((curLevel + toBeRemoved.size()), 2);
+		score->increment(rowScore);
+	}
 	for (auto it = toBeRemoved.rbegin(); it != toBeRemoved.rend(); ++it) {
 		board.push_back(Row());
 		board.erase(board.begin() + *it);
