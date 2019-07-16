@@ -185,7 +185,7 @@ void Board::createSettler(std::pair<int, int> coord) {
 	board.at(coord.second).setRowAt(coord.first, '*', s);
 }
 
-void Board::createHintSettler() {
+void Board::createHintSettler(std::vector<std::pair<int, int>> coord) {
 	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
 	hintSettlerCoord = coord;
 	for (auto &i : coord) {
