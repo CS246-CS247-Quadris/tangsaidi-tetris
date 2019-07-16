@@ -43,7 +43,7 @@ class Board {
 		std::shared_ptr<Score> score;
 		std::vector<Row> board;
 		std::vector<std::vector<bool>> hintBoard;
-		std::vector<std::pair<int, int>> hintBlock;
+		// std::vector<std::pair<int, int>> hintBlock;
 		int curLevel;		
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;

@@ -197,7 +197,7 @@ void Board::deleteHintSettler() {
 	for (auto &i : hintSettlerCoord) {
 		board.at(i.second).clearPixelAt(i.first);
 	}
-	hintBlock.clear();
+	hintSettlerCoord.clear();
 }
 
 void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel) {
@@ -535,7 +535,7 @@ void Board::hint(){
 	hintResult.erase(hintResult.begin());
 	hintResult.erase(hintResult.begin());
 	//print board
-	createHintSettler(hintBlock);
+	createHintSettler(hintResult);
 }
 
 /* Drops a block onto the board and turn it into a settler
