@@ -5,6 +5,7 @@
 #include <memory>
 #include <fstream>
 #include <set>
+#include <sstream>
 #include "block.h"
 #include "score.h"
 #include "row.h"
@@ -32,6 +33,7 @@ class Board {
 		void norand(bool isNoRandom, std::string file="");
 		void setSeed(int seed);
 		void replaceCurrentBlock(char cType);
+		std::stringstream toStringStream();
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
@@ -44,7 +46,7 @@ class Board {
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
 		
-		void printRow(int y);
+		std::stringstream printRow(int y);
 		std::vector<std::pair<int, int>> ifDropNow(const std::vector<std::pair<int,int>> &);
 		bool isHole(int, int, int, const std::set<std::pair<int, int>> &);
 		bool isHalfHole(int, int, const std::set<std::pair<int, int>> &);

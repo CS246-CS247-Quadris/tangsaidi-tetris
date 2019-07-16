@@ -48,24 +48,35 @@ void Board::changeLevel(int delta) {
 	}
 }
 
-void Board::printRow(int y) {
+std::stringstream Board::printRow(int y) {
+	std::stringstream ss;
 	for(int x=0;x<11;x++) {
 		vector<pair<int,int>> comp = cur->getComponents();
 		bool ifHit = false;
 		for(auto& v:comp) {
 			if(v.first == x && v.second == y && !checkEnd()) {
-				cout << cur->getBlockType();
+				ss << cur->getBlockType();
 				ifHit = true;
 			}
 		}
 		if (y < 15 && board.at(y).isOccupied(x)) {
-			cout << board.at(y).getData(x);
+			ss << board.at(y).getData(x);
 			ifHit = true;
 		}
 		if(!ifHit) {
-			cout<<' ';
+			ss <<' ';
 		}
 	}
+	return ss;
+}
+
+std::stringstream Board::toStringStream() {
+	std::stringstream ss;
+	int nRows = board.size();
+	for(int y=nRows+2;y>=0;y--) {
+		ss << printRow(y).str() << "\n";
+	}
+	return ss;
 }
 
 void Board::print() {
@@ -78,15 +89,8 @@ void Board::print() {
 	cout<<setw(3)<<right<<score->getHighestScore()<<endl;
 	cout<<"-----------"<<endl;
 	// First, check first 3 reserved row
-	int nRows = board.size();
-	for(int y=nRows+2;y>=nRows;y--) {
-		printRow(y);
-		cout<<endl;
-	}
-	for(int y=nRows-1;y>=0;y--) {
-		printRow(y);
-		cout<<endl;
-	}
+	cout << toStringStream().str();
+
 	cout<<"-----------"<<endl;
 	
 	cout<<"Next: "<<endl;
@@ -121,6 +125,8 @@ void Board::print() {
 			break;
 	}
 }
+
+
 
 void Board::norand(bool isNoRandom, string file) {
 	strategy->setNorandom(isNoRandom);
