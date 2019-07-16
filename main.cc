@@ -12,7 +12,7 @@
 // #include <QSocketNotifier>
 
 
-#include "tetrixwindow.h"
+#include "window.h"
 
 #include "game.h"
 #include "textGame.h"
@@ -172,10 +172,6 @@ int main(int argc, char *argv[]) {
 	}
 
     QScopedPointer<QCoreApplication> app(createApplication(argc, argv));
-	// unique_ptr<QObject> quadrisWindow = make_unique
-	// if (qobject_cast<QApplication *>(app.data)) {
-
-	// }
 
 	/* Now process configurations */
 	// TODO: might cause exception
@@ -187,10 +183,10 @@ int main(int argc, char *argv[]) {
 	textGame.run();
 	QObject::connect(&textGame, SIGNAL(quit()), &(*app), SLOT(quit()));
 
+	unique_ptr<Window> window;
 	if (!enableTextMode) {
-		TetrixWindow window;
-		window.show();
-		return app->exec();
+		window = make_unique<Window>(game.get());
+		window->show();
 	}
 	
 	return app->exec();

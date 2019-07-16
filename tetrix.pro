@@ -6,10 +6,8 @@ CONFIG += c++14
 
 
 HEADERS       = textGame.h \
-                tetrixboard.h \
-                tetrixpiece.h \
-                tetrixwindow.h \
                 game.h \
+                window.h \
                 board.h \
                 block.h \
                 row.h \
@@ -25,10 +23,8 @@ HEADERS       = textGame.h \
 
 SOURCES       = textGame.cc \
                 main.cc \
-                tetrixboard.cpp \
-                tetrixpiece.cpp \
-                tetrixwindow.cpp \
                 game.cc \
+                window.cc \
                 board.cc \
                 block.cc \
                 row.cc \

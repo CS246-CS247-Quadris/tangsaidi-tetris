@@ -13,7 +13,6 @@
 // Console section, to be separated into another file
 class TextGame: public QObject {
     Q_OBJECT;
-	Game* game;
 
 	public:
 		TextGame(Game*);
@@ -21,8 +20,10 @@ class TextGame: public QObject {
 
 	signals:
 		void quit();
+        void notifyRepaint();
 
 	private:
+		Game* game;
 		std::unique_ptr<QSocketNotifier> m_notifier;
 
 	private slots:
