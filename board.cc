@@ -251,7 +251,6 @@ pair<int, int> Board::findHoles(const set<pair<int, int>> & preserved) {
 				}
 				if (isHole(i, right, j, preserved)) {
 					numOfHoles ++;
-					cout << "find hole with: " << i << " " << right << " " << j << endl;
 				}
 			}
 		}
@@ -314,7 +313,7 @@ pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) 
 	// 	if (board.at(curPosition.second + 1).isOccupied(curPosition.first + 1)) edgeNum ++;
 	// }
 	
-	return make_pair(edgeNum + 1, maxHeight + 1);
+	return make_pair(maxHeight + 1, edgeNum + 1);
 }
 
 vector<pair<int,int>> Board::singleOrientationHint() {
