@@ -185,17 +185,18 @@ void Board::createSettler(std::pair<int, int> coord) {
 	board.at(coord.second).setRowAt(coord.first, '*', s);
 }
 
-void Board::createHintSettler(vector<pair<int, int>> coord) {
+void Board::createHintSettler() {
 	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
-	for (auto &i : coord) {
+	for (auto &i : hintBlock) {
 		board.at(i.second).setRowAt(i.first, '?', s);
 	}
 }
 
-void Board::deleteHintSettler(vector<pair<int, int>> coord) {
-	for (auto &i : coord) {
+void Board::deleteHintSettler() {
+	for (auto &i : hintBlock) {
 		board.at(i.second).clearPixelAt(i.first);
 	}
+	hintBlock.clear();
 }
 
 void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel) {
@@ -486,13 +487,13 @@ void Board::hint(){
 	//the solution wih least amount of holes win
 	//if the same, then pick the one with the least max height
 	//if same height, random for stage 1, and possibly look at next block for future use
-	vector<pair<int, int>> hintBlock = singleOrientationHint();
+	vector<pair<int, int>> hintResult = singleOrientationHint();
 	cout << "rotation 0" << endl;
-	cout << "removable row: " << hintBlock.at(0).first << endl;
-	cout << "holes: " << hintBlock.at(1).first << " halfHoles: " << hintBlock.at(1).second << endl;
-	cout << "maxHeight: " << hintBlock.at(2).first << " edges: " << hintBlock.at(2).second << endl;	
-	for (int i = 3; i < hintBlock.size(); i++) {
-		cout << "(" << hintBlock.at(i).first << ", " << hintBlock.at(i).second << ")" << endl;	
+	cout << "removable row: " << hintResult.at(0).first << endl;
+	cout << "holes: " << hintResult.at(1).first << " halfHoles: " << hintResult.at(1).second << endl;
+	cout << "maxHeight: " << hintResult.at(2).first << " edges: " << hintResult.at(2).second << endl;	
+	for (int i = 3; i < hintResult.size(); i++) {
+		cout << "(" << hintResult.at(i).first << ", " << hintResult.at(i).second << ")" << endl;	
 	}
 	for (int i = 0; i < 3; ++i) {
 		cur->rotate(true);
@@ -504,34 +505,39 @@ void Board::hint(){
 		for (int i = 3; i < tmpBlock.size(); i++) {
 			cout << "(" << tmpBlock.at(i).first << ", " << tmpBlock.at(i).second << ")" << endl;	
 		}
-		if (tmpBlock.at(0).first > hintBlock.at(0).first) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(1).first < hintBlock.at(1).first) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first 
-			&& tmpBlock.at(1).first == hintBlock.at(1).first && tmpBlock.at(1).second < hintBlock.at(1).second) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(1).first == hintBlock.at(1).first 
-			&& tmpBlock.at(1).second == hintBlock.at(1).second && tmpBlock.at(2).first < hintBlock.at(2).first) {
-			hintBlock = tmpBlock;
-		} else if (tmpBlock.at(0).first == hintBlock.at(0).first 
-			&& tmpBlock.at(1).first == hintBlock.at(1).first && tmpBlock.at(1).second == hintBlock.at(1).second
-			&& tmpBlock.at(2).first == hintBlock.at(2).first && tmpBlock.at(2).second < hintBlock.at(2).second) {
-			hintBlock = tmpBlock;
+		if (tmpBlock.at(0).first > hintResult.at(0).first) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first && tmpBlock.at(1).first < hintResult.at(1).first) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first 
+			&& tmpBlock.at(1).first == hintResult.at(1).first && tmpBlock.at(1).second < hintResult.at(1).second) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first && tmpBlock.at(1).first == hintResult.at(1).first 
+			&& tmpBlock.at(1).second == hintResult.at(1).second && tmpBlock.at(2).first < hintResult.at(2).first) {
+			hintResult = tmpBlock;
+		} else if (tmpBlock.at(0).first == hintResult.at(0).first 
+			&& tmpBlock.at(1).first == hintResult.at(1).first && tmpBlock.at(1).second == hintResult.at(1).second
+			&& tmpBlock.at(2).first == hintResult.at(2).first && tmpBlock.at(2).second < hintResult.at(2).second) {
+			hintResult = tmpBlock;
 		}
 	}
 	cur->rotate(true);
 	cout << "bestHint" << endl;
-	cout << "removable row: " << hintBlock.at(0).first << endl;
-	cout << "holes: " << hintBlock.at(1).first << " halfHoles: " << hintBlock.at(1).second << endl;
-	cout << "maxHeight: " << hintBlock.at(2).first << " edges: " << hintBlock.at(2).second << endl;
-	hintBlock.erase(hintBlock.begin());
-	hintBlock.erase(hintBlock.begin());
-	hintBlock.erase(hintBlock.begin());
+	cout << "removable row: " << hintResult.at(0).first << endl;
+	cout << "holes: " << hintResult.at(1).first << " halfHoles: " << hintResult.at(1).second << endl;
+	cout << "maxHeight: " << hintResult.at(2).first << " edges: " << hintResult.at(2).second << endl;
+	if (hintResult.at(0).first < 0 && hintResult.at(1).first < 0 && hintResult.at(1).second < 0
+		&& hintResult.at(2).first < 0 && hintResult.at(2).second < 0) {
+		cout << "Invalid hint. Already at bottom." << endl;
+	}
+	hintResult.erase(hintResult.begin());
+	hintResult.erase(hintResult.begin());
+	hintResult.erase(hintResult.begin());
 	//print board
-	createHintSettler(hintBlock);
-	print();
-	deleteHintSettler(hintBlock);
+	hintBlock = hintResult;
+	createHintSettler();
+	// print();
+	// deleteHintSettler();
 }
 
 /* Drops a block onto the board and turn it into a settler

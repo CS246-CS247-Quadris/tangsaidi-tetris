@@ -42,6 +42,7 @@ class Board {
 		std::shared_ptr<Score> score;
 		std::vector<Row> board;
 		std::vector<std::vector<bool>> hintBoard;
+		std::vector<std::pair<int, int>> hintBlock;
 		int curLevel;		
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
@@ -56,8 +57,8 @@ class Board {
 		std::pair<int, int> findHoles();
 		std::pair<int, int> findEdgesAndHeight();
 		std::vector<std::pair<int,int>> singleOrientationHint();
-		void createHintSettler(std::vector<std::pair<int, int>> coord);
-		void deleteHintSettler(std::vector<std::pair<int, int>> coord);
+		void createHintSettler();
+		void deleteHintSettler();
 };
 
 #endif /* __BOARD_H__ */
