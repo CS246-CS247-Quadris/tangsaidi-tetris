@@ -3,7 +3,19 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <memory>
+
+#include <QtWidgets>
+#include <QScopedPointer>
+#include <QCoreApplication>
+#include <QApplication>
+// #include <QSocketNotifier>
+
+
+#include "tetrixwindow.h"
+
 #include "game.h"
+#include "textGame.h"
 using namespace std;
 
 enum ArgumentType {
@@ -82,7 +94,14 @@ bool isNumber(const string& s)
     return !s.empty() && it == s.end();
 }
 
-void testBlock();
+// create a version based on args
+QCoreApplication* createApplication(int &argc, char *argv[])
+{
+    for (int i = 1; i < argc; ++i)
+        if (!qstrcmp(argv[i], "-text"))
+            return new QCoreApplication(argc, argv);
+    return new QApplication(argc, argv);
+}
 
 int main(int argc, char *argv[]) {
 	// Argument parsing
@@ -151,29 +170,28 @@ int main(int argc, char *argv[]) {
 				break;
 		}
 	}
-	
+
+    QScopedPointer<QCoreApplication> app(createApplication(argc, argv));
+	// unique_ptr<QObject> quadrisWindow = make_unique
+	// if (qobject_cast<QApplication *>(app.data)) {
+
+	// }
+
 	/* Now process configurations */
 	// TODO: might cause exception
-	srand((unsigned int)stoi(str_seed));
 	startLevel = stoi(str_level);
-	
 	// Now start the game
-	game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
-	
-	while(true) {
-		game->printBoard();
-		cout<<"> ";
-		if(!game->parseCommand(cin)) {
-			if(game->needRestart())
-				game = make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
-			else
-				break;
-		}
+	game = std::make_unique<Game>(startLevel, stoi(str_seed), fScript);
+
+	TextGame textGame(game.get());
+	textGame.run();
+	QObject::connect(&textGame, SIGNAL(quit()), &(*app), SLOT(quit()));
+
+	if (!enableTextMode) {
+		TetrixWindow window;
+		window.show();
+		return app->exec();
 	}
 	
-	game->printBoard();
-	cout<<"\nGame over.\n"<<endl;
-	
-	return 0;
+	return app->exec();
 }
-
