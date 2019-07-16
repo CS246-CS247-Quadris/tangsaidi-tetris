@@ -244,12 +244,15 @@ pair<int, int> Board::findHoles(const set<pair<int, int>> & preserved) {
 	int halfHoles = 0;
 	for (int i = 0; i < board.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
-			int right = j;
-			while (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) {
-				j++;
-			}
-			if (isHole(i, right, j, preserved)) {
-				numOfHoles ++;
+			if (!board.at(i).isOccupied(j) && preserved.find(make_pair(j, i)) == preserved.end()) {
+				int right = j;
+				while (j + 1 < 11 && !board.at(i).isOccupied(j+1) && preserved.find(make_pair(j+1, i)) == preserved.end()) {
+					j++;
+				}
+				if (isHole(i, right, j, preserved)) {
+					numOfHoles ++;
+					cout << "find hole with: " << i << " " << right << " " << j << endl;
+				}
 			}
 		}
 	}
@@ -285,19 +288,24 @@ pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) 
 	for (int i = 0; i + 1 < 11; ++i) {
 		for (int j = 0; j + 1 < board.size(); ++j) {
 			int emptyPixel = 0;
-			int sameLevelEmpty = 0;
+			int specialCase1 = 0;
+			int specialCase2 = 0;
 			if (!board.at(j).isOccupied(i) && preserved.find(make_pair(i, j)) == preserved.end()) {
 				emptyPixel++;
-				sameLevelEmpty++;
+				if (j == 0) specialCase2++;
+			} else if (j == 0) {
+				specialCase1 ++;
 			}
 			if (!board.at(j + 1).isOccupied(i) && preserved.find(make_pair(i, j + 1)) == preserved.end()) emptyPixel++;
 			if (!board.at(j).isOccupied(i + 1) && preserved.find(make_pair(i + 1, j)) == preserved.end()) {
 				emptyPixel++;
-				sameLevelEmpty++;
+				if (j == 0) specialCase1 ++;
+			} else if (j == 0) {
+				specialCase2 ++;
 			}
 			if (!board.at(j + 1).isOccupied(i + 1) && preserved.find(make_pair(i + 1, j + 1)) == preserved.end()) emptyPixel++;
 			if (emptyPixel == 3 || emptyPixel == 1) edgeNum++;
-			if (j == 0 && sameLevelEmpty == 1) edgeNum++;
+			if (specialCase1 == 2 || specialCase2 == 2) edgeNum++; 
 		}
 	}
 	// pair<int, int> curPosition = make_pair(0, prevHeight);
@@ -306,7 +314,7 @@ pair<int, int> Board::findEdgesAndHeight(const set<pair<int, int>> & preserved) 
 	// 	if (board.at(curPosition.second + 1).isOccupied(curPosition.first + 1)) edgeNum ++;
 	// }
 	
-	return make_pair(edgeNum, maxHeight + 1);
+	return make_pair(edgeNum + 1, maxHeight + 1);
 }
 
 vector<pair<int,int>> Board::singleOrientationHint() {
@@ -410,9 +418,21 @@ void Board::hint(){
 	//if the same, then pick the one with the least max height
 	//if same height, random for stage 1, and possibly look at next block for future use
 	vector<pair<int, int>> hintBlock = singleOrientationHint();
+	cout << "rotation 0" << endl;
+	cout << "holes: " << hintBlock.at(0).first << " halfHoles: " << hintBlock.at(0).second << endl;
+	cout << "edges: " << hintBlock.at(1).first << " maxHeight: " << hintBlock.at(1).second << endl;	
+	for (int i = 2; i < hintBlock.size(); i++) {
+		cout << "(" << hintBlock.at(i).first << ", " << hintBlock.at(i).second << ")" << endl;	
+	}
 	for (int i = 0; i < 3; ++i) {
 		cur->rotate(true);
 		vector<pair<int, int>> tmpBlock = singleOrientationHint();
+		cout << "rotation " << i + 1 << endl;
+		cout << "holes: " << tmpBlock.at(0).first << " halfHoles: " << tmpBlock.at(0).second << endl;
+		cout << "edges: " << tmpBlock.at(1).first << " maxHeight: " << tmpBlock.at(1).second << endl;	
+		for (int i = 2; i < tmpBlock.size(); i++) {
+			cout << "(" << tmpBlock.at(i).first << ", " << tmpBlock.at(i).second << ")" << endl;	
+		}
 		if (tmpBlock.at(0).first < hintBlock.at(0).first) {
 			hintBlock = tmpBlock;
 		} else if (tmpBlock.at(0).first == hintBlock.at(0).first && tmpBlock.at(0).second < hintBlock.at(0).second) {
@@ -426,8 +446,9 @@ void Board::hint(){
 		}
 	}
 	cur->rotate(true);
+	cout << "bestHint" << endl;
 	cout << "holes: " << hintBlock.at(0).first << " halfHoles: " << hintBlock.at(0).second << endl;
-	cout << "vertices: " << hintBlock.at(1).first << " maxHeight: " << hintBlock.at(1).second << endl;
+	cout << "edges: " << hintBlock.at(1).first << " maxHeight: " << hintBlock.at(1).second << endl;
 	hintBlock.erase(hintBlock.begin());
 	hintBlock.erase(hintBlock.begin());
 	//print board
