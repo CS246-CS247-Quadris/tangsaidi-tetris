@@ -79,7 +79,6 @@ private:
     QLCDNumber *linesLcd;
     QPushButton *startButton;
     QPushButton *quitButton;
-    QPushButton *pauseButton;
 };
 //! [0]
 

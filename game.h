@@ -58,7 +58,7 @@ private:
 	// Context variable, used by game main loop
 	int seed;
 	int startLevel;
-	bool bSupressOutput;
+	bool isHint;
 	const std::string& script;
 	
 	std::unique_ptr<Board> game;

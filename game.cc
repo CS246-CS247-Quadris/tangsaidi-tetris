@@ -19,7 +19,7 @@ Game::Game(int level, int rndSeed, const string& script):
 	seed{rndSeed},
 	script{script},
 	startLevel{level},
-	bSupressOutput{false},
+	isHint{false},
 	game{make_unique<Board>(level, script)}, 
 	prefixTree{make_shared<Game::StateNode>("")},
 	command{
@@ -305,7 +305,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			// ignore multiplier
 			cout<<"DEBUG: hint "<<rept<<endl;
 			game->hint();
-			bSupressOutput = true;
+			isHint = true;
 			break;
 		case DEBUG_REPLACE_I:
 			// I
@@ -436,7 +436,7 @@ bool Game::parseCommand(istream& in) {
 			istream_iterator<string>(), 
 			back_inserter(tokens));
 	if(tokens.empty()) {
-		bSupressOutput = true;
+		isHint = true;
 		return true;
 	}
 	
@@ -470,11 +470,10 @@ bool Game::parseCommand(istream& in) {
 }
 
 void Game::printBoard() {
-	if(!bSupressOutput) {
-		game->print();
-	}
-	else {
-		bSupressOutput = false;
+	game->print();
+	if(isHint) {
+		game->deleteHintSettler();
+		isHint = false;
 	}
 }
 
