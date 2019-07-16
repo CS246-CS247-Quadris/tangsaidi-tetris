@@ -187,5 +187,4 @@ int main(int argc, char *argv[]) {
 	textGame.run();
 	QObject::connect(&textGame, SIGNAL(quit()), &(*app), SLOT(quit()));
 	return app->exec();
-
 }

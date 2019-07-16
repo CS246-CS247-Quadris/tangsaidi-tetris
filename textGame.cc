@@ -3,6 +3,8 @@
 #include <iostream>
 
 TextGame::TextGame(Game* game): game(game) {
+    game->printBoard();
+    std::cout<<"> "<< std::flush;
     m_notifier = std::make_unique<QSocketNotifier>(fileno(stdin), QSocketNotifier::Read, this);
 }
 
@@ -11,9 +13,9 @@ void TextGame::run() {
 }
 
 void TextGame::readCommand() {
-	game->printBoard();
-	std::cout<<"> ";
 	if (!game->parseCommand(std::cin)) {
 		QApplication::quit();
 	}
+    game->printBoard();
+	std::cout<<"> "<< std::flush;
 }
