@@ -10,7 +10,7 @@
 
 class Game {
 public:
-	Game(bool, int, int, const std::string&);
+	Game(int, int, const std::string&);
 	~Game();
 	void printBoard();
 	bool parseCommand(std::istream&);

@@ -90,7 +90,7 @@ protected:
 
 //! [1]
 private:
-    enum { BoardWidth = 10, BoardHeight = 22 };
+    enum { BoardWidth = 11, BoardHeight = 18 };
 
     TetrixShape &shapeAt(int x, int y) { return board[(y * BoardWidth) + x]; }
     int timeoutTime() { return 1000 / (1 + level); }
