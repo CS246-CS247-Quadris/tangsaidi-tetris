@@ -15,7 +15,7 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 	}
 }
 
-Game::Game(bool isTextMode, int level, int rndSeed, const string& script): 
+Game::Game(int level, int rndSeed, const string& script): 
 	seed{rndSeed},
 	script{script},
 	startLevel{level},

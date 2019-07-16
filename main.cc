@@ -12,7 +12,7 @@
 // #include <QSocketNotifier>
 
 
-// #include "tetrixwindow.h"
+#include "tetrixwindow.h"
 
 #include "game.h"
 #include "textGame.h"
@@ -181,10 +181,17 @@ int main(int argc, char *argv[]) {
 	// TODO: might cause exception
 	startLevel = stoi(str_level);
 	// Now start the game
-	game = std::make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
+	game = std::make_unique<Game>(startLevel, stoi(str_seed), fScript);
 
 	TextGame textGame(game.get());
 	textGame.run();
 	QObject::connect(&textGame, SIGNAL(quit()), &(*app), SLOT(quit()));
+
+	if (!enableTextMode) {
+		TetrixWindow window;
+		window.show();
+		return app->exec();
+	}
+	
 	return app->exec();
 }
