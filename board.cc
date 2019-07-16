@@ -337,6 +337,7 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 	int bestScore = -1;
 	pair<int, int> bestShape = make_pair(-1, -1);
 	pair<int, int> bestHole = make_pair(-1, -1);
+	if (curLevel >= 3) cur->move('d', 1);
 	//try all possible positions as the block is moved to the left
 	int i = 0;
 	while(isValid(cur->getComponents())) {
@@ -470,6 +471,7 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 	}
 	//revert back the original block
 	cur->move('l', i);
+	if (curLevel >= 3) cur->move('d', -1);
 	//return results
 	vector<pair<int, int>> result;
 	result.emplace_back(make_pair(bestScore, 0));
