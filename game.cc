@@ -383,6 +383,8 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			break;
 		}
 		case COMMAND_AMP:
+			printBoard();
+			break;
 		default:
 			break;
 	}
