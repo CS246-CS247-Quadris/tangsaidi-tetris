@@ -2,19 +2,11 @@
 #include <fstream>
 using namespace std;
 
+int Score::highestScore = 0;
+
 Score::Score() {
 	score = 0;
 	gameEnd = false;
-	ifstream scoreFile(highestScorePath);
-	if (scoreFile.is_open()) {
-		scoreFile >> highestScore;
-		scoreFile.close();
-	} else {
-		ofstream outfile(highestScorePath);
-		outfile << 0 << std::endl;
-		outfile.close();
-		highestScore = 0;
-	}
 }
 
 Score::~Score(){}
@@ -39,9 +31,5 @@ void Score::increment(int i) {
 	score += i;
 	if (score > highestScore) {
 		highestScore = score;
-		ofstream scoreFile;
-		scoreFile.open(highestScorePath, ios::out | ios::trunc);
-		scoreFile << highestScore;
-		scoreFile.close();
 	}
 }
