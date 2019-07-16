@@ -1,5 +1,7 @@
 QT += widgets
-QMAKE_CXXFLAGS += -std=c++14
+QMAKE_CC = gcc
+QMAKE_CXX = g++
+CONFIG += c++14
 
 HEADERS       = tetrixboard.h \
                 tetrixpiece.h \

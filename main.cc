@@ -164,12 +164,12 @@ int main(int argc, char *argv[]) {
 	
 	// Now start the game
 	game = std::make_unique<Game>(enableTextMode, startLevel, stoi(str_seed), fScript);
-	
+
+	QApplication app(argc, argv);
 	if (!enableTextMode) {
-		QApplication app(argc, argv);
     	TetrixWindow window;
 		window.show();
-		qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+		// qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
 
 	}
 
