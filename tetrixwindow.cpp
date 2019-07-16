@@ -28,10 +28,7 @@ TetrixWindow::TetrixWindow()
     startButton = new QPushButton(tr("&Start"));
     startButton->setFocusPolicy(Qt::NoFocus);
     quitButton = new QPushButton(tr("&Quit"));
-    quitButton->setFocusPolicy(Qt::NoFocus);
-    pauseButton = new QPushButton(tr("&Pause"));
-//! [2] //! [3]
-    pauseButton->setFocusPolicy(Qt::NoFocus);
+
 //! [3] //! [4]
 
     connect(startButton, SIGNAL(clicked()), board, SLOT(start()));

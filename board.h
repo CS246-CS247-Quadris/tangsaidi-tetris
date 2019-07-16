@@ -37,6 +37,7 @@ class Board {
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
+		void deleteHintSettler();
 
 	private:
 		std::shared_ptr<Score> score;
@@ -45,6 +46,7 @@ class Board {
 		std::unique_ptr<Block> cur;
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
+		std::vector<std::pair<int, int>> hintSettlerCoord;
 		
 		std::stringstream printRow(int y);
 		std::vector<std::pair<int, int>> ifDropNow(const std::vector<std::pair<int,int>> &);
@@ -54,7 +56,6 @@ class Board {
 		std::pair<int, int> findEdgesAndHeight(const std::set<std::pair<int, int>> &);
 		std::vector<std::pair<int,int>> singleOrientationHint();
 		void createHintSettler(std::vector<std::pair<int, int>> coord);
-		void deleteHintSettler(std::vector<std::pair<int, int>> coord);
 };
 
 #endif /* __BOARD_H__ */

@@ -187,13 +187,14 @@ void Board::createSettler(std::pair<int, int> coord) {
 
 void Board::createHintSettler(vector<pair<int, int>> coord) {
 	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
+	hintSettlerCoord = coord;
 	for (auto &i : coord) {
 		board.at(i.second).setRowAt(i.first, '?', s);
 	}
 }
 
-void Board::deleteHintSettler(vector<pair<int, int>> coord) {
-	for (auto &i : coord) {
+void Board::deleteHintSettler() {
+	for (auto &i : hintSettlerCoord) {
 		board.at(i.second).clearPixelAt(i.first);
 	}
 }
@@ -458,8 +459,8 @@ void Board::hint(){
 	hintBlock.erase(hintBlock.begin());
 	//print board
 	createHintSettler(hintBlock);
-	print();
-	deleteHintSettler(hintBlock);
+	// print();
+	// deleteHintSettler(hintBlock);
 }
 
 /* Drops a block onto the board and turn it into a settler
