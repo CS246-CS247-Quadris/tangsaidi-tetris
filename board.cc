@@ -55,8 +55,10 @@ std::stringstream Board::printRow(int y) {
 		bool ifHit = false;
 		for(auto& v:comp) {
 			if(v.first == x && v.second == y && !checkEnd()) {
-				ss << cur->getBlockType();
-				ifHit = true;
+				if (y >= 15 || !board.at(y).isOccupied(x)) {
+					ss << cur->getBlockType();
+					ifHit = true;
+				}
 			}
 		}
 		if (y < 15 && board.at(y).isOccupied(x)) {
@@ -264,6 +266,10 @@ pair<int, int> Board::findHoles() {
 		for (int j = 0; j < 11; ++j) {
 			if (hintBoard.at(i).at(j) == true && isHalfHole(i, j)) {
 				halfHoles ++;
+				while (j + 1 < 11 && hintBoard.at(i).at(j + 1) == true) {
+					halfHoles++;
+					j++;
+				}
 			}
 		}
 	}
@@ -353,7 +359,7 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 		//for each possible position, set up the hintBoard to check simulated board after drop
 		hintBoard.clear();
 		vector<bool> tmpRow;
-		for (int i = 0; i < board.size() - 3; ++i) {
+		for (int i = 0; i < board.size(); ++i) {
 			tmpRow.clear();
 			for (int j = 0; j < 11; ++j) {
 				if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end())
@@ -419,7 +425,7 @@ vector<pair<int,int>> Board::singleOrientationHint() {
 		//for each possible position, set up the hintBoard to check simulated board after drop
 		hintBoard.clear();
 		vector<bool> tmpRow;
-		for (int i = 0; i < board.size() - 3; ++i) {
+		for (int i = 0; i < board.size(); ++i) {
 			tmpRow.clear();
 			for (int j = 0; j < 11; ++j) {
 				if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end())
