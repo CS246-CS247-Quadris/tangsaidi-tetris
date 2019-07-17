@@ -187,6 +187,7 @@ int main(int argc, char *argv[]) {
 	if (!enableTextMode) {
 		window = make_unique<Window>(game.get());
 		QObject::connect(&textGame, SIGNAL(updateWindow()), window.get(), SLOT(updateWindow()));
+		QObject::connect(window.get(), SIGNAL(execCommand(std::string)), &textGame, SLOT(execCommand(std::string)));
 		window->show();
 	}
 	

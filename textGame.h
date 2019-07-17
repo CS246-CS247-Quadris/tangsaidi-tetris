@@ -3,6 +3,8 @@
 #ifndef TEXTGAME
 #define TEXTGAME
 
+#include <iostream>
+
 #include <QtWidgets>
 #include <QObject>
 #include <QApplication>
@@ -22,11 +24,14 @@ class TextGame: public QObject {
 		void quit();
         void updateWindow();
 
+	public slots:
+		void execCommand(std::string command);
+
 	private:
 		Game* game;
 		std::unique_ptr<QSocketNotifier> m_notifier;
 
 	private slots:
-		void readCommand();
+		void readCommand(std::istream& = std::cin);
 };
 #endif

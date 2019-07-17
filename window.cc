@@ -27,6 +27,7 @@ Window::Window(Game* game): game(game) {
     // Restart button
     restartButton = new QPushButton(tr("&Restart"));
     restartButton->setFocusPolicy(Qt::NoFocus);
+    connect(restartButton, SIGNAL(released()), this, SLOT(handleRestart()));
 
     // Quit button
     quitButton = new QPushButton(tr("&Quit"));
@@ -69,9 +70,12 @@ void Window::paintEvent(QPaintEvent *event) {
     levelLcd->display(game->game->getCurrentLevel());
     scoreLcd->display(game->game->getScore());
     hiLcd->display(game->game->getHiScore());
-
 }
 
 void Window::updateWindow() {
     this->repaint();
+}
+
+void Window::handleRestart() {
+    emit execCommand("restart");
 }

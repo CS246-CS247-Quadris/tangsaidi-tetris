@@ -9,6 +9,7 @@
 #include "board.h"
 
 class Window;
+class WindowBoard;
 
 class Game {
 	friend class Window;

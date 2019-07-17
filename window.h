@@ -21,12 +21,19 @@ class Window: public QWidget {
     
     public:
         Window(Game*);
+
+    signals:
+        void execCommand(std::string command);
     
+    public slots:
+		void updateWindow();
+
+    private slots:
+        void handleRestart();
+
     protected:
         void paintEvent(QPaintEvent *event) override;
 
-    public slots:
-		void updateWindow();
 
     private:
         QPointer<QLabel> createLabel(const QString &text);
