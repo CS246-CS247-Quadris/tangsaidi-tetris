@@ -22,8 +22,8 @@ class Window: public QWidget {
     public:
         Window(Game*);
 
-    // public slots:
-	// 	void repaint();
+    public slots:
+		void updateWindow();
 
     private:
         QPointer<QLabel> createLabel(const QString &text);

@@ -14,8 +14,10 @@ void TextGame::run() {
 
 void TextGame::readCommand() {
 	if (!game->parseCommand(std::cin)) {
+        std::cout << "Game over" << std::endl;
 		QApplication::quit();
 	}
     game->printBoard();
+    emit updateWindow();
 	std::cout<<"> "<< std::flush;
 }

@@ -55,10 +55,14 @@ Window::Window(Game* game): game(game) {
     setLayout(layout);
 
     setWindowTitle(tr("Quadris"));
-    resize(550, 600);
+    resize(800, 600);
 }
 QPointer<QLabel> Window::createLabel(const QString &text) {
     QPointer<QLabel> lbl =  new QLabel(text);
     lbl->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     return lbl;
+}
+
+void Window::updateWindow() {
+    this->repaint();
 }

@@ -20,7 +20,7 @@ class TextGame: public QObject {
 
 	signals:
 		void quit();
-        void notifyRepaint();
+        void updateWindow();
 
 	private:
 		Game* game;
