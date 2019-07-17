@@ -34,7 +34,6 @@ class Window: public QWidget {
     protected:
         void paintEvent(QPaintEvent *event) override;
 
-
     private:
         QPointer<QLabel> createLabel(const QString &text);
 

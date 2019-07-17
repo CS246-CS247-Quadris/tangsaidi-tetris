@@ -83,6 +83,28 @@ std::string Board::getStringified() const {
 	return stringified;
 }
 
+std::string Board::getStringifiedNext() const {
+	switch(next->getBlockType()) {
+		case 'I':
+			return "IIII";
+		case 'J':
+			return "J\nJJJ";
+		case 'L':
+			return "  L\nLLL";
+		case 'O':
+			return "OO\nOO";
+		case 'S':
+			return" SS\nSS";
+		case 'Z':
+			return "ZZ\n ZZ";
+		case 'T':
+			return "TTT\n T";
+		default:
+			cerr<<"Failed reading shape of next block."<<endl;
+			return "?";
+	}
+}
+
 void Board::print() {
 	cout << "\033[2J\033[1;1H"; // clear screen
 	cout<<setw(10)<<left<<"Level:";
@@ -103,32 +125,7 @@ void Board::print() {
 		cout<<"  N/A"<<endl;
 		return;
 	}
-	switch(next->getBlockType()) {
-		case 'I':
-			cout<<"\nIIII"<<endl;
-			break;
-		case 'J':
-			cout<<"J\nJJJ"<<endl;
-			break;
-		case 'L':
-			cout<<"  L\nLLL"<<endl;
-			break;
-		case 'O':
-			cout<<"OO\nOO"<<endl;
-			break;
-		case 'S':
-			cout<<" SS\nSS"<<endl;
-			break;
-		case 'Z':
-			cout<<"ZZ\n ZZ"<<endl;
-			break;
-		case 'T':
-			cout<<"TTT\n T"<<endl;
-			break;
-		default:
-			cerr<<"Failed reading shape of next block."<<endl;
-			break;
-	}
+	cout << getStringifiedNext() << endl;
 }
 
 

@@ -40,6 +40,7 @@ class Board {
 		int getHiScore() const;
 		int getScore() const;
 		std::string getStringified() const;
+		std::string getStringifiedNext() const;
 		std::stringstream toStringStream();
 
 	private:

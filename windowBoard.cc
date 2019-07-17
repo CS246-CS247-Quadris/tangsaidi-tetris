@@ -1,12 +1,16 @@
 #include "windowBoard.h"
 #include <map>
-#include <QtWidgets>
-
 
 WindowBoard::WindowBoard(QWidget *parent, Game *game) : QFrame(parent), game(game) {
     setFrameStyle(QFrame::Panel | QFrame::Sunken);
     setFocusPolicy(Qt::StrongFocus);
 }
+
+
+void WindowBoard::setNextPieceLabel(QPointer<QLabel> label) {
+    nextPieceLabel = label;
+}
+
 
 QSize WindowBoard::sizeHint() const{
     return QSize(BoardWidth * 15 + frameWidth() * 2,
@@ -39,6 +43,44 @@ void WindowBoard::paintEvent(QPaintEvent *event){
             }
             curCol++;
         }
+    }
+
+    if (nextPieceLabel) {
+        std::string nextBlock = game->game->getStringifiedNext();
+        char blockType = nextBlock[nextBlock.size() - 1];
+
+        int width, height;
+
+        if (blockType == 'O') {
+            width = 2;
+            height = 2;
+        } else if (blockType == 'I') {
+            width = 4;
+            height = 1;
+        } else {
+            width = 3;
+            height = 2;
+        }
+
+        QPixmap pixmap(width * squareWidth(), height * squareHeight());
+        QPainter painter(&pixmap);
+        painter.fillRect(pixmap.rect(), nextPieceLabel->palette().background());
+
+        int x = 0;
+        int y = 0;
+        for (char c: nextBlock) {
+            if (c == '\n') {
+                y++;
+                x = 0;
+            } else if (c == ' ') {
+                x++;
+            } else {
+                drawSquare(painter, x * squareWidth(), y * squareHeight(), c);
+                x++;
+            }
+        }
+
+        nextPieceLabel->setPixmap(pixmap);
     }
 
 }

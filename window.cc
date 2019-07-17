@@ -10,6 +10,7 @@ Window::Window(Game* game): game(game) {
     nextPieceLabel = new QLabel();
     nextPieceLabel->setFrameStyle(QFrame::Box | QFrame::Raised);
     nextPieceLabel->setAlignment(Qt::AlignCenter);
+    dropZone->setNextPieceLabel(nextPieceLabel);
 
     // Current score
     scoreLcd = new QLCDNumber(5);
@@ -18,7 +19,6 @@ Window::Window(Game* game): game(game) {
     // Current Level
     levelLcd = new QLCDNumber(2);
     levelLcd->setSegmentStyle(QLCDNumber::Filled);
-    levelLcd->display(game->game->getCurrentLevel());
 
     // Hi score
     hiLcd = new QLCDNumber(5);
@@ -41,8 +41,8 @@ Window::Window(Game* game): game(game) {
     layout->addWidget(nextPieceLabel, 1, 0);
     layout->addWidget(createLabel(tr("LEVEL")), 2, 0);
     layout->addWidget(levelLcd, 3, 0);
-    
-    layout->addWidget(dropZone, 0, 1, 12, 2);
+        layout->addWidget(restartButton, 4, 0);
+    layout->addWidget(dropZone, 0, 1, 6, 2);
     
     layout->addWidget(createLabel(tr("SCORE")), 0, 3);
     layout->addWidget(scoreLcd, 1, 3);
@@ -50,8 +50,7 @@ Window::Window(Game* game): game(game) {
     layout->addWidget(createLabel(tr("HI SCORE")), 2, 3);
     layout->addWidget(hiLcd, 3, 3);
     
-    layout->addWidget(restartButton, 4, 3);
-    layout->addWidget(quitButton, 5, 3);
+    layout->addWidget(quitButton, 4, 3);
 
     setLayout(layout);
 
@@ -66,7 +65,6 @@ QPointer<QLabel> Window::createLabel(const QString &text) {
 
 void Window::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
-
     levelLcd->display(game->game->getCurrentLevel());
     scoreLcd->display(game->game->getScore());
     hiLcd->display(game->game->getHiScore());
