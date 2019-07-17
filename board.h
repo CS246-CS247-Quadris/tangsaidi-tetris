@@ -33,11 +33,12 @@ class Board {
 		void norand(bool isNoRandom, std::string file="");
 		void setSeed(int seed);
 		void replaceCurrentBlock(char cType);
-		std::stringstream toStringStream();
 
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
 		void deleteHintSettler();
+		std::string getStringified() const;
+		std::stringstream toStringStream();
 
 	private:
 		std::shared_ptr<Score> score;
@@ -49,6 +50,7 @@ class Board {
 		std::unique_ptr<Block> next;
 		std::unique_ptr<Level> strategy;
 		std::vector<std::pair<int, int>> hintSettlerCoord;
+		std::string stringified;
 		
 		std::stringstream printRow(int y);
 		std::vector<std::pair<int, int>> ifDropNow(const std::vector<std::pair<int,int>> &);

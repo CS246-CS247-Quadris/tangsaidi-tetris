@@ -27,7 +27,7 @@ bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
 		if(i.first<0 || i.first>10) return false;
 		if (i.second > board.size()+2 || i.second < 0) return false;
-		if (i.second < board.size() && board.at(i.second).isOccupied(i.first)) return false;
+		if (i.second < board.size() && board.at(i.second).isOccupied(i.first) && board.at(i.second).getData(i.first) != '?') return false;
 	}
 	return true;
 }
@@ -79,6 +79,10 @@ std::stringstream Board::toStringStream() {
 	return ss;
 }
 
+std::string Board::getStringified() const {
+	return stringified;
+}
+
 void Board::print() {
 	cout << "\033[2J\033[1;1H"; // clear screen
 	cout<<setw(10)<<left<<"Level:";
@@ -89,7 +93,8 @@ void Board::print() {
 	cout<<setw(3)<<right<<score->getHighestScore()<<endl;
 	cout<<"-----------"<<endl;
 	// First, check first 3 reserved row
-	cout << toStringStream().str();
+	stringified = toStringStream().str();
+	cout << stringified;
 
 	cout<<"-----------"<<endl;
 	

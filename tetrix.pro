@@ -7,6 +7,7 @@ CONFIG += c++14
 
 HEADERS       = textGame.h \
                 game.h \
+                windowBoard.h \
                 window.h \
                 board.h \
                 block.h \
@@ -24,6 +25,7 @@ HEADERS       = textGame.h \
 SOURCES       = textGame.cc \
                 main.cc \
                 game.cc \
+                windowBoard.cc \
                 window.cc \
                 board.cc \
                 block.cc \

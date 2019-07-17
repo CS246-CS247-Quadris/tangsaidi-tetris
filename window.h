@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "game.h"
+#include "windowBoard.h"
 
 QT_BEGIN_NAMESPACE
 class QLCDNumber;
@@ -25,11 +26,11 @@ class Window: public QWidget {
 	// 	void repaint();
 
     private:
-        std::unique_ptr<QLabel> createLabel(const QString &text);
+        QPointer<QLabel> createLabel(const QString &text);
 
         Game* game;
 
-        QPointer<QFrame> dropZone;
+        QPointer<WindowBoard> dropZone;
 
         QPointer<QLabel> nextPieceLabel;
         QPointer<QLCDNumber> scoreLcd;

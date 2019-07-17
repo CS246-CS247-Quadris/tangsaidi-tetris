@@ -8,13 +8,15 @@
 #include <iostream>
 #include "board.h"
 
+class Window;
+
 class Game {
+	friend class Window;
 public:
 	Game(int, int, const std::string&);
 	~Game();
 	void printBoard();
 	bool parseCommand(std::istream&);
-	bool needRestart() const;
 private:
 	enum CommandType {
 		CONTROL_LEFT = 0,
