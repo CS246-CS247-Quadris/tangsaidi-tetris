@@ -5,6 +5,7 @@
 Window::Window(Game* game): game(game) {
     // Drop zone
     dropZone = new WindowBoard(0, game);
+    connect(dropZone, SIGNAL(keyDown(std::string)), this, SLOT(keyDown(std::string)));
 
     // Next piece of block
     nextPieceLabel = new QLabel();
@@ -33,7 +34,6 @@ Window::Window(Game* game): game(game) {
     quitButton = new QPushButton(tr("&Quit"));
 
     connect(quitButton , SIGNAL(clicked()), qApp, SLOT(quit()));
-
 
     QPointer<QGridLayout> layout = new QGridLayout;
 
@@ -76,4 +76,8 @@ void Window::updateWindow() {
 
 void Window::handleRestart() {
     emit execCommand("restart");
+}
+
+void Window::keyDown(std::string key) {
+    emit execCommand(key);
 }

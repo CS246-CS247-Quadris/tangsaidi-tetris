@@ -104,3 +104,58 @@ void WindowBoard::drawSquare(QPainter &painter, int x, int y, char blockType){
     painter.drawLine(x + squareWidth() - 1, y + squareHeight() - 1,
                      x + squareWidth() - 1, y + 1);
 }
+
+void WindowBoard::keyPressEvent(QKeyEvent *event){
+    switch (event->key()) {
+    case Qt::Key_Left:
+        emit keyDown("left");
+        break;
+    case Qt::Key_Right:
+        emit keyDown("right");
+        break;
+    case Qt::Key_Down:
+        emit keyDown("clockwise");
+        break;
+    case Qt::Key_Up:
+        emit keyDown("counterclockwise");
+        break;
+    case Qt::Key_Space:
+        emit keyDown("drop");
+        break;
+    case Qt::Key_D:
+        emit keyDown("down");
+        break;
+    case Qt::Key_I:
+        emit keyDown("I");
+        break;
+    case Qt::Key_J:
+        emit keyDown("J");
+        break;
+    case Qt::Key_L:
+        emit keyDown("L");
+        break;
+    case Qt::Key_O:
+        emit keyDown("O");
+        break;
+    case Qt::Key_S:
+        emit keyDown("S");
+        break;
+    case Qt::Key_Z:
+        emit keyDown("Z");
+        break;
+    case Qt::Key_T:
+        emit keyDown("T");
+        break;
+    case Qt::Key_H:
+        emit keyDown("hint");
+        break;
+    case Qt::Key_Minus:
+        emit keyDown("leveldown");
+        break;
+    case Qt::Key_Plus:
+        emit keyDown("levelup");
+        break;
+    default:
+        QFrame::keyPressEvent(event);
+    }
+}

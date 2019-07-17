@@ -27,6 +27,7 @@ class Window: public QWidget {
     
     public slots:
 		void updateWindow();
+        void keyDown(std::string key);
 
     private slots:
         void handleRestart();

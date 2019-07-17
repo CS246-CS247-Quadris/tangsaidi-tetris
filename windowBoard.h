@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QPointer>
 #include <QtWidgets>
+#include <string>
 #include "board.h"
 #include "game.h"
 
@@ -19,9 +20,12 @@ class WindowBoard: public QFrame {
         QSize sizeHint() const override;
         QSize minimumSizeHint() const override;
 
+    signals:
+        void keyDown(std::string key);
+
     protected:
         void paintEvent(QPaintEvent *event) override;
-        // void keyPressEvent(QKeyEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
     private:
         enum { BoardWidth = 11, BoardHeight = 18 };
