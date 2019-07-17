@@ -3,7 +3,7 @@
 #include <QtWidgets>
 
 
-WindowBoard::WindowBoard(QWidget *parent, Board *board) : QFrame(parent), board(board) {
+WindowBoard::WindowBoard(QWidget *parent, Game *game) : QFrame(parent), game(game) {
     setFrameStyle(QFrame::Panel | QFrame::Sunken);
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -28,7 +28,7 @@ void WindowBoard::paintEvent(QPaintEvent *event){
 
     int curRow = 0;
     int curCol = 0;
-    for (char c: board->getStringified()) {
+    for (char c: game->game->getStringified()) {
         if (c == '\n') {
             curCol = 0;
             curRow++;

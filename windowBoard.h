@@ -3,13 +3,14 @@
 
 #include <QFrame>
 #include "board.h"
+#include "game.h"
 
 class WindowBoard: public QFrame {
     Q_OBJECT;
 
     public:
         WindowBoard(QWidget* = 0);
-        WindowBoard(QWidget* = 0, Board* = 0);
+        WindowBoard(QWidget* = 0, Game* = 0);
 
         QSize sizeHint() const override;
         QSize minimumSizeHint() const override;
@@ -19,7 +20,7 @@ class WindowBoard: public QFrame {
 
     private:
         enum { BoardWidth = 11, BoardHeight = 18 };
-        Board* board;
+        Game* game;
         void drawSquare(QPainter &painter, int x, int y, char blockType);
         int squareWidth() { return contentsRect().width() / BoardWidth; }
         int squareHeight() { return contentsRect().height() / BoardHeight; }

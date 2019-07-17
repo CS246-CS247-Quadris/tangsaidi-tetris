@@ -21,6 +21,9 @@ class Window: public QWidget {
     
     public:
         Window(Game*);
+    
+    protected:
+        void paintEvent(QPaintEvent *event) override;
 
     public slots:
 		void updateWindow();

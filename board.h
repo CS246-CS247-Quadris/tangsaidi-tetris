@@ -37,6 +37,8 @@ class Board {
 		void createSettler(std::pair<int, int> coord);
 		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
 		void deleteHintSettler();
+		int getHiScore() const;
+		int getScore() const;
 		std::string getStringified() const;
 		std::stringstream toStringStream();
 

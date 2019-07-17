@@ -572,3 +572,11 @@ void Board::drop() {
 bool Board::checkEnd() {
 	return !isValid(cur->getComponents());
 }
+
+int Board::getHiScore() const {
+	return Score::getHighestScore();
+}
+
+int Board::getScore() const {
+	return score->getCurrentScore();
+}

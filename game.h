@@ -12,6 +12,7 @@ class Window;
 
 class Game {
 	friend class Window;
+	friend class WindowBoard;
 public:
 	Game(int, int, const std::string&);
 	~Game();

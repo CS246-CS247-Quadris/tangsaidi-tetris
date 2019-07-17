@@ -4,7 +4,7 @@
 
 Window::Window(Game* game): game(game) {
     // Drop zone
-    dropZone = new WindowBoard(0, game->game.get());
+    dropZone = new WindowBoard(0, game);
 
     // Next piece of block
     nextPieceLabel = new QLabel();
@@ -61,6 +61,15 @@ QPointer<QLabel> Window::createLabel(const QString &text) {
     QPointer<QLabel> lbl =  new QLabel(text);
     lbl->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
     return lbl;
+}
+
+void Window::paintEvent(QPaintEvent *event) {
+    QWidget::paintEvent(event);
+
+    levelLcd->display(game->game->getCurrentLevel());
+    scoreLcd->display(game->game->getScore());
+    hiLcd->display(game->game->getHiScore());
+
 }
 
 void Window::updateWindow() {
