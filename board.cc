@@ -340,7 +340,6 @@ int Board::findEdges() {
 	and the second one is the total height of all columns.
  */
 pair<int, int> Board::findHeight() {
-	int prevHeight = -1;
 	int maxHeight = -1;
 	int sumHeight = 0;
 	//find the maxHeight and total height
@@ -352,7 +351,6 @@ pair<int, int> Board::findHeight() {
 		sumHeight += (j + 1);
 		if (maxHeight == -1) {
 			maxHeight = j;
-			prevHeight = j;
 		} else if(maxHeight < j) {
 			maxHeight = j;
 		}
