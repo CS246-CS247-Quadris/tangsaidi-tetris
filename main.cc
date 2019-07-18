@@ -9,8 +9,6 @@
 #include <QScopedPointer>
 #include <QCoreApplication>
 #include <QApplication>
-// #include <QSocketNotifier>
-
 
 #include "window.h"
 
@@ -18,6 +16,7 @@
 #include "textGame.h"
 using namespace std;
 
+// All possible values of ArgumentType
 enum ArgumentType {
 	ARG_TEXT,
 	ARG_SEED,
@@ -26,6 +25,7 @@ enum ArgumentType {
 	ARG_HELP
 };
 
+// Global value that stores state of what arguments are passed in, unique to each run of the program
 const map<string, ArgumentType> mode = {
 	{"-text", ARG_TEXT},
 	{"-seed", ARG_SEED},
@@ -170,26 +170,31 @@ int main(int argc, char *argv[]) {
 				break;
 		}
 	}
-
+	// Creates a QCoreApplication if -text is enabled, else creates a full QApplication
     QScopedPointer<QCoreApplication> app(createApplication(argc, argv));
 
 	/* Now process configurations */
-	// TODO: might cause exception
 	startLevel = stoi(str_level);
 	// Now start the game
 	game = std::make_unique<Game>(startLevel, stoi(str_seed), fScript);
 
+	// Start the core part of our game, text game is the source of truth for GUI
 	TextGame textGame(game.get());
 	textGame.run();
+	// Quit the program when text game sends quit signal
 	QObject::connect(&textGame, SIGNAL(quit()), &(*app), SLOT(quit()));
 
+	// Creates a window object if -text is not supplied
 	unique_ptr<Window> window;
 	if (!enableTextMode) {
 		window = make_unique<Window>(game.get());
+		// Connect the text game's updateWindow signal to the window's updateWindow slot so it knows when to repaint
 		QObject::connect(&textGame, SIGNAL(updateWindow()), window.get(), SLOT(updateWindow()));
+		// Connect the exec command signal from window, so we can control the text game with GUI
 		QObject::connect(window.get(), SIGNAL(execCommand(std::string)), &textGame, SLOT(execCommand(std::string)));
 		window->show();
 	}
 	
+	// Start the event loop
 	return app->exec();
 }

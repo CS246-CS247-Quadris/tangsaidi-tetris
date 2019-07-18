@@ -74,6 +74,7 @@ std::unique_ptr<Level> Level::create(int level, Board* board) {
 
 void Level::move(char direction, int steps) {
   board->cur->move(direction, steps);
+  // undo the move if the move was invalid
   if (!board->isValid(board->cur->getComponents())) {
     board->cur->move(direction, (-1) * steps);
   }
@@ -81,6 +82,7 @@ void Level::move(char direction, int steps) {
 
 void Level::rotate(bool isClockwise) {
   board->cur->rotate(isClockwise);
+  // undo rotation if the rotation was invalid
   if (!board->isValid(board->cur->getComponents())) {
     board->cur->rotate(1 ^ isClockwise);
   }

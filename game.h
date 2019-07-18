@@ -17,6 +17,9 @@ class Game {
 public:
 	Game(int, int, const std::string&);
 	~Game();
+	/*
+	prints board to std output
+	 */
 	void printBoard();
 	bool parseCommand(std::istream&);
 private:

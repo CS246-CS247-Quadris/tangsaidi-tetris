@@ -387,7 +387,8 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		default:
 			break;
 	}
-	// check if game is after each command, in case debug statement switch to an invalid block
+	// check if game is after each command, in case debug s
+	// tatement switch to an invalid block
 	if(game->checkEnd()) return false;
 	
 	return true;
@@ -452,11 +453,6 @@ bool Game::parseCommand(istream& in) {
 		}
 		macro[s] = tokens;
 		addCommandPrefixLookup(s);
-		
-		// cout<<"DEBUG: Add macro '"<<s<<"' => ";
-		// for(auto it : tokens)
-		// 	cout<<it<<" ";
-		// cout<<endl;
 	}
 	else {
 		for(int i=0;i< (int) tokens.size();i++) {
