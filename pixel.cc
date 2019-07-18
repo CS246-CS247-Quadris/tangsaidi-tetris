@@ -1,7 +1,7 @@
 #include "pixel.h"
 using namespace std;
 
-//note here use '-' as an invalid character for pixel
+//Note: use '-' as an invalid character for pixel, unoccupied
 Pixel::Pixel() : parent{nullptr}, data{'-'} {}
 
 void Pixel::setPixel(char d, shared_ptr<Settler> s){
