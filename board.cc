@@ -145,7 +145,6 @@ void Board::setSeed(int seed) {
 }
 
 // This may not be safe for higher levels
-// **TEST REQUIRED**
 void Board::replaceCurrentBlock(char cType) {
 	if(cType == cur->getBlockType())
 		return;
@@ -164,8 +163,8 @@ void Board::replaceCurrentBlock(char cType) {
 		}
 	}
 	
-	cur = Block::create(cType, curLevel);
-	comp = cur->getComponents();
+	std::unique_ptr<Block> tmp = Block::create(cType, curLevel);
+	comp = tmp->getComponents();
 	
 	srcXmin = comp.at(0).first;
 	srcYmin = comp.at(0).second;
@@ -179,10 +178,22 @@ void Board::replaceCurrentBlock(char cType) {
 	}
 	
 	// coordinates need to be fixed
-	for(int c=destXmin-srcXmin;c>0;c--) cur->move('r', 1);
-	while(!isValid(cur->getComponents())) cur->move('l', 1);
-	for(int c=srcYmin-destYmin;c>0;c--) cur->move('d', 1);
-	while(!isValid(cur->getComponents())) cur->move('d', -1);
+	for(int c=destXmin-srcXmin;c>0;c--) tmp->move('r', 1);
+	int counter = 0;
+	while(!isValid(tmp->getComponents()))  {
+		if (counter > 11) return;
+		tmp->move('l', 1);
+		counter++;
+	};
+	counter = 0;
+	for(int c=srcYmin-destYmin;c>0;c--) tmp->move('d', 1);
+	while(!isValid(tmp->getComponents())) {
+		if (counter > 15) return;
+		tmp->move('d', -1);
+		counter++;
+	}
+
+	cur = std::move(tmp);
 }
 
 void Board::createSettler(std::pair<int, int> coord) {
