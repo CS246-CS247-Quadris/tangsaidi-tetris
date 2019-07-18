@@ -19,8 +19,7 @@ Game::Game(int level, int rndSeed, const string& script):
 	seed{rndSeed},
 	startLevel{level},
 	isHint{false},
-	script{script},
-	game{make_unique<Board>(level, script)}, 
+	script{script}, 
 	command{
 		{"left", CONTROL_LEFT},
 		{"right", CONTROL_RIGHT},
@@ -68,8 +67,10 @@ Game::Game(int level, int rndSeed, const string& script):
 	addCommandPrefixLookup("T");
 	addCommandPrefixLookup("rename");
 	addCommandPrefixLookup("&&");
-	
+
 	game->setSeed(seed);
+	// Not in MIL because we need to set seed first
+	game = make_unique<Board>(level, script);
 }
 
 Game::~Game() {}
