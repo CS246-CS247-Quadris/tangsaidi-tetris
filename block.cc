@@ -1,9 +1,10 @@
 #include "block.h"
-#include <iostream>
 using namespace std;
 
+#define UNUSED(x) (void)(x)
+
 unique_ptr<Block> Block::create(char type, int level) {
-	cout << "Block " << type << " created" << endl;
+	// cout << "Block " << type << " created" << endl;
 	switch(type) {
 		case 'I':
 			return make_unique<IBlock>(level);
@@ -26,7 +27,7 @@ unique_ptr<Block> Block::create(char type, int level) {
 
 // Lower-left bounding box is preserved, so rotate with respect to 
 // lower-left corner
-Block::Block(char t, int level):type{t}, rotCenter{0,13}, level{level} {}
+Block::Block(char t, int level):rotCenter{0,13}, type{t}, level{level} {}
 
 vector<pair<int,int>> Block::getComponents() const {
 	return coordinate;
@@ -40,7 +41,7 @@ vector<pair<int,int>> Block::getComponents() const {
  * assumption: the coordinate system of the board has origin at bottom-left corner
  */
 void Block::move(char direction, int steps) {
-	cout << "Moved direction: " << direction << "  distance: " << steps << endl;
+	// cout << "Moved direction: " << direction << "  distance: " << steps << endl;
 	switch(direction) {
 		case 'l':
 			for(auto& v:coordinate) {
@@ -64,7 +65,7 @@ void Block::move(char direction, int steps) {
 }
 
 void Block::rotate(bool isClockwise) {
-	cout << "Rotated clockwise: " << isClockwise << endl;
+	// cout << "Rotated clockwise: " << isClockwise << endl;
 	int x=rotCenter.first, y=rotCenter.second;
 	// transform coordinates
 	for(auto& v:coordinate) {
@@ -132,7 +133,9 @@ TBlock::TBlock(int level):Block{'T', level} {
 }
 
 // O block remains unchanged after any rotation
-void OBlock::rotate(bool isClockwise) {}
+void OBlock::rotate(bool isClockwise) {
+	UNUSED(isClockwise);
+}
 
 // Get block types
 char Block::getBlockType() {

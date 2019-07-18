@@ -15,7 +15,7 @@ LevelZero::LevelZero(Board* board): Level(board) {
 
 // get the next block on this level
 std::unique_ptr<Block> LevelZero::getNext() {
-  if (current == sequence.size()) {
+  if (current == (int) sequence.size()) {
     current = 0;
   }
   return Block::create(sequence[current++], board->getCurrentLevel());

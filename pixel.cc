@@ -2,7 +2,7 @@
 using namespace std;
 
 //note here use '-' as an invalid character for pixel
-Pixel::Pixel() : data{'-'}, parent{nullptr} {}
+Pixel::Pixel() : parent{nullptr}, data{'-'} {}
 
 void Pixel::setPixel(char d, shared_ptr<Settler> s){
 	data = d;
@@ -23,13 +23,4 @@ bool Pixel::isOccupied() const {
 
 char Pixel::getData() const {
 	return data;
-}
-
-ostream& operator<<(std::ostream & out, const Pixel & p) {
-	if (p.isOccupied()) {
-		out << p.data;
-	} else {
-		out << ' ';
-	}
-	return out;
 }

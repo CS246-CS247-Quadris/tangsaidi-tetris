@@ -34,8 +34,18 @@ class Board {
 		void setSeed(int seed);
 		void replaceCurrentBlock(char cType);
 
+		/* Board::CreateSettler 
+		   Creates the settler for * block at coord
+		 */
 		void createSettler(std::pair<int, int> coord);
-		void createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel);
+		/* Board::CreateSettler 
+		   Creates the settler for any block passed in coordinates, blockType and Level
+		 */
+		void createSettler(const std::vector<std::pair<int, int>> & coord, char type, int level);
+		/* Board::DeleteHintSettler 
+		   Delete hint settler created with hint function (stored in hintSettlerCoord)
+		   Should be called after display, before next command.
+		 */
 		void deleteHintSettler();
 		int getHiScore() const;
 		int getScore() const;
@@ -67,7 +77,7 @@ class Board {
 		void setHintBoard(const std::vector<std::pair<int, int>> &);
 		int getHintScore();
 		std::vector<std::pair<int,int>> singleOrientationHint(bool);
-		void createHintSettler(std::vector<std::pair<int, int>> coord);
+		void createHintSettler(const std::vector<std::pair<int, int>> & coord);
 };
 
 #endif /* __BOARD_H__ */

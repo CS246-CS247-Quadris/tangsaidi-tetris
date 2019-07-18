@@ -33,7 +33,7 @@ void Row::clearPixelAt(int index) {
 }
 
 char Row::getData(int i) {
-	if (i >= data.size() || i < 0) return -1;
+	if (i >= (int) data.size() || i < 0) return -1;
 	return data.at(i).getData();
 }
 
@@ -45,14 +45,6 @@ bool Row::isRemovable() {
 }
 
 bool Row::isOccupied(int i) {
-	if (i >= data.size() || i < 0) return false;
+	if (i >= (int) data.size() || i < 0) return false;
 	return data.at(i).isOccupied();
-}
-
-ostream& operator<<(std::ostream & out, const Row & r) {
-	for (auto &d : r.data) {
-		out << d;
-	}
-	//out << endl;
-	return out;
 }

@@ -1,5 +1,4 @@
 #include "score.h"
-#include <fstream>
 using namespace std;
 
 int Score::highestScore = 0;

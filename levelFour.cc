@@ -2,8 +2,6 @@
 #include <cstdlib> 
 #include <utility>
 
-
-#include <iostream>
 using namespace std;
 
 LevelFour::LevelFour(Board* board): LevelThree(board){
@@ -44,7 +42,7 @@ std::unique_ptr<Block> LevelFour::getNext() {
       board->createSettler(std::make_pair(mid, dropRow));
     }
   }
-  return std::move(ret);
+  return ret;
 }
 
 LevelFour::~LevelFour() {}

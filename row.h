@@ -21,9 +21,7 @@ class Row {
     void clearPixelAt(int);
   	bool isRemovable();
     bool isOccupied(int);
-	char getData(int);
-
-  	friend std::ostream& operator<<(std::ostream &, const Row &);
+	  char getData(int);
 };
 
 #endif

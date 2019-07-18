@@ -6,7 +6,7 @@
 using namespace std;
 
 Board::Board(int level, const string& script): 
-	curLevel{level}, board{15}, score{make_shared<Score>()} {
+	score{make_shared<Score>()}, board{15}, curLevel{level} {
 	strategy = Level::create(curLevel, this);
 	if(!script.empty())
 		strategy->setScriptFile(script);
@@ -26,8 +26,10 @@ int Board::getCurrentLevel() const {
 bool Board::isValid(std::vector<std::pair<int, int>> coord) {
 	for (auto &i : coord) {
 		if(i.first<0 || i.first>10) return false;
-		if (i.second > board.size()+2 || i.second < 0) return false;
-		if (i.second < board.size() && board.at(i.second).isOccupied(i.first) && board.at(i.second).getData(i.first) != '?') return false;
+		if (i.second > (int) board.size()+2 || i.second < 0) return false;
+		if (i.second < (int) board.size() && board.at(i.second).isOccupied(i.first) 
+			&& board.at(i.second).getData(i.first) != '?') 
+			return false;
 	}
 	return true;
 }
@@ -189,11 +191,11 @@ void Board::createSettler(std::pair<int, int> coord) {
 	board.at(coord.second).setRowAt(coord.first, '*', s);
 }
 
-void Board::createHintSettler(std::vector<std::pair<int, int>> coord) {
+void Board::createHintSettler(const std::vector<std::pair<int, int>> & coord) {
 	shared_ptr<Settler> s = make_shared<Settler>(-1, score);
 	hintSettlerCoord = coord;
 	for (auto &i : coord) {
-		if (i.second >= board.size() || i.first >= 11 || i.second < 0 || i.first < 0) {
+		if (i.second >= (int) board.size() || i.first >= 11 || i.second < 0 || i.first < 0) {
 			hintSettlerCoord.clear();
 			return;
 		}
@@ -209,13 +211,16 @@ void Board::deleteHintSettler() {
 	hintSettlerCoord.clear();
 }
 
-void Board::createSettler(std::vector<std::pair<int, int>> coord, char blockType, int blockLevel) {
-	shared_ptr<Settler> s = make_shared<Settler>(blockLevel, score);
+void Board::createSettler(const std::vector<std::pair<int, int>> & coord, char type, int level) {
+	shared_ptr<Settler> s = make_shared<Settler>(level, score);
 	for (auto &i : coord) {
-		board.at(i.second).setRowAt(i.first, blockType, s);
+		board.at(i.second).setRowAt(i.first, type, s);
 	}
 }
 
+/* 	Board::ifDropNow
+	Return the coordinates of passed in block if "drop" is performed.
+ */
 vector<pair<int, int>> Board::ifDropNow(const vector<pair<int,int>> & block) {
 	vector<pair<int, int>> result = block;
 	do {
@@ -229,8 +234,12 @@ vector<pair<int, int>> Board::ifDropNow(const vector<pair<int,int>> & block) {
 	return result;
 }
 
+/* 	Board::isHole
+	Return true if from right to left, it is a hole that can not be accessed.
+	Otherwise false.
+ */
 bool Board::isHole(int row, int right, int left) {
-	if (row + 1 >= hintBoard.size()) return false;
+	if (row + 1 >= (int) hintBoard.size()) return false;
 	for (int i = right; i <= left; ++i) {
 		if (hintBoard.at(row+1).at(i) == false)
 			return false;
@@ -238,8 +247,12 @@ bool Board::isHole(int row, int right, int left) {
 	return true;
 }
 
+/* 	Board::countHalfHole 
+	Delete hint settler created with hint function (stored in hintSettlerCoord)
+	Should be called after display, before next command.
+ */
 int Board::countHalfHoles(int row, int right, int left) {
-	if (row + 1 >= hintBoard.size()) return 0;
+	if (row + 1 >= (int) hintBoard.size()) return 0;
 	if (right == left) return false;
 	if (right + 1 == left) {
 		if (hintBoard.at(row+1).at(right) == true) return 1;
@@ -261,12 +274,17 @@ int Board::countHalfHoles(int row, int right, int left) {
 	return n;
 }
 
+/* 	Board::findHoles 
+	Return a pair of integers, where first one is the total width of all holes,
+	and the second one is the total width of half holes.
+	Note: half holes is defined to be unoccupied pixels that can be accessed from only left or right.
+ */
 pair<int, int> Board::findHoles() {
 	int numOfHoles = 0;
 	int numofHalfHoles = 0;
 	//half holes are the holes that are only blocked on one side.
 	//From algorithm of hint, this case is not solvable so should be penilizaed.
-	for (int i = 0; i < hintBoard.size(); ++i) {
+	for (int i = 0; i < (int) hintBoard.size(); ++i) {
 		for (int j = 0; j < 11; ++j) {
 			if (hintBoard.at(i).at(j) == false) {
 				int right = j;
@@ -285,12 +303,14 @@ pair<int, int> Board::findHoles() {
 	return make_pair(numOfHoles, numofHalfHoles);
 }
 
+/* 	Board::findEdges 
+	Return the total edge of the final shape on board.
+ */
 int Board::findEdges() {
 	int edgeNum = 0;
-	//find the total edge of the current shape.
 	//search all 4*4, if three empty or one empty, central point is a vertex.
 	for (int i = 0; i + 1 < 11; ++i) {
-		for (int j = 0; j + 1 < hintBoard.size(); ++j) {
+		for (int j = 0; j + 1 < (int) hintBoard.size(); ++j) {
 			int emptyPixel = 0;
 			int specialCase1 = 0;
 			int specialCase2 = 0;
@@ -315,6 +335,10 @@ int Board::findEdges() {
 	return edgeNum + 1;
 }
 
+/* 	Board::findHeight 
+	Return a pair of integers where the first one is max height of all columns,
+	and the second one is the total height of all columns.
+ */
 pair<int, int> Board::findHeight() {
 	int prevHeight = -1;
 	int maxHeight = -1;
@@ -336,6 +360,9 @@ pair<int, int> Board::findHeight() {
 	return make_pair(maxHeight + 1, sumHeight);
 }
 
+/* 	Board::hintIsRemovable 
+	Return true if row i is removable on hintBoard.
+ */
 bool Board::hintIsRemovable(int i) {
 	for (int j = 0; j < 11; ++j) {
 		if (hintBoard.at(i).at(j) == false) return false;
@@ -343,9 +370,12 @@ bool Board::hintIsRemovable(int i) {
 	return true;
 }
 
+/* 	Board::checkAndRemoveRow 
+	Return the number of removable rows with all of them removed in hintBoard.
+ */
 int Board::checkAndRemoveRow() {
 	vector<int> toBeRemoved;
-	for (int i = 0; i < hintBoard.size(); ++i) {
+	for (int i = 0; i < (int) hintBoard.size(); ++i) {
 		if (hintIsRemovable(i)) {
 			toBeRemoved.emplace_back(i);
 		}
@@ -358,6 +388,10 @@ int Board::checkAndRemoveRow() {
 	return toBeRemoved.size();
 }
 
+/* 	Board::getHintScore 
+	Return a score for current hintBoard, with factors being 
+	number of holes, half holes, maxHeight, totalHeight, and number of edges.
+ */
 int Board::getHintScore() {
 	int numOfClear = checkAndRemoveRow();
 	int numofEdges = findEdges();
@@ -368,15 +402,17 @@ int Board::getHintScore() {
 	return hintScore;
 }
 
+/* 	Board::setHintBoard 
+	Set up the hintBoard to check simulated board after drop
+ */
 void Board::setHintBoard(const vector<pair<int, int>> & block) {
-	//set up the hintBoard to check simulated board after drop
 	set<pair<int, int>> preserved;
 	for (auto &i : block) {
 		preserved.insert(i);
 	}
 	hintBoard.clear();
 	vector<bool> tmpRow;
-	for (int i = 0; i < board.size(); ++i) {
+	for (int i = 0; i < (int) board.size(); ++i) {
 		tmpRow.clear();
 		for (int j = 0; j < 11; ++j) {
 				if (board.at(i).isOccupied(j) || preserved.find(make_pair(j, i)) != preserved.end())
@@ -388,8 +424,11 @@ void Board::setHintBoard(const vector<pair<int, int>> & block) {
 	}
 }
 
+/* 	Board::singleOrientationHint
+	Checks for all possible solutions within 1 move after rotation, return the best solution
+ */
 vector<pair<int,int>> Board::singleOrientationHint(bool rotated) {
-	//check for all possible solutions within 1 move after rotation, give the best solution
+	
 	vector<pair<int, int>> bestCoord;
 	pair<bool, int> bestScore = make_pair(false, 0);
 	if (curLevel >= 3 && rotated == false) cur->move('d', 1);
@@ -444,7 +483,7 @@ vector<pair<int,int>> Board::singleOrientationHint(bool rotated) {
 }
 
 void Board::hint(){
-	//check for each rotation and get the best score
+	//check for all 4 rotations and get the best score
 	vector<pair<int, int>> hintResult = singleOrientationHint(false);
 	for (int i = 0; i < 3; ++i) {
 		cur->rotate(true);
@@ -470,7 +509,7 @@ void Board::drop() {
 	cur = std::move(next);
 	next= strategy->getNext();
 	vector<int> toBeRemoved;
-	for (int i = 0; i < board.size(); ++i) {
+	for (int i = 0; i < (int) board.size(); ++i) {
 		if (board[i].isRemovable()) {
 			toBeRemoved.push_back(i);
 		}

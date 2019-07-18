@@ -9,7 +9,7 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 	if(root!=nullptr) {
 		for(int i=0;i<k;i++) cout<<" ";
 		cout<<"Node("<<root->strAccept<<")"<<endl;
-		for(int i=0;i<root->next.size();i++) {
+		for(int i=0;i < (int) root->next.size();i++) {
 			debugPrintTree(root->next[i], k+1);
 		}
 	}
@@ -17,11 +17,10 @@ void Game::debugPrintTree(const shared_ptr<StateNode>& root, int k) {
 
 Game::Game(int level, int rndSeed, const string& script): 
 	seed{rndSeed},
-	script{script},
 	startLevel{level},
 	isHint{false},
+	script{script},
 	game{make_unique<Board>(level, script)}, 
-	prefixTree{make_shared<Game::StateNode>("")},
 	command{
 		{"left", CONTROL_LEFT},
 		{"right", CONTROL_RIGHT},
@@ -44,7 +43,8 @@ Game::Game(int level, int rndSeed, const string& script):
 		{"Z", DEBUG_REPLACE_Z},
 		{"T", DEBUG_REPLACE_T},
 		{"rename", COMMAND_RENAME},
-		{"&&", COMMAND_AMP}}
+		{"&&", COMMAND_AMP}},
+	prefixTree{make_shared<Game::StateNode>("")}
 {
 	addCommandPrefixLookup("left");
 	addCommandPrefixLookup("right");
@@ -81,7 +81,7 @@ Game::StateNode::StateNode(const string& str):strAccept{str}{}
 // check if a lookup pathway already exists is the tree
 bool Game::ifDuplicated(const string& command) {
 	shared_ptr<StateNode> cur = prefixTree;
-	for(int i=0; i<command.length(); i++) {
+	for(int i=0; i < (int) command.length(); i++) {
 		if(cur->path.count(command[i]) <= 0)
 			return false;
 	}
@@ -95,7 +95,7 @@ void Game::addCommandPrefixLookup(const string& command) {
 		return;
 	}
 	
-	for(int i=0; i<command.length(); i++) {
+	for(int i=0; i < (int) command.length(); i++) {
 		// root node already created by Game ctor
 		//cur = cur->append(command, command[i]);
 		
@@ -191,45 +191,46 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 	}
 	else /*if(macro.count(token) > 0)*/ {
 		vector<string> m = macro.at(token);
-		for(int i=0; i<m.size(); i++) {
+		for(int i=0; i < (int) m.size(); i++) {
 			if(!perform(m, i))
 				return false;
 		}
+		return true;
 	}
 	
 	switch(type) {
 		case CONTROL_LEFT:
 			// left
-			cout<<"DEBUG: left "<<rept<<endl;
+			// cout<<"DEBUG: left "<<rept<<endl;
 			game->move('l', rept);
 			break;
 		case CONTROL_RIGHT:
 			// right
-			cout<<"DEBUG: right "<<rept<<endl;
+			// cout<<"DEBUG: right "<<rept<<endl;
 			game->move('r', rept);
 			break;
 		case CONTROL_DOWN:
 			// down
-			cout<<"DEBUG: down "<<rept<<endl;
+			// cout<<"DEBUG: down "<<rept<<endl;
 			game->move('d', rept);
 			break;
 		case CONTROL_CLOCKWISE:
 			// clockwise
-			cout<<"DEBUG: clockwise "<<rept<<endl;
+			// cout<<"DEBUG: clockwise "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 				game->rotate(true);
 			}
 			break;
 		case CONTROL_CC:
 			// counterclockwise
-			cout<<"DEBUG: counterclockwise "<<rept<<endl;
+			// cout<<"DEBUG: counterclockwise "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 				game->rotate(false);
 			}
 			break;
 		case CONTROL_DROP:
 			// drop
-			cout<<"DEBUG: drop "<<rept<<endl;
+			// cout<<"DEBUG: drop "<<rept<<endl;
 			for(int c=0;c<rept;c++) {
 				game->drop();
 				if(game->checkEnd()) return false;
@@ -237,18 +238,18 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			break;
 		case CONTROL_LEVELUP:
 			// levelup
-			cout<<"DEBUG: levelup "<<rept<<endl;
+			// cout<<"DEBUG: levelup "<<rept<<endl;
 			game->changeLevel(rept);
 			break;
 		case CONTROL_LEVELDOWN:
 			// leveldown
-			cout<<"DEBUG: leveldown "<<rept<<endl;
+			// cout<<"DEBUG: leveldown "<<rept<<endl;
 			game->changeLevel(-rept);
 			break;
 		case CONTROL_RND:
 			// random
 			// ignore multiplier
-			cout<<"DEBUG: random"<<endl;
+			// cout<<"DEBUG: random"<<endl;
 			game->norand(false);
 			game->setSeed(seed);
 			break;
@@ -256,9 +257,9 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		{
 			// norandom <file>
 			// ignore multiplier
-			cout<<"DEBUG: norandom "<<rept<<endl;
+			// cout<<"DEBUG: norandom "<<rept<<endl;
 			string fileName="";
-			if(index < tokens.size()-1) {
+			if(index < (int) (tokens.size()-1)) {
 				fileName = tokens.at(++index);
 			}
 			else {
@@ -271,10 +272,10 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		case CONTROL_SEQUENCE:
 		{
 			// TODO: sequence <file>
-			cout<<"DEBUG: sequence "<<rept<<endl;
+			// cout<<"DEBUG: sequence "<<rept<<endl;
 			string fileName;
 			ifstream ifs;
-			if(index >= tokens.size()-1) {
+			if(index >= (int) (tokens.size()-1)) {
 				cout<<"Error: file name not specified for 'sequence'."<<endl;
 				break;
 			}
@@ -296,51 +297,51 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 		case CONTROL_RESTART:
 			// restart
 			// ignore multiplier
-			cout<<"DEBUG: restart "<<rept<<endl;
+			// cout<<"DEBUG: restart "<<rept<<endl;
 			// quit the game, Game context will be recreated by main
 			reset();
 			break;
 		case CONTROL_HINT:
 			// hint
 			// ignore multiplier
-			cout<<"DEBUG: hint "<<rept<<endl;
+			// cout<<"DEBUG: hint "<<rept<<endl;
 			game->hint();
 			isHint = true;
 			break;
 		case DEBUG_REPLACE_I:
 			// I
 			// actually, repeat this is meaningless
-			cout<<"DEBUG: I "<<rept<<endl;
+			// cout<<"DEBUG: I "<<rept<<endl;
 			game->replaceCurrentBlock('I');
 			break;
 		case DEBUG_REPLACE_J:
 			// J
-			cout<<"DEBUG: J "<<rept<<endl;
+			// cout<<"DEBUG: J "<<rept<<endl;
 			game->replaceCurrentBlock('J');
 			break;
 		case DEBUG_REPLACE_L:
 			// L
-			cout<<"DEBUG: L "<<rept<<endl;
+			// cout<<"DEBUG: L "<<rept<<endl;
 			game->replaceCurrentBlock('L');
 			break;
 		case DEBUG_REPLACE_O:
 			// O
-			cout<<"DEBUG: O "<<rept<<endl;
+			// cout<<"DEBUG: O "<<rept<<endl;
 			game->replaceCurrentBlock('O');
 			break;
 		case DEBUG_REPLACE_S:
 			// S
-			cout<<"DEBUG: S "<<rept<<endl;
+			// cout<<"DEBUG: S "<<rept<<esdl;
 			game->replaceCurrentBlock('S');
 			break;
 		case DEBUG_REPLACE_Z:
 			// Z
-			cout<<"DEBUG: Z "<<rept<<endl;
+			// cout<<"DEBUG: Z "<<rept<<endl;
 			game->replaceCurrentBlock('Z');
 			break;
 		case DEBUG_REPLACE_T:
 			// T
-			cout<<"DEBUG: T "<<rept<<endl;
+			// cout<<"DEBUG: T "<<rept<<endl;
 			game->replaceCurrentBlock('T');
 			break;
 		case COMMAND_RENAME:
@@ -354,7 +355,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			string src = tokens.at(++index);
 			string dest = tokens.at(++index);
 			
-			cout<<"DEBUG: rename "<<src<<" "<<dest<<endl;
+			// cout<<"DEBUG: rename "<<src<<" "<<dest<<endl;
 			
 			if(test(dest)) {
 				cout<<"Error: "<<"'"<<dest<<"' already exists."<<endl;
@@ -370,7 +371,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 				}
 			}
 			
-			cout<<"  DEBUG: rename "<<src<<" "<<dest<<endl;
+			// cout<<"  DEBUG: rename "<<src<<" "<<dest<<endl;
 			
 			if(command.count(src) > 0) {
 				command[dest] = command.at(src);
@@ -398,7 +399,7 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 void Game::splitToken(const string& token, string& cmd, int& rept) {
 	int pos=-1;
 	
-	for(int i=0;i<token.length();i++) {
+	for(int i=0;i< (int) token.length();i++) {
 		if(isdigit(token[i])) {
 			pos = i;
 		}
@@ -454,13 +455,13 @@ bool Game::parseCommand(istream& in) {
 		macro[s] = tokens;
 		addCommandPrefixLookup(s);
 		
-		cout<<"DEBUG: Add macro '"<<s<<"' => ";
-		for(auto it : tokens)
-			cout<<it<<" ";
-		cout<<endl;
+		// cout<<"DEBUG: Add macro '"<<s<<"' => ";
+		// for(auto it : tokens)
+		// 	cout<<it<<" ";
+		// cout<<endl;
 	}
 	else {
-		for(int i=0;i<tokens.size();i++) {
+		for(int i=0;i< (int) tokens.size();i++) {
 			if(!perform(tokens, i))
 				return false;
 		}
