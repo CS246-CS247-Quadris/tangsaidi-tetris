@@ -19,7 +19,6 @@ bool LevelFour::hasRemovable() {
 }
 
 // get the next block on this level, failed command also trigger heavy move
-// **TEST REQUIRED**
 std::unique_ptr<Block> LevelFour::getNext() {
   std::unique_ptr<Block> ret = LevelThree::getNext();
   counter++;
@@ -32,12 +31,12 @@ std::unique_ptr<Block> LevelFour::getNext() {
     if (!getBoard()->at(dropRow).isOccupied(mid)) {
       for (int i = 14; i>-1; --i) {
         if (getBoard()->at(i).isOccupied(mid)) {
-          dropRow++;
           break;
         } else {
           dropRow--;
         }
       }
+      dropRow++;
 
       board->createSettler(std::make_pair(mid, dropRow));
     }
