@@ -23,6 +23,9 @@ class Board {
 		~Board();
 		int getCurrentLevel() const;
 		bool checkEnd();
+		/*
+		Check if the position is valid
+		 */
 		bool isValid(std::vector<std::pair<int, int>> coord);
 		void hint();
 		void drop(); // remember to clear rows only after getNext()
@@ -39,18 +42,25 @@ class Board {
 		 */
 		void createSettler(std::pair<int, int> coord);
 		/* Board::CreateSettler 
-		   Creates the settler for any block passed in coordinates, blockType and Level
+		   Creates the settler for any block passed in coordinates, blockType
+		   and Level
 		 */
-		void createSettler(const std::vector<std::pair<int, int>> & coord, char type, int level);
+		void createSettler(const std::vector<std::pair<int, int>> & coord, 
+				char type, int level);
 		/* Board::DeleteHintSettler 
-		   Delete hint settler created with hint function (stored in hintSettlerCoord)
+		   Delete hint settler created with hint function (stored in 
+		   hintSettlerCoord) 
 		   Should be called after display, before next command.
 		 */
 		void deleteHintSettler();
 		int getHiScore() const;
 		int getScore() const;
+		/*
+			Get string representation of each type below
+		 */
 		std::string getStringified() const;
 		std::string getStringifiedNext() const;
+		
 		std::stringstream toStringStream();
 
 	private:

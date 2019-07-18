@@ -18,9 +18,11 @@ class Level {
     bool norandom = false;
     static int seed;
     static std::string scriptFile;
-    // Helper method that does not manage memory, the object it points to is managed by the unique pointer
-    // on the board, which is guranteed to live longer than this created Block pointer, because it is only
-    // generated when move and rotation are performed and is not stored anywhere.
+    // Helper method that does not manage memory, the object it points 
+    // to is managed by the unique pointer on the board, which is guranteed
+    // to live longer than this created Block pointer, because it is only
+    // generated when move and rotation are performed and is not stored
+    // anywhere.
     Block* getCur();
     std::vector<Row>* getBoard();
     
@@ -34,7 +36,8 @@ class Level {
     static void setSeed(int seed);
     static void setScriptFile(std::string scriptFile);
 
-    // setSequence and setNorandom for the norand command, vitual in case we will need to overwrite it
+    // setSequence and setNorandom for the norand command, vitual in case
+    // we will need to overwrite it
     virtual void setNorandom(bool norandom);
     // this is virtual so we can delete the method when necessary
     virtual void setSequence(std::string fileName);

@@ -12,15 +12,18 @@ class WindowBoard: public QFrame {
     Q_OBJECT;
 
     public:
-        WindowBoard(QWidget* = 0);
+        // Initial set up of the board
         WindowBoard(QWidget* = 0, Game* = 0);
 
+        // Make the board be aware of the next piece label,
+        // so it can change it when need to
         void setNextPieceLabel(QPointer<QLabel> label);
 
         QSize sizeHint() const override;
         QSize minimumSizeHint() const override;
 
     signals:
+        // signal sent to window after the command has been assessed
         void keyDown(std::string key);
 
     protected:

@@ -17,22 +17,41 @@ QT_END_NAMESPACE
 
 class Window: public QWidget {
     Q_OBJECT
-    // window does not own the game
     
     public:
+        /*
+        Constructs window object so it is also aware of game
+         */
         Window(Game*);
 
     signals:
+        /*
+        Sends execCommand to text game
+         */
         void execCommand(std::string command);
     
     public slots:
+        /*
+        Does a repaint in case something changed in the window
+         */
 		void updateWindow();
-        void keyDown(std::string key);
+        /*
+        Handles keyDown events, sends the command received from
+        key pressed in board to text game
+         */
+        void keyDown(std::string command);
 
     private slots:
+        /*
+        Listener for restart button
+         */
         void handleRestart();
 
     protected:
+        /*
+        Overrides the default paint methods, describes how the
+        window should be painted
+         */
         void paintEvent(QPaintEvent *event) override;
 
     private:

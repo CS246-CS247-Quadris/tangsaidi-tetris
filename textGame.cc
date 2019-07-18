@@ -5,7 +5,8 @@
 TextGame::TextGame(Game* game): game(game) {
     game->printBoard();
     std::cout<<"> "<< std::flush;
-    m_notifier = std::make_unique<QSocketNotifier>(fileno(stdin), QSocketNotifier::Read, this);
+    m_notifier = std::make_unique<QSocketNotifier>(fileno(stdin),
+        QSocketNotifier::Read, this);
 }
 
 void TextGame::run() {
@@ -13,6 +14,8 @@ void TextGame::run() {
 }
 
 void TextGame::readCommand(std::istream& in) {
+    // Read until parseCommand returns false
+    // Note, it only returns false when it needs to exit
 	if (!game->parseCommand(in)) {
 		QCoreApplication::quit();
 	}
@@ -23,6 +26,7 @@ void TextGame::readCommand(std::istream& in) {
 
 
 void TextGame::execCommand(std::string command) {
+    // put the command into an istringstream so readCommand can read from it
     std::istringstream iss(command);
     readCommand(iss);
 }

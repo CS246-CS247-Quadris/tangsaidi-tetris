@@ -35,13 +35,15 @@ Window::Window(Game* game): game(game) {
 
     connect(quitButton , SIGNAL(clicked()), qApp, SLOT(quit()));
 
+    // Add everything above to the layout below, and transfer ownership 
+    // to be managed by the QApp hiearchy
     QPointer<QGridLayout> layout = new QGridLayout;
 
     layout->addWidget(createLabel(tr("NEXT")), 0, 0);
     layout->addWidget(nextPieceLabel, 1, 0);
     layout->addWidget(createLabel(tr("LEVEL")), 2, 0);
     layout->addWidget(levelLcd, 3, 0);
-        layout->addWidget(restartButton, 4, 0);
+    layout->addWidget(restartButton, 4, 0);
     layout->addWidget(dropZone, 0, 1, 6, 2);
     
     layout->addWidget(createLabel(tr("SCORE")), 0, 3);
@@ -78,6 +80,6 @@ void Window::handleRestart() {
     emit execCommand("restart");
 }
 
-void Window::keyDown(std::string key) {
-    emit execCommand(key);
+void Window::keyDown(std::string command) {
+    emit execCommand(command);
 }
