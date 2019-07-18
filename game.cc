@@ -445,6 +445,10 @@ bool Game::parseCommand(istream& in) {
 	splitToken(tokens[0], s, cnt);
 	if(s.back() == ':') {
 		s.pop_back();
+		if(macro.count(s) > 0) {
+			cout<<"Error: "<<s<<" already defined."<<endl;
+			return true;
+		}
 		tokens.erase(tokens.begin());
 		for(auto& it : tokens) {
 			if(!test(it)) {
