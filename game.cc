@@ -69,8 +69,7 @@ Game::Game(int level, int rndSeed, const string& script):
 	addCommandPrefixLookup("rename");
 	addCommandPrefixLookup("&&");
 	
-//	cout<<"Debug Tree:"<<endl;
-//	debugPrintTree(prefixTree);
+	game->setSeed(seed);
 }
 
 Game::~Game() {}
@@ -251,7 +250,6 @@ bool Game::perform(const vector<string>& tokens, int& index) {
 			// ignore multiplier
 			// cout<<"DEBUG: random"<<endl;
 			game->norand(false);
-			game->setSeed(seed);
 			break;
 		case CONTROL_NORND:
 		{

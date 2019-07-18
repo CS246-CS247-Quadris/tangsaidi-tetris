@@ -7,9 +7,9 @@ using namespace std;
 
 Board::Board(int level, const string& script): 
 	score{make_shared<Score>()}, board{15}, curLevel{level} {
-	strategy = Level::create(curLevel, this);
 	if(!script.empty())
-		strategy->setScriptFile(script);
+		Level::setScriptFile(script);
+	strategy = Level::create(curLevel, this);
 	// need to check off by one case here for level 4
 	cur = strategy->getNext();
 	next= strategy->getNext();
@@ -141,7 +141,7 @@ void Board::norand(bool isNoRandom, string file) {
 }
 
 void Board::setSeed(int seed) {
-	strategy->setSeed(seed);
+	Level::setSeed(seed);
 }
 
 // This may not be safe for higher levels
