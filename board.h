@@ -58,12 +58,15 @@ class Board {
 		std::stringstream printRow(int y);
 		std::vector<std::pair<int, int>> ifDropNow(const std::vector<std::pair<int,int>> &);
 		bool isHole(int, int, int);
-		bool isHalfHole(int, int);
+		int countHalfHoles(int, int, int);
 		bool hintIsRemovable(int);
 		int checkAndRemoveRow();
 		std::pair<int, int> findHoles();
-		std::pair<int, int> findEdgesAndHeight();
-		std::vector<std::pair<int,int>> singleOrientationHint();
+		int findEdges();
+		std::pair<int, int> findHeight();
+		void setHintBoard(const std::vector<std::pair<int, int>> &);
+		int getHintScore();
+		std::vector<std::pair<int,int>> singleOrientationHint(bool);
 		void createHintSettler(std::vector<std::pair<int, int>> coord);
 };
 
