@@ -4,7 +4,6 @@ using namespace std;
 #define UNUSED(x) (void)(x)
 
 unique_ptr<Block> Block::create(char type, int level) {
-	// cout << "Block " << type << " created" << endl;
 	switch(type) {
 		case 'I':
 			return make_unique<IBlock>(level);
@@ -65,7 +64,6 @@ void Block::move(char direction, int steps) {
 }
 
 void Block::rotate(bool isClockwise) {
-	// cout << "Rotated clockwise: " << isClockwise << endl;
 	int x=rotCenter.first, y=rotCenter.second;
 	// transform coordinates
 	for(auto& v:coordinate) {
